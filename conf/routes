@@ -1,0 +1,62 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET         /                                                  controllers.Application.index()
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                                      controllers.Assets.versioned(path="/public", file: Asset)
+# static source, the same as assets
+GET         /static/*file                                      controllers.Assets.at(path="/public", file)
+
+GET         /test                                              controllers.Test.index
+GET         /init                                              controllers.Init.index
+GET         /initLock                                          controllers.BusinessTask.initLock
+GET         /initLockverybegin                                 controllers.BusinessTask.initLockverybegin
+
+# web service
+POST        /service/sendmail                                  controllers.Service.sendemail
+
+GET         /login                                             controllers.Application.login()
+POST        /login                                             controllers.Application.authenticate()
+GET         /logout                                            controllers.Application.logout()
+
+
+
+
+GET         /shopkeeper/addshopkeeper                          controllers.Shopkeeper.addshopkeeper()
+POST        /shopkeeper/addshopkeeper                          controllers.Shopkeeper.doaddshopkeeper()
+GET         /shopkeeper/addshop                                controllers.Shopkeeper.addshop()
+POST        /shopkeeper/addshop                                controllers.Shopkeeper.doaddshop()
+GET         /shopkeeper/batchadd                               controllers.Shopkeeper.batchadd()
+POST        /shopkeeper/batchadd                               controllers.Shopkeeper.dobatchadd()
+GET         /shopkeeper/all                                    controllers.Shopkeeper.all()
+
+
+
+GET         /buyer/addbuyer                                    controllers.Buyer.addbuyer()
+POST        /buyer/doaddbuyer                                  controllers.Buyer.doaddbuyer()
+GET         /buyer/batchadd                                    controllers.Buyer.batchadd()
+POST        /buyer/dobatchadd                                  controllers.Buyer.dobatchadd()
+GET         /buyer/all                                         controllers.Buyer.all()
+GET         /buyer/clear                                       controllers.Buyer.clear()
+
+
+GET         /task/addshopkeepertask                            controllers.BusinessTask.addshopkeepertask()
+POST        /task/addshopkeepertask                            controllers.BusinessTask.doaddshopkeepertask()
+POST        /task/batchaddshopkeepertask                       controllers.BusinessTask.dobatchaddshopkeepertask()
+GET         /task/allnowtask                                   controllers.BusinessTask.allnowtask()
+GET         /task/allnowbuyertask                              controllers.BusinessTask.allnowbuyertask()
+GET         /task/getreadyshuashou                             controllers.BusinessTask.getreadyshuashou()
+POST        /task/caculatetaskList                             controllers.BusinessTask.caculateTaskList()
+POST        /task/getalltaskList                               controllers.BusinessTask.getAllTaskList()
+POST        /task/deletebytaskbookname                         controllers.BusinessTask.deleteByTaskbookName()
+POST        /task/getshopkeeperbookbyshopkeeperbookname        controllers.BusinessTask.getshopkeeperbookbyshopkeeperbookname()
+
+GET         /task/clear                                        controllers.BusinessTask.clear()
+GET         /image/*file                                       controllers.AssetsControllers.getImage(file)
+
+
+
+

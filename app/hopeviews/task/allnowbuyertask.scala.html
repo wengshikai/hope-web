@@ -1,0 +1,47 @@
+@(tasknum:Int,allprice:Double,taskbookMap: java.util.Map[String,models.excel.BuyerTaskList] , nowtasklist: java.util.List[String])
+
+
+@global{
+
+    <div class="container">
+        <br/><br/><br/><br/>
+        @if(tasknum==0) {
+            <p class="text-danger">
+            没有完全分配任务书！请先执行分配
+            </p>
+        }
+        <h1>刷手任务书</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>任务书名</th>
+                    <th>单数</th>
+                    <th>价格</th>
+                    <th>查看</th>
+                    <th>下载Excel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>总计</td>
+                    <td>@tasknum</td>
+                    <td>@allprice</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                @for(i <- 0 until nowtasklist.size()){
+
+                    <tr>
+                        <td>@nowtasklist.get(i)</td>
+                        <td>@taskbookMap.get(nowtasklist.get(i)).getStlist.size()</td>
+                        <td>@taskbookMap.get(nowtasklist.get(i)).getZongBenJinNum</td>
+                        <td><button class="btn disabled btn-info" type="button">查看</button></td>
+                        <td><a href="">下载</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+}
+

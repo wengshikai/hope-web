@@ -1,0 +1,90 @@
+@(shopkeeperbook: models.excel.ShopkeeperTaskBook)
+
+
+@global{
+
+    <div class="container">
+        <br/><br/><br/><br/>
+        <h1>查看商家任务书</h1>
+
+        @for(skl <- shopkeeperbook.getTasklist){
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>商家姓名</th>
+                        <th>店铺名称</th>
+                        <th>店铺旺旺</th>
+                        <th>产品链接</th>
+                        <th>电脑端价格</th>
+                        <th>手机端价格</th>
+                        <th>图片一</th>
+                        <th>图片二</th>
+                        <th>图片三</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td>@skl.getShopkeeperName</td>
+                    <td>@skl.getShopName</td>
+                    <td>@skl.getShopWangwang</td>
+                    <td><a href="@skl.getItemLink">链接</a></td>
+                    <td>@skl.getPcCost</td>
+                    <td>@skl.getPhoneCost</td>
+                    <td>
+                        @if(skl.getPic1!=null && !skl.getPic1.equals("")){
+                            <img style="height: 100px;width: auto" alt="140x140" src="/image/@shopkeeperbook.getTaskbookUuid@skl.getPic1" />
+                        }
+                    </td>
+                    <td>
+                    @if(skl.getPic2!=null&& !skl.getPic2.equals("")) {
+                        <img style="height: 100px;width: auto" alt="140x140" src="/image/@shopkeeperbook.getTaskbookUuid@skl.getPic2" />
+                    }
+                    </td>
+                    <td>
+                    @if(skl.getPic3!=null&& !skl.getPic3.equals("")) {
+                        <img style="height: 100px;width: auto" alt="140x140" src="/image/@shopkeeperbook.getTaskbookUuid@skl.getPic3" />
+                    }
+                    </td>
+                    <tr>
+                </tbody>
+            </table>
+            <br/>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>关键词</th>
+                        <th>任务要求</th>
+                        <th>单价</th>
+                        <th>数量</th>
+                        <th>总价</th>
+                        <th>刷手旺旺</th>
+                        <th>任务书</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(item <- skl.getTasklist){
+                        <tr>
+                        <td>@item.getId</td>
+                        <td>@item.getKeyword</td>
+                        <td>@item.getTaskRequirement</td>
+                        <td>@item.getUnitPrice</td>
+                        <td>@item.getGoodsNumber</td>
+                        <td>@item.getAllPrice</td>
+                        <td>@item.getBuyerWangwang</td>
+                        <td>@item.getBuyerTaskBookId</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br/>
+        }
+
+
+
+
+
+    </div>
+
+}
+

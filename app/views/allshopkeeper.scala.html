@@ -1,0 +1,32 @@
+@(shopkeeperMap: java.util.Map[Integer,models.dbtable.Shopkeeper],shopMap: java.util.Map[Integer,java.util.List[models.dbtable.Shop]])
+
+
+@global{
+
+    <div class="container">
+        <br/><br/><br/><br/>
+        <h1>查看所有</h1>
+        <ul contenteditable="true" class="">
+
+        @for((key, value) <- shopkeeperMap) {
+            <li>
+                @value.getShopkeeperId @value.getName @value.getMobilephone @value.getQq @value.getWechat
+            <ol contenteditable="true">
+            @for(value <- shopMap.get(key)){
+                <li>@value.getShopId @value.getShopName @value.getShopWangwang</li>
+            }
+            </ol>
+            </li>
+        }
+        </ul>
+
+
+
+
+
+
+
+    </div>
+
+}
+

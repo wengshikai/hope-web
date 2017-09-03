@@ -1,0 +1,47 @@
+@(form: Form[Shopkeeper.ShopForm])
+@global{
+
+    <div class="container">
+        <br/>
+        <br/><br/><br/>
+        @helper.form(routes.Shopkeeper.doaddshop()) {
+            <h1>添加店铺</h1>
+
+            @if(form.hasGlobalErrors) {
+                <p class="text-danger">
+                @form.globalError.message
+                </p>
+            }
+
+            @if(flash.contains("success")) {
+                <p class="text-success">
+                @flash.get("success")
+                </p>
+            }
+
+            @if(flash.contains("failed")) {
+                <p class="text-danger">
+                @flash.get("failed")
+                </p>
+            }
+
+            <p>
+                <label>店铺名:</label><input type="text" name="shopName" placeholder="shopName" value="@form("shopName").value" />
+            </p>
+            <p>
+                <label>旺旺:</label><input type="text" name="shopWangwang" placeholder="shopWangwang" value="@form("shopWangwang").value" />
+            </p>
+            <p>
+                <label>商家名:</label><input type="text" name="shopkeeperName" placeholder="shopkeeperName" value="@form("shopkeeperName").value" />
+            </p>
+            <p>
+                <label>商家手机:</label><input type="text" name="shopkeeperMobilephone" placeholder="shopkeeperMobilephone" value="@form("shopkeeperMobilephone").value" />
+            </p>
+            <p>
+                <button type="submit" class="btn btn-info">提交</button>
+            </p>
+        }
+    </div>
+
+}
+

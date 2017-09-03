@@ -1,0 +1,92 @@
+@(tasknum:Int,allprice:Double,taskbookMap: java.util.Map[String,models.excel.ShopkeeperTaskBook] , nowtasklist: java.util.List[String],min_num:Int,now_num:Int)
+@import models.LockTableManager.isLock
+
+@global{
+
+    <div class="container">
+        <br/><br/><br/><br/>
+        <h1>已经上传的任务书</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>任务书名</th>
+                    <th>单数</th>
+                    <th>价格</th>
+                    <th>删除</th>
+                    <th>查看</th>
+                    <th>下载Excel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>总计</td>
+                    <td>@tasknum</td>
+                    <td>@allprice</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            @for(i <- 0 until nowtasklist.size()){
+
+                <tr>
+                    <td>@(i+1)</td>
+                    <td>@nowtasklist.get(i)</td>
+                    <td>@taskbookMap.get(nowtasklist.get(i)).getTaskNum</td>
+                    <td>@taskbookMap.get(nowtasklist.get(i)).getTaskAllPriceSum</td>
+                    <td>
+                    @helper.form(routes.BusinessTask.deleteByTaskbookName()) {<button type="submit" class="btn btn-info">删除</button>
+                    <input type="hidden" name="taskbookName" value="@nowtasklist.get(i)">}
+                    </td>
+                    <td>
+                        @helper.form(routes.BusinessTask.getshopkeeperbookbyshopkeeperbookname()) {<button type="submit" class="btn btn-info">查看</button>
+                            <input type="hidden" name="taskbookName" value="@nowtasklist.get(i)">}
+                    </td>
+                    <td><a href="">下载</a></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="container">
+        <br/><br/><br/><br/>
+        @if(flash.contains("error")) {
+            <p class="text-warning">
+            @flash.get("error")
+            </p>
+        }
+        @helper.form(routes.BusinessTask.caculateTaskList()) {
+            <h1>分配任务</h1>
+            <label>任务书数量:</label><input type="text" name="buyernum" placeholder="buyernum" value="@min_num"/> ,本次至少需要 <span class="text-danger"> @min_num  </span>个刷手,上一次数据库中已经分配<span class="text-danger"> @now_num  </span>个刷手
+            <p>
+                <button type="submit" class="btn btn-info">分配</button>
+            </p>
+        }
+
+    </div>
+
+    <div class="container">
+        <br/><br/><br/><br/>
+            <h1>获取商家和刷手任务书</h1>
+            <p>
+                @if(isLock("TaskTables")){
+                        <button class="btn disabled " type="button">获取</button>
+                    <span class="text-danger">有新上传或者删除，下载功能已经锁定，请先分配任务</span>
+                }else{
+                    @helper.form(routes.BusinessTask.getAllTaskList()) {
+        <p><button type="submit" class="btn btn-info">获取</button></p>
+        }
+                    @helper.form(routes.BusinessTask.initLock()) {
+                        <button type="submit" class="btn btn-danger">解锁上传功能</button>
+                    }
+                    <span class="text-danger">任务已经分配，上传功能已经锁定，若要继续上传，需要先解锁上传功能</span>
+                }
+
+            </p>
+
+    </div>
+
+}
+

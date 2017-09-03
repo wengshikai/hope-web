@@ -1,0 +1,71 @@
+@import models.LockTableManager.isLock
+
+@global{
+    <div class="container">
+        <br/><br/><br/><br/>
+        @if(isLock("TaskTables")){
+
+            @helper.form(action = routes.BusinessTask.doaddshopkeepertask() ,'enctype -> "multipart/form-data") {
+                @if(flash.contains("succ")) {
+                    <p class="text-success">
+                    @flash.get("succ")
+                    </p>
+                }
+
+                @if(flash.contains("error")) {
+                    <p class="text-danger">
+                    @flash.get("error")
+                    </p>
+                }
+                <h1>添加商家任务书</h1>
+
+                <p>
+                    <input type="file" name="shopkeeperzip">
+                </p>
+                <p>
+                    <button type="submit" class="btn btn-info">提交</button>
+                </p>
+
+
+            }
+
+            <br/><br/><br/><br/>
+            @helper.form(action = routes.BusinessTask.dobatchaddshopkeepertask() ,'enctype -> "multipart/form-data") {
+                @if(flash.contains("batch_succ")) {
+                    <p class="text-success">
+                    @flash.get("batch_succ")
+                    </p>
+                }
+
+                @if(flash.contains("batch_error")) {
+                    <p class="text-danger">
+                    @flash.get("batch_error")
+                    </p>
+                }
+                <h1>批量添加商家任务书</h1>
+
+                <p>
+                    <input type="file" name="shopkeeperzip">
+                </p>
+                <p>
+                    <button type="submit" class="btn btn-info">提交</button>
+                </p>
+            }
+
+
+        }else{
+            <p>
+            @helper.form(routes.BusinessTask.initLock()) {
+                <button type="submit" class="btn btn-danger">解锁上传功能</button>
+            }
+            </p>
+            <p class="text-danger">任务已经分配，上传功能已经锁定，若要继续上传，需要先解锁上传功能</p>
+        }
+
+
+
+
+    </div>
+
+}
+
