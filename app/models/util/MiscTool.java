@@ -56,9 +56,10 @@ public class MiscTool {
     public static byte[] buildDownloadTaskZip(List<TaskTables> all){
         buildDownloadShuashouZip(all, "刷手.zip");
         buildDownloadShopkeeperZip(all, "商家.zip");
-        String[] ss = new String[2];
+        String[] ss = new String[3];
         ss[0] = "刷手.zip";
         ss[1] = "商家.zip";
+        ss[2] = "账单.txt";
         ZIPTool.compressFiles2Zip(ss, "task.zip");
         try {
             byte[] ret = FileTool.getFileContent("task.zip");
@@ -70,12 +71,17 @@ public class MiscTool {
             FileTool.delete("刷手.zip");
             FileTool.delete("商家.zip");
             FileTool.delete("task.zip");
+            FileTool.delete("账单.txt");
         }
     }
 
     public static void buildDownloadShuashouZip(List<TaskTables> all,String zipname){
         List<models.dbtable.Buyer> ssl = BuyerManager.getALl();
         Map<String,Integer> levelMap = new HashMap();
+        Map<String,String> wangwang2shopname = new HashMap<String,String>();
+        for(TaskTables taskTables:all){
+            wangwang2shopname.put(taskTables.getShopWangwang(),taskTables.getShopName());
+        }
         for(models.dbtable.Buyer buyer:ssl){
             levelMap.put(buyer.getWangwang(),buyer.getLevel());
         }
@@ -168,6 +174,50 @@ public class MiscTool {
         for(String s:lastarray){
             FileTool.delete(s);
         }
+
+        Map<String,Map<String,List<Double>>> money = new HashMap<String,Map<String,List<Double>>>();
+
+        for(TaskTables taskTables:all){
+            Integer index1 = levelMap.get(taskTables.getBuyerWangwang());
+            if(money.get(""+index1) == null){
+                Map<String,List<Double>> map1 = new HashMap<String,List<Double>>();
+                money.put(""+index1,map1);
+            }
+            String  sw = taskTables.getShopWangwang();
+            if(money.get(""+index1).get(sw) == null){
+                money.get(""+index1).put(sw,new ArrayList<Double>());
+            }
+            money.get(""+index1).get(sw).add(taskTables.getAllPrice());
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("分组\t旺旺\t店铺\t总单数\t总金额\n");
+        for(Map.Entry<String,Map<String,List<Double>>> entry:money.entrySet()){
+            String group = entry.getKey();
+            Map<String,List<Double>>  loop2 = entry.getValue();
+            for(Map.Entry<String,List<Double>> entry2:loop2.entrySet()){
+                sb.append(group);
+                sb.append("\t");
+                sb.append(entry2.getKey());
+                sb.append("\t");
+                sb.append(wangwang2shopname.get(entry2.getKey()));
+                sb.append("\t");
+                sb.append(entry2.getValue().size());
+                sb.append("\t");
+                double tmpd = 0.0;
+                List<Double> tmpdl = entry2.getValue();
+                for(Double d:tmpdl){
+                    tmpd = tmpd + d;
+                }
+                sb.append(""+tmpd);
+                sb.append("\n");
+            }
+        }
+        try{
+            FileTool.putFileContent("账单.txt",sb.toString().getBytes());
+        }catch (Exception e){
+            
+        }
+
     }
 
     public static void buildDownloadShopkeeperZip(List<TaskTables> all,String zipname){
