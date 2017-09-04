@@ -11,7 +11,7 @@ import java.util.List;
 
 
 /**
- * Created by fengya on 15-10-25.
+ * Created by weng on 15-10-25.
  */
 
 public class FileTool {
@@ -167,6 +167,6 @@ public class FileTool {
     }
 
     public static void  main(String[] arvs){
-        System.out.println(getFileDir("/tmp/fengya1/fengya2/fengya3/fengya4/fengya5"));
+        System.out.println(getFileDir("/tmp/weng1/weng2/weng3/weng4/weng5"));
     }
 }

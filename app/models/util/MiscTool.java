@@ -19,8 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import models.BuyerManager;
+
 /**
- * Created by fengya on 15-12-10.
+ * Created by weng on 15-12-10.
  */
 public class MiscTool {
 
@@ -71,6 +74,13 @@ public class MiscTool {
     }
 
     public static void buildDownloadShuashouZip(List<TaskTables> all,String zipname){
+        List<models.dbtable.Buyer> ssl = BuyerManager.getALl();
+        Map<String,Integer> levelMap = new HashMap();
+        for(models.dbtable.Buyer buyer:ssl){
+            levelMap.put(buyer.getWangwang(),buyer.getLevel());
+        }
+        Map<String,String> levelArrayMap = new HashMap();
+
         FileTool.deleteDirectory("exceltmp");
         FileTool.createDestDirectoryIfNotExists("exceltmp/");
         Map<Integer,String> idtobuyer = new HashMap<Integer,String>();
@@ -123,6 +133,7 @@ public class MiscTool {
             String real_n =  entry.getKey()+"号-共"+sstl.getZongDanShuNum()+"单-"+f1bj+
                     "+"+sstl.getZongYongjinNum()+"="+f2benjin+"元-"+idtobuyer.get(entry.getKey())+".xls";
             names_realname.add("exceltmp/"+real_n);
+            levelArrayMap.put("exceltmp/"+real_n,""+levelMap.get(idtobuyer.get(entry.getKey())));
             try {
                 ((BuyerTaskList)entry.getValue()).Deal();
             } catch (IOException e) {
@@ -136,8 +147,25 @@ public class MiscTool {
                 e.printStackTrace();
             }
         }
-        ZIPTool.compressFiles2Zip(names_realname.toArray(new String[names_realname.size()]), zipname);
+        Map<String,List<String>> levelArrayList = new HashMap();
+        for(Map.Entry<String, String> entry : levelArrayMap.entrySet()){
+            if(levelArrayList.get(entry.getValue()) == null){
+                levelArrayList.put(entry.getValue(),new ArrayList<String>());
+            }
+            levelArrayList.get(entry.getValue()).add(entry.getKey());
+        }
+        List<String> lastarray = new ArrayList();
+        for(Map.Entry<String, List<String>> entry : levelArrayList.entrySet()){
+            List<String> tmpl = entry.getValue();
+            ZIPTool.compressFiles2Zip(tmpl.toArray(new String[tmpl.size()]), entry.getKey()+".zip");
+            lastarray.add(entry.getKey()+".zip");
+        }
+
+        ZIPTool.compressFiles2Zip(lastarray.toArray(new String[lastarray.size()]), zipname);
         for(String s:names_realname){
+            FileTool.delete(s);
+        }
+        for(String s:lastarray){
             FileTool.delete(s);
         }
     }

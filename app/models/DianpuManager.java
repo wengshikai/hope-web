@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import java.util.List;
 
 /**
- * Created by fengya on 15-12-4.
+ * Created by weng on 15-12-4.
  */
 public class DianpuManager {
     public static boolean insert(String id,String wangwang){

@@ -6,7 +6,7 @@ import models.util.DatabaseTool;
 
 
 /**
- * Created by fengya on 15-11-15.
+ * Created by weng on 15-11-15.
  */
 public class BusinessUserManager {
     public static boolean insertUser(String userid, String name,int type,String qq,String weixin,

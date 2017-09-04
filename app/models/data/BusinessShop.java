@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 /**
- * Created by fengya on 15-11-9.
+ * Created by weng on 15-11-9.
  */
 @Entity //@Entity 标注为实体类
 public class BusinessShop {

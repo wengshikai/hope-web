@@ -9,7 +9,7 @@ import util.SendEmail;
 import models.data.EmailBean;
 
 /**
- * Created by fengya on 15-9-29.
+ * Created by weng on 15-9-29.
  */
 public class Service  extends Controller {
 

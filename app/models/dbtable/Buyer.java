@@ -5,7 +5,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * Created by fengya on 15-12-16.
+ * Created by weng on 15-12-16.
  */
 @Entity
 public class Buyer {

@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 /**
- * Created by fengya on 15-10-25.
+ * Created by weng on 15-10-25.
  */
 public class UserManager {
     private static Random random = new Random();

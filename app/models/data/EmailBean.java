@@ -1,7 +1,7 @@
 package models.data;
 
 /**
- * Created by fengya on 15-9-29.
+ * Created by weng on 15-9-29.
  */
 public class EmailBean{
     private String[] to;

@@ -5,7 +5,7 @@ import util.FileTool;
 import java.io.IOException;
 
 /**
- * Created by fengya on 15-12-5.
+ * Created by weng on 15-12-5.
  */
 public class LocalStoreTool {
     private static final String imagedir  = "data/image";

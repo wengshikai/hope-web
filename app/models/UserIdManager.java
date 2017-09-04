@@ -5,7 +5,7 @@ import models.util.DatabaseTool;
 
 
 /**
- * Created by fengya on 15-12-4.
+ * Created by weng on 15-12-4.
  */
 public class UserIdManager {
     public static boolean insertId(String tablename,long id){

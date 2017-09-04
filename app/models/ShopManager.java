@@ -8,7 +8,7 @@ import javax.persistence.Query;
 import java.util.List;
 
 /**
- * Created by fengya on 15-12-15.
+ * Created by weng on 15-12-15.
  */
 public class ShopManager {
     public static boolean insert(int shopkeeperId,String shopName,String shopWangwang){

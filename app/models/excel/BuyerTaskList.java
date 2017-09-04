@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by fengya on 15-11-25.
+ * Created by weng on 15-11-25.
  */
 public class BuyerTaskList {
     private String filepath;
@@ -68,9 +68,9 @@ public class BuyerTaskList {
             sst.setGoodnum(5);
             sst.setUnit_price(6.13);
             sst.setKeyword("我去了就"+i);
-            byte[] ic = FileTool.getFileContent("/Users/fengya/workspace/mygod/2.jpg");
+            byte[] ic = FileTool.getFileContent("/Users/weng/workspace/mygod/2.jpg");
             sst.addPic(ic,"jpg");
-            ic = FileTool.getFileContent("/Users/fengya/workspace/mygod/1.jpg");
+            ic = FileTool.getFileContent("/Users/weng/workspace/mygod/1.jpg");
             sst.addPic(ic,"jpg");
             stl.addShuashouTask(sst);
         }

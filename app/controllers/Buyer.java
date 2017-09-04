@@ -11,7 +11,7 @@ import java.util.List;
 
 
 /**
- * Created by fengya on 15-12-16.
+ * Created by weng on 15-12-16.
  */
 public class Buyer   extends Controller{
 

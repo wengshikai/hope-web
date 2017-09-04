@@ -28,7 +28,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import util.LocalStoreTool;
 
 /**
- * Created by fengya on 15-12-16.
+ * Created by weng on 15-12-16.
  */
 public class ShopkeeperTaskBook {
     private String taskbookUuid;
@@ -164,7 +164,7 @@ public class ShopkeeperTaskBook {
 
     public static void main(String argv[]){
         ShopkeeperTaskBook shopkeeperTaskBook = new ShopkeeperTaskBook();
-        shopkeeperTaskBook.parse("/Users/fengya/Downloads/10151216/12.17商家任务书/hodo红豆宾慕专卖店/");
+        shopkeeperTaskBook.parse("/Users/weng/Downloads/10151216/12.17商家任务书/hodo红豆宾慕专卖店/");
         System.out.print(shopkeeperTaskBook.toString());
 
     }

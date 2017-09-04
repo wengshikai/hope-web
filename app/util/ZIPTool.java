@@ -52,7 +52,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
- * Created by fengya on 15-12-8.
+ * Created by weng on 15-12-8.
  */
 public class ZIPTool {
     /**

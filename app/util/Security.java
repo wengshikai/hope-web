@@ -4,7 +4,7 @@ import java.security.NoSuchAlgorithmException;
 
 
 /**
- * Created by fengya on 15-10-25.
+ * Created by weng on 15-10-25.
  */
 
 public class Security {

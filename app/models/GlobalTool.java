@@ -8,7 +8,7 @@ import play.Logger;
 import play.Play;
 
 /**
- * Created by fengya on 15-9-29.
+ * Created by weng on 15-9-29.
  */
 public class GlobalTool {
     public static final Logger.ALogger loger =  Logger.of("GLOBAL");
@@ -110,7 +110,7 @@ public class GlobalTool {
 
 
         DatabaseTool.dosql("user",CreateUser );
-        UserManager.insertUser("fengya", "123456");
+        UserManager.insertUser("weng", "123456");
         UserManager.insertUser("yanjue", "yanjue123");
 
 

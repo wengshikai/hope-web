@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 
 /**
- * Created by fengya on 15-12-4.
+ * Created by weng on 15-12-4.
  */
 
 @Entity //@Entity 标注为实体类

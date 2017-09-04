@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- * Created by fengya on 15-12-5.
+ * Created by weng on 15-12-5.
  */
 
 @Entity //@Entity 标注为实体类

@@ -5,7 +5,7 @@ import models.util.DatabaseTool;
 
 
 /**
- * Created by fengya on 15-12-28.
+ * Created by weng on 15-12-28.
  */
 public class LockTableManager {
     public static boolean insert(String key,int value){

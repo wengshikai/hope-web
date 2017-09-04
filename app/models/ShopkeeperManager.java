@@ -9,7 +9,7 @@ import java.util.List;
 
 
 /**
- * Created by fengya on 15-12-13.
+ * Created by weng on 15-12-13.
  */
 public class ShopkeeperManager {
     public static boolean insert(String name,String mobilephone,String qq,String wechat){

@@ -5,7 +5,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * Created by fengya on 15-12-15.
+ * Created by weng on 15-12-15.
  */
 @Entity //@Entity 标注为实体类
 public class Shop {

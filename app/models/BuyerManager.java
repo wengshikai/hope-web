@@ -7,7 +7,7 @@ import javax.persistence.Query;
 import java.util.List;
 
 /**
- * Created by fengya on 15-12-16.
+ * Created by weng on 15-12-16.
  */
 public class BuyerManager {
     public static boolean insert(String name,String wangwang,String mobilephone,int level){
