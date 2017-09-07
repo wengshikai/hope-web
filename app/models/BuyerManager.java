@@ -39,6 +39,8 @@ public class BuyerManager {
         }
     }
 
+
+    /** 获取所有刷手 */
     public static List<Buyer> getALl(){
         try {
             Query query = DatabaseTool.defaultEm.createQuery("select u from Buyer u");

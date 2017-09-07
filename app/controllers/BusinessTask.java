@@ -112,6 +112,7 @@ public class BusinessTask  extends Controller {
         }
     }
 
+    /** 批量添加商家任务书 */
     public Result dobatchaddshopkeepertask() {
         LockTableManager.update("TaskTables",1);
         play.mvc.Http.MultipartFormData body = request().body().asMultipartFormData();
@@ -236,7 +237,7 @@ public class BusinessTask  extends Controller {
     }
 
 
-
+    /** 分配任务 */
     @Security.Authenticated(Secured.class)
     public Result caculateTaskList() {
         Form<buyernumForm> form = Form.form(buyernumForm.class).bindFromRequest();

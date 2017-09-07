@@ -6,14 +6,21 @@ import javax.persistence.Id;
 
 /**
  * Created by weng on 15-12-16.
+ *
+ * 买家(刷手)实体
  */
 @Entity
 public class Buyer {
     @Id @GeneratedValue(strategy= GenerationType.AUTO)
+    /** 买家Id,主键 */
     int id;
+    /** 买家姓名 */
     protected String name;
+    /** 买家旺旺名 */
     protected String wangwang;
+    /** 买家手机号 */
     protected String mobilephone;
+    /** 买家所在的组 */
     protected int level;
 
     public int getId() {

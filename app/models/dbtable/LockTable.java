@@ -7,8 +7,10 @@ import javax.persistence.Id;
 
 /**
  * Created by weng on 15-12-28.
+ *
+ * 任务书上传锁定状态
  */
-@Entity //@Entity 标注为实体类
+@Entity
 public class LockTable {
     @Id
     String key;

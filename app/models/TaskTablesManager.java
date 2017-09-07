@@ -70,17 +70,6 @@ public class TaskTablesManager {
         return true;
     }
 
-    public static List<TaskTables> getALl(){
-        try {
-            Query query = DatabaseTool.defaultEm.createQuery("select u from TaskTables u");
-            List<TaskTables> entry =(List<TaskTables>)query.getResultList();
-            return entry;
-        } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
-            return null;
-        }
-    }
-
     public static List<String> getALlTaskBookName(){
         try {
             Query query = DatabaseTool.defaultEm.createQuery("select distinct u.taskbookName from TaskTables u");
@@ -165,21 +154,8 @@ public class TaskTablesManager {
         }
     }
 
-    public static Map<String,ArrayList<TaskTables>> getALlByShopkeeperTaskList(){
-        Map<String,ArrayList<TaskTables>> ret = new HashMap<String,ArrayList<TaskTables>>();
-        List<TaskTables>  ntlist = getALl();
-        for(TaskTables nt:ntlist){
-            if(!ret.containsKey(nt.getTaskbookUuid())){
-                ArrayList<TaskTables> ant = new ArrayList<TaskTables>();
-                ant.add(nt);
-                ret.put(nt.getTaskbookUuid(),ant);
-            }else{
-                ret.get(nt.getTaskbookUuid()).add(nt);
-            }
-        }
-        return ret;
-    }
 
+    /** 计算总共需要多少刷手 */
     public static int getNeedBuyerNum(){
         DataSource ds = DB.getDataSource("default");
         Connection conn = null;
@@ -219,6 +195,38 @@ public class TaskTablesManager {
         return resstr;
     }
 
+
+    /** 获取所有商家任务 */
+    public static List<TaskTables> getALl(){
+        try {
+            Query query = DatabaseTool.defaultEm.createQuery("select u from TaskTables u");
+            List<TaskTables> entry =(List<TaskTables>)query.getResultList();
+            return entry;
+        } catch (Exception e) {
+            GlobalTool.loger.error("something error!",e);
+            return null;
+        }
+    }
+
+
+    /** 获取所有的商家任务，并且按"商家任务书Id"分组 */
+    public static Map<String,ArrayList<TaskTables>> getALlByShopkeeperTaskList(){
+        Map<String,ArrayList<TaskTables>> ret = new HashMap<String,ArrayList<TaskTables>>();
+        List<TaskTables>  ntlist = getALl();
+        for(TaskTables nt:ntlist){
+            if(!ret.containsKey(nt.getTaskbookUuid())){
+                ArrayList<TaskTables> ant = new ArrayList<TaskTables>();
+                ant.add(nt);
+                ret.put(nt.getTaskbookUuid(),ant);
+            }else{
+                ret.get(nt.getTaskbookUuid()).add(nt);
+            }
+        }
+        return ret;
+    }
+
+
+    /** 将商家任务设置对应的刷手旺旺名和刷手Id */
     public static boolean setBuyerWangwangAndtaskbookid(int taskid,String buyerWangwang,int buyerTaskBookId){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
@@ -236,6 +244,7 @@ public class TaskTablesManager {
     }
 
 
+    /** 分配任务 */
     public static boolean updatenew(int num,List<models.dbtable.Buyer> ssu){
         Map<String,ArrayList<TaskTables>> alltask = getALlByShopkeeperTaskList();
         int index=0;
