@@ -2,6 +2,8 @@ package controllers;
 
 import models.CombineShopBuyerManager;
 import models.GlobalTool;
+import models.dbtable.CombineShopBuyer;
+import models.util.MiscTool;
 import util.AmountUtil;
 import util.ExcelUtil;
 import play.mvc.*;
@@ -84,6 +86,7 @@ public class CombineTask extends Controller{
     }
 
 
+    /** 解析单个xls文件,并写入数据库 */
     private int addOneShopBuyer(String excelFileName){
         ArrayList<ArrayList<String>> excel = ExcelUtil.parse(excelFileName);
         if(excel == null || excel.get(0).size()==0 ) {
@@ -111,4 +114,34 @@ public class CombineTask extends Controller{
 
         return 0;
     }
+
+
+    /** 下载合并后的商家-刷手映射表 */
+    @Security.Authenticated(Secured.class)
+    public Result downloadShopBuyerTable() throws Exception {
+        //初始化目录
+        FileTool.deleteDirectory("combineExcelTmp");
+        FileTool.createDestDirectoryIfNotExists("combineExcelTmp/");
+
+        //获取所有的店铺名
+        List<String> shopNames = CombineShopBuyerManager.getAllShopNames();
+        List<String> excelNameList = new ArrayList<String>();
+        for(String shopname: shopNames) {
+            //每个店铺名获取相应的刷手列表
+            List<CombineShopBuyer> combineShopBuyerList = CombineShopBuyerManager.getBuyerByShopName(shopname);
+            //生成xls文件
+            String excelName = MiscTool.buildCombineShopBuyerExcel(combineShopBuyerList);
+            excelNameList.add(excelName);
+        }
+
+        //打成zip包
+        byte[] ret = MiscTool.buildDownloadCombineZip(excelNameList, "combineExcelTmp/combine.zip");
+
+        
+
+
+        response().setHeader("Content-Disposition", "attachment;filename=combine.zip");
+        return ok(ret);
+    }
+
 }

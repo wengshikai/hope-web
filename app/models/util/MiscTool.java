@@ -1,23 +1,26 @@
 package models.util;
 
+import models.dbtable.CombineShopBuyer;
 import models.dbtable.TaskTables;
 import models.excel.BuyerTask;
 import models.excel.ShopkeeperTask;
 import models.excel.ShopkeeperTaskBook;
 import models.excel.ShopkeeperTaskList;
 import models.excel.BuyerTaskList;
-import util.FileTool;
-import util.LocalStoreTool;
-import util.ZIPTool;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import util.*;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 import models.BuyerManager;
@@ -208,7 +211,7 @@ public class MiscTool {
                 for(Double d:tmpdl){
                     tmpd = tmpd + d;
                 }
-                sb.append(""+tmpd);
+                sb.append(""+ Misc.formatDoubleForMoney(tmpd));
                 sb.append("\n");
             }
         }
@@ -277,6 +280,62 @@ public class MiscTool {
         ZIPTool.compressFiles2Zip(names.toArray(new String[names.size()]), zipname);
         for(String s:names){
             FileTool.delete(s);
+        }
+    }
+
+
+    /** 生成商家刷手映射表 */
+    public static String buildCombineShopBuyerExcel(List<CombineShopBuyer> combineShopBuyerList) throws Exception {
+        Workbook wb = new XSSFWorkbook();
+        CreationHelper createHelper = wb.getCreationHelper();
+        Sheet sheet = ExcelUtil.getOrCreateSheet(wb, "sheet1");
+
+        //第一列第一行填写店铺名
+        ExcelUtil.getOrCreateCell(sheet,0,0).setCellValue(combineShopBuyerList.get(0).getShopName());
+        int price = 0;
+        for (int index=0; index<combineShopBuyerList.size(); index++) {
+            //填写买家旺旺名
+            ExcelUtil.getOrCreateCell(sheet,index+1,0).setCellValue(combineShopBuyerList.get(index).getBuyerWangwang());
+            //填写金额(数据库存的是分,转化为元)
+            ExcelUtil.getOrCreateCell(sheet,index+1,1).setCellValue(AmountUtil.changeF2Y(new Long(combineShopBuyerList.get(index).getPrice())));
+            //总金额累加
+            price += combineShopBuyerList.get(index).getPrice();
+        }
+
+        //生成xls文件
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+        String dateToday = sdf.format(d);
+        String excelName = "combineExcelTmp/" + dateToday + combineShopBuyerList.get(0).getShopName()
+                + "+" + combineShopBuyerList.size()
+                + "+" + AmountUtil.changeF2Y(String.valueOf(price)) + ".xls";
+
+        try {
+            Path p = Paths.get(excelName);
+            OutputStream fileOut = Files.newOutputStream(p);
+            wb.write(fileOut);
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return excelName;
+    }
+
+
+    /** 生成商家刷手映射表的压缩包 */
+    public static byte[] buildDownloadCombineZip(List<String> excelNameList, String zipName) {
+        ZIPTool.compressFiles2Zip(excelNameList.toArray(new String[excelNameList.size()]), zipName);
+        excelNameList.forEach(FileTool::delete);
+
+        try {
+            byte[] ret = FileTool.getFileContent(zipName);
+            return ret;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            FileTool.delete(zipName);
         }
     }
 }

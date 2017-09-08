@@ -25,7 +25,9 @@
 
     <div class="container">
         <br/><br/><br/><br/>
-        <h1>获取合并后的表格</h1><button type="submit" class="btn btn-info">获取</button>
+        @helper.form(routes.CombineTask.downloadShopBuyerTable()) {
+            <h1>获取合并后的表格</h1> <button type="submit" class="btn btn-info">获取</button>
+        }
     </div>
 
 }
