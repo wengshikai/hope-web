@@ -79,6 +79,8 @@ public class ShopkeeperTaskBook {
         return util.Misc.formatDoubleForMoney(ret);
     }
 
+
+    /** 解析商家任务书excel */
     public boolean parse(String dirpath){
         List<String> list = FileTool.getFileListInDirectory(dirpath);
         Set<String> imgNames = new HashSet<String>();

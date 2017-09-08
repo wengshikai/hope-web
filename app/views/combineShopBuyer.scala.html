@@ -1,0 +1,32 @@
+@global{
+    <div class="container">
+        <br/><br/><br/><br/>
+        @helper.form(action = routes.CombineTask.uploadShopBuyer ,'enctype -> "multipart/form-data") {
+            <h1>刷手合并</h1>
+            @if(flash.contains("success")) {
+                <p class="text-success">
+                @flash.get("success")
+                </p>
+            }
+            @if(flash.contains("error")) {
+                <p class="text-danger">
+                @flash.get("error")
+                </p>
+            }
+            <p>
+                <input type="file" name="shopbuyerzip">
+            </p>
+            <p>
+                <button type="submit" class="btn btn-info">提交</button>
+            </p>
+        }
+    </div>
+
+
+    <div class="container">
+        <br/><br/><br/><br/>
+        <h1>获取合并后的表格</h1><button type="submit" class="btn btn-info">获取</button>
+    </div>
+
+}
+

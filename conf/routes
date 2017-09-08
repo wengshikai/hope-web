@@ -53,6 +53,10 @@ POST        /task/getalltaskList                               controllers.Busin
 POST        /task/deletebytaskbookname                         controllers.BusinessTask.deleteByTaskbookName()
 POST        /task/getshopkeeperbookbyshopkeeperbookname        controllers.BusinessTask.getshopkeeperbookbyshopkeeperbookname()
 
+GET         /combine/combineShopBuyer                           controllers.CombineTask.combineShopBuyer()
+POST        /combine/downloadCombineShopBuyer                   controllers.CombineTask.uploadShopBuyer()
+
+
 GET         /task/clear                                        controllers.BusinessTask.clear()
 GET         /image/*file                                       controllers.AssetsControllers.getImage(file)
 

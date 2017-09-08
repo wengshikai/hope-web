@@ -23,9 +23,6 @@ public class GlobalTool {
             "`mobilephone` varchar(32) NOT NULL,`qq` varchar(32),`wechat` varchar(32), PRIMARY KEY (`shopkeeperId`)," +
             "UNIQUE KEY `shopkeeperAndPhnoe` (`name`,`mobilephone`) ) ; ";
 
-    public static final  String CreateShuashouUser = "CREATE TABLE `ShuashouUser` (`shopkeeperId` bigint auto_increment,`name`  varchar(64) ,"+
-            "`wangwang` varchar(64),`mobilephone` varchar(64),`level` int, PRIMARY KEY (`id`)) ; ";
-
     public static final  String CreateBuyer = "CREATE TABLE `Buyer` (`id` bigint auto_increment ,`name`  varchar(64) ,"+
             "`wangwang` varchar(64),`mobilephone` varchar(64),`level` int, PRIMARY KEY (`id`)) ; ";
 
@@ -89,6 +86,14 @@ public class GlobalTool {
             "`value` int," +
             "PRIMARY KEY (`key`)); ";
 
+    public static final  String CreateCombineShopBuyer = "CREATE TABLE `CombineShopBuyer` (" +
+            "`id` bigint auto_increment ," +
+            "`shopName` varchar(64)," +
+            "`buyerWangwang` varchar(64)," +
+            "`price` int ," +
+            "PRIMARY KEY (`id`), " +
+            "UNIQUE (`shopName`, `buyerWangwang`))";
+
     static {
         Configuration config = Play.application().configuration();
         urlprefix = config.getString("play.http.context", "");
@@ -106,7 +111,7 @@ public class GlobalTool {
         DatabaseTool.dropTable("default","NowTask");
         DatabaseTool.dropTable("default","TaskTables");
         DatabaseTool.dropTable("default","LockTable");
-
+        DatabaseTool.dropTable("default","CombineShopBuyer");
 
 
         DatabaseTool.dosql("user",CreateUser );
@@ -127,10 +132,8 @@ public class GlobalTool {
         DatabaseTool.dosql("default",CreateTaskHistory);
         DatabaseTool.dosql("default",CreateNowTask);
         DatabaseTool.dosql("default",CreateLockTable);
+        DatabaseTool.dosql("default",CreateCombineShopBuyer);
         LockTableManager.insert("TaskTables", 1);
-
-
-
     }
 
     public static void initBuyer(){
@@ -156,6 +159,11 @@ public class GlobalTool {
 
     public static void initLock(){
         LockTableManager.update("TaskTables", 1);
+    }
+
+
+    public static void initCombineShopBuyer() {
+        DatabaseTool.dosql("default","truncate table `CombineShopBuyer`");
     }
 
 }

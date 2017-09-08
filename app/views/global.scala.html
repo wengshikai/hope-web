@@ -37,15 +37,7 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="@{urlprefix}">Home</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">商家管理<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="@{urlprefix}shopkeeper/addshopkeeper">增加商家</a></li>
-                                <li><a href="@{urlprefix}shopkeeper/addshop">增加店铺</a></li>
-                                <li><a href="@{urlprefix}shopkeeper/batchadd">批量增加商家和店铺</a></li>
-                                <li><a href="@{urlprefix}shopkeeper/all">查看所有</a></li>
-                            </ul>
-                        </li>
+
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">刷手管理<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
@@ -55,6 +47,7 @@
                                 <li><a href="@{urlprefix}buyer/clear">清空刷手</a></li>
                             </ul>
                         </li>
+
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">任务管理<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
@@ -64,7 +57,15 @@
                                 <li><a href="@{urlprefix}task/clear">清空任务</a></li>
                             </ul>
                         </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">合并表格<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="@{urlprefix}combine/combineShopBuyer">刷手合并</a></li>
+                            </ul>
+                        </li>
                     </ul>
+
                     @if(ctx.session().get("name")) {
                         <ul class="nav navbar-nav pull-right">
                             <li class="dropdown pull-right">
