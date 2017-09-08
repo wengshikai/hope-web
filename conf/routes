@@ -24,17 +24,6 @@ GET         /logout                                            controllers.Appli
 
 
 
-
-GET         /shopkeeper/addshopkeeper                          controllers.Shopkeeper.addshopkeeper()
-POST        /shopkeeper/addshopkeeper                          controllers.Shopkeeper.doaddshopkeeper()
-GET         /shopkeeper/addshop                                controllers.Shopkeeper.addshop()
-POST        /shopkeeper/addshop                                controllers.Shopkeeper.doaddshop()
-GET         /shopkeeper/batchadd                               controllers.Shopkeeper.batchadd()
-POST        /shopkeeper/batchadd                               controllers.Shopkeeper.dobatchadd()
-GET         /shopkeeper/all                                    controllers.Shopkeeper.all()
-
-
-
 GET         /buyer/addbuyer                                    controllers.Buyer.addbuyer()
 POST        /buyer/doaddbuyer                                  controllers.Buyer.doaddbuyer()
 GET         /buyer/batchadd                                    controllers.Buyer.batchadd()

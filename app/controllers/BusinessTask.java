@@ -186,6 +186,8 @@ public class BusinessTask  extends Controller {
         return ok(allnowtask.render(tasknum,allprice,taskbookMap,ssl, min_num, now_num));
     }
 
+
+    /** 获取所有刷手任务书 */
     @Security.Authenticated(Secured.class)
     public Result allnowbuyertask() {
         int tasknum  = 0;

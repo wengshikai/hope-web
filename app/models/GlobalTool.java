@@ -16,20 +16,10 @@ public class GlobalTool {
     public static final  String CreateUserId = "CREATE TABLE `UserId` " +
             "(`tablename` varchar(64) NOT NULL DEFAULT '',`id` BIGINT NOT NULL DEFAULT 0,PRIMARY KEY (`tablename`)) ; ";
 
-    public static final  String CreateShangjiaUser = "CREATE TABLE `ShangjiaUser` (`id` varchar(64) NOT NULL DEFAULT '',`name`  varchar(64) ,"+
-            "`wangwang` varchar(64),`mobilephone` varchar(64), PRIMARY KEY (`id`)) ; ";
-
-    public static final  String CreateShopkeeper = "CREATE TABLE `Shopkeeper` (`shopkeeperId` bigint auto_increment ,`name`  varchar(32) NOT NULL,"+
-            "`mobilephone` varchar(32) NOT NULL,`qq` varchar(32),`wechat` varchar(32), PRIMARY KEY (`shopkeeperId`)," +
-            "UNIQUE KEY `shopkeeperAndPhnoe` (`name`,`mobilephone`) ) ; ";
-
     public static final  String CreateBuyer = "CREATE TABLE `Buyer` (`id` bigint auto_increment ,`name`  varchar(64) ,"+
             "`wangwang` varchar(64),`mobilephone` varchar(64),`level` int, PRIMARY KEY (`id`)) ; ";
 
     public static final  String CreateUser = "CREATE TABLE `User` (`name` varchar(64) NOT NULL DEFAULT '',`salt` varchar(64) NOT NULL DEFAULT '',`password` varchar(64) NOT NULL DEFAULT '',PRIMARY KEY (`name`)) ;";
-
-    public static final  String CreateDianpu = "CREATE TABLE `Dianpu` (`id` varchar(64) NOT NULL DEFAULT ''," +
-            "`wangwang`  varchar(64) ,PRIMARY KEY (`id`)) ; ";
 
     public static final  String CreateShop = "CREATE TABLE `Shop` (`shopId` bigint auto_increment ," +
             "`shopkeeperId`  bigint ,`shopName`  varchar(64) ,`shopWangwang`  varchar(64) ," +
@@ -102,10 +92,7 @@ public class GlobalTool {
     public static void initDB() {
         DatabaseTool.dropTable("user", "User");
         DatabaseTool.dropTable("default","UserId");
-        DatabaseTool.dropTable("default","Shopkeeper");
-        DatabaseTool.dropTable("default","ShangjiaUser");
         DatabaseTool.dropTable("default","Buyer");
-        DatabaseTool.dropTable("default","Dianpu");
         DatabaseTool.dropTable("default","Shop");
         DatabaseTool.dropTable("default","TaskHistory");
         DatabaseTool.dropTable("default","NowTask");
@@ -123,11 +110,8 @@ public class GlobalTool {
         UserIdManager.insertId("ShangjiaUser", 0);
         UserIdManager.insertId("ShuashouUser",0);
 
-        DatabaseTool.dosql("default",CreateShopkeeper);
         DatabaseTool.dosql("default",CreateTaskTables);
-        DatabaseTool.dosql("default",CreateShangjiaUser);
         DatabaseTool.dosql("default",CreateBuyer);
-        DatabaseTool.dosql("default",CreateDianpu);
         DatabaseTool.dosql("default",CreateShop);
         DatabaseTool.dosql("default",CreateTaskHistory);
         DatabaseTool.dosql("default",CreateNowTask);

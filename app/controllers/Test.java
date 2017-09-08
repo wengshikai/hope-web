@@ -1,10 +1,7 @@
 package controllers;
 
 import models.*;
-import models.data.Dianpu;
-import models.data.ShangjiaUser;
 import models.data.ShuashouUser;
-import models.dbtable.Shopkeeper;
 import models.util.DatabaseTool;
 import play.mvc.*;
 import views.html.*;

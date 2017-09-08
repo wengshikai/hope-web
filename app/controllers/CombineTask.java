@@ -137,9 +137,6 @@ public class CombineTask extends Controller{
         //打成zip包
         byte[] ret = MiscTool.buildDownloadCombineZip(excelNameList, "combineExcelTmp/combine.zip");
 
-        
-
-
         response().setHeader("Content-Disposition", "attachment;filename=combine.zip");
         return ok(ret);
     }
