@@ -210,28 +210,6 @@ public class BusinessTask  extends Controller {
     }
 
 
-
-
-
-
-
-    @Security.Authenticated(Secured.class)
-    public Result getreadyshuashou() {
-        List<String> ssl = NowTaskManager.getDianpu();
-        long now = 0;
-        try {
-             now = TimeTool.getTodayUnixTimestamp();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        long old = now - 86400*30;
-
-        List<String> ss = new ArrayList<String>();
-        List<models.dbtable.Buyer> ssu = BuyerManager.getALlWithNot(ss);
-        return ok(getreadyshuashou.render(ssu));
-    }
-
     public static class buyernumForm {
        public int  buyernum;
     }

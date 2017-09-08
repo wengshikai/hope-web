@@ -62,16 +62,4 @@ public class BuyerManager {
             return 0L;
         }
     }
-
-    public static List<Buyer> getALlWithNot(List<String> names){
-        try {
-            Query query = DatabaseTool.defaultEm.createQuery("select u from Buyer u where u.wangwang not in :names");
-            query.setParameter("names",names);
-            List<Buyer>  entry =(List<Buyer>)query.getResultList();
-            return entry;
-        } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
-            return null;
-        }
-    }
 }
