@@ -1,8 +1,28 @@
 @global{
     <div class="container">
-        <br/><br/><br/><br/>
+        <br/><br/>
+        @helper.form(routes.CombineTask.clearCombineShopBuyer()) {
+            <h1>清除数据</h1>
+            @if(flash.contains("clear_success")) {
+                <p class="text-success">
+                @flash.get("clear_success")
+                </p>
+            }
+            @if(flash.contains("clear_error")) {
+                <p class="text-danger">
+                @flash.get("clear_error")
+                </p>
+            }
+            <button type="submit" class="btn btn-info">清除</button>
+        }
+    </div>
+
+
+    <div class="container">
+        <br/><br/>
         @helper.form(action = routes.CombineTask.uploadShopBuyer ,'enctype -> "multipart/form-data") {
             <h1>刷手合并</h1>
+
             @if(flash.contains("success")) {
                 <p class="text-success">
                 @flash.get("success")
@@ -13,20 +33,22 @@
                 @flash.get("error")
                 </p>
             }
-            <p>
-                <input type="file" name="shopbuyerzip">
-            </p>
-            <p>
-                <button type="submit" class="btn btn-info">提交</button>
-            </p>
+            <input type="file" name="shopbuyerzip">
+            <button type="submit" class="btn btn-info">提交</button>
         }
     </div>
 
 
     <div class="container">
-        <br/><br/><br/><br/>
+        <br/><br/>
         @helper.form(routes.CombineTask.downloadShopBuyerTable()) {
-            <h1>获取合并后的表格</h1> <button type="submit" class="btn btn-info">获取</button>
+            <h1>获取合并后的表格</h1>
+            @if(flash.contains("download_error")) {
+                <p class="text-danger">
+                @flash.get("download_error")
+                </p>
+            }
+            <button type="submit" class="btn btn-info">获取</button>
         }
     </div>
 

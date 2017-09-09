@@ -27,6 +27,33 @@ public class CombineTask extends Controller{
     }
 
 
+    /** 清除商家刷手映射表数据 */
+    public Result clearCombineShopBuyer() {
+
+        /* 删除目录 */
+        FileTool.deleteDirectory("data/combine/");
+
+        /* 初始化数据库 */
+        GlobalTool.initCombineShopBuyer();
+
+        /* 获取所有的店铺名 */
+        List<String> shopNames = CombineShopBuyerManager.getAllShopNames();
+
+        if(shopNames == null || shopNames.size() == 0) {
+            flash("clear_success", "清除数据成功");
+            return redirect(
+                    routes.CombineTask.combineShopBuyer()
+            );
+        } else {
+            flash("clear_error", "清除数据失败");
+            return redirect(
+                    routes.CombineTask.combineShopBuyer()
+            );
+        }
+    }
+
+
+
     /** 上传商家刷手对应表 */
     public Result uploadShopBuyer() {
         String fileNameListStr = "";
@@ -34,13 +61,13 @@ public class CombineTask extends Controller{
         play.mvc.Http.MultipartFormData.FilePart zipFile = body.getFile("shopbuyerzip");
         if (zipFile != null) {
             try {
-                /** 删除目录 */
+                /* 删除目录 */
                 FileTool.deleteDirectory("data/combine/");
-                /** 创建目录 */
+                /* 创建目录 */
                 FileTool.createDestDirectoryIfNotExists("data/combine/");
-                /** 解压上传的文件 */
+                /* 解压上传的文件 */
                 ZIPTool.unZipToFolder(zipFile.getFile().getAbsolutePath(), "data/combine/");
-                /** 获取解压后的所有文件 */
+                /* 获取解压后的所有文件 */
                 List<String> dirList = FileTool.getFileListInDirectory("data/combine/");
                 String dirPath = "";
                 for (String s : dirList) {
@@ -56,10 +83,10 @@ public class CombineTask extends Controller{
                     );
                 }
 
-                /** 先清空表中的所有数据 */
+                /* 先清空表中的所有数据 */
                 GlobalTool.initCombineShopBuyer();
 
-                /** 获取目录下的所有xls文件,依次处理 */
+                /* 获取目录下的所有xls文件,依次处理 */
                 List<String> fileList = FileTool.getFileListInDirectory(dirPath);
                 for(String fileName:fileList){
                     if(fileName.endsWith(".xls")) {
@@ -132,20 +159,27 @@ public class CombineTask extends Controller{
 
         //获取所有的店铺名
         List<String> shopNames = CombineShopBuyerManager.getAllShopNames();
-        List<String> excelNameList = new ArrayList<String>();
-        for(String shopname: shopNames) {
-            //每个店铺名获取相应的刷手列表
-            List<CombineShopBuyer> combineShopBuyerList = CombineShopBuyerManager.getBuyerByShopName(shopname);
-            //生成xls文件
-            String excelName = MiscTool.buildCombineShopBuyerExcel(combineShopBuyerList);
-            excelNameList.add(excelName);
+        if (shopNames != null && shopNames.size() !=0 ) { //判断存在数据才会生成表格
+            List<String> excelNameList = new ArrayList<String>();
+            for (String shopname : shopNames) {
+                //每个店铺名获取相应的刷手列表
+                List<CombineShopBuyer> combineShopBuyerList = CombineShopBuyerManager.getBuyerByShopName(shopname);
+                //生成xls文件
+                String excelName = MiscTool.buildCombineShopBuyerExcel(combineShopBuyerList);
+                excelNameList.add(excelName);
+            }
+
+            //打成zip包
+            byte[] ret = MiscTool.buildDownloadCombineZip(excelNameList, "combineExcelTmp/combine.zip");
+
+            response().setHeader("Content-Disposition", "attachment;filename=combine.zip");
+            return ok(ret);
+        } else {
+            flash("download_error", "没有上传数据源");
+            return redirect(
+                    routes.CombineTask.combineShopBuyer()
+            );
         }
-
-        //打成zip包
-        byte[] ret = MiscTool.buildDownloadCombineZip(excelNameList, "combineExcelTmp/combine.zip");
-
-        response().setHeader("Content-Disposition", "attachment;filename=combine.zip");
-        return ok(ret);
     }
 
 }

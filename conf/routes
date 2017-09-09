@@ -42,6 +42,8 @@ POST        /task/getalltaskList                               controllers.Busin
 POST        /task/deletebytaskbookname                         controllers.BusinessTask.deleteByTaskbookName()
 POST        /task/getshopkeeperbookbyshopkeeperbookname        controllers.BusinessTask.getshopkeeperbookbyshopkeeperbookname()
 
+
+GET         /combine/clearCombineShopBuyer                     controllers.CombineTask.clearCombineShopBuyer()
 GET         /combine/combineShopBuyer                          controllers.CombineTask.combineShopBuyer()
 POST        /combine/uploadShopBuyer                           controllers.CombineTask.uploadShopBuyer()
 POST        /combine/downloadShopBuyerTable                    controllers.CombineTask.downloadShopBuyerTable()
