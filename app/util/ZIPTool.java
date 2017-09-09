@@ -187,28 +187,28 @@ public class ZIPTool {
 
     /**
      * 把一个zip文件解压到一个指定的目录中
-     * @param zipfilename   zip文件抽象地址
-     * @param outputdir     目录绝对地址
+     * @param zipFileName   zip文件抽象地址
+     * @param outputDir     目录绝对地址
      */
-    public static void unZipToFolder(String zipfilename, String outputdir) throws IOException {
-        File zipfile = new File(zipfilename);
-        if (zipfile.exists()) {
-            outputdir = outputdir + File.separator;
-            FileTool.createDestDirectoryIfNotExists(outputdir);
-            //FileUtils.forceMkdir(new File(outputdir));
-            ZipFile zf = new ZipFile(zipfile, System.getProperty("file.encoding"));
-            Enumeration zipArchiveEntrys = zf.getEntries();
-            while (zipArchiveEntrys.hasMoreElements()) {
-                ZipArchiveEntry zipArchiveEntry = (ZipArchiveEntry) zipArchiveEntrys.nextElement();
+    public static void unZipToFolder(String zipFileName, String outputDir) throws IOException {
+        File zipFile = new File(zipFileName);
+        if (zipFile.exists()) {
+            outputDir = outputDir + File.separator;
+            FileTool.createDestDirectoryIfNotExists(outputDir);
+            //FileUtils.forceMkdir(new File(outputDir));
+            ZipFile zf = new ZipFile(zipFile, System.getProperty("file.encoding"));
+            Enumeration zipArchiveEntries = zf.getEntries();
+            while (zipArchiveEntries.hasMoreElements()) {
+                ZipArchiveEntry zipArchiveEntry = (ZipArchiveEntry) zipArchiveEntries.nextElement();
                 if (zipArchiveEntry.isDirectory()) {
-                    FileTool.createDestDirectoryIfNotExists(outputdir + zipArchiveEntry.getName() + File.separator);
-                    //FileUtils.forceMkdir(new File(outputdir + zipArchiveEntry.getName() + File.separator));
+                    FileTool.createDestDirectoryIfNotExists(outputDir + zipArchiveEntry.getName() + File.separator);
+                    //FileUtils.forceMkdir(new File(outputDir + zipArchiveEntry.getName() + File.separator));
                 } else {
-                    IOUtils.copy(zf.getInputStream(zipArchiveEntry), Files.newOutputStream(Paths.get(outputdir + zipArchiveEntry.getName())));
+                    IOUtils.copy(zf.getInputStream(zipArchiveEntry), Files.newOutputStream(Paths.get(outputDir + zipArchiveEntry.getName())));
                 }
             }
         } else {
-            throw new IOException("指定的解压文件不存在：\t" + zipfilename);
+            throw new IOException("指定的解压文件不存在：\t" + zipFileName);
         }
     }
 

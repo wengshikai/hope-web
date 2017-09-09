@@ -29,23 +29,28 @@ public class CombineTask extends Controller{
 
     /** 上传商家刷手对应表 */
     public Result uploadShopBuyer() {
+        String fileNameListStr = "";
         play.mvc.Http.MultipartFormData body = request().body().asMultipartFormData();
         play.mvc.Http.MultipartFormData.FilePart zipFile = body.getFile("shopbuyerzip");
         if (zipFile != null) {
             try {
+                /** 删除目录 */
                 FileTool.deleteDirectory("data/combine/");
+                /** 创建目录 */
                 FileTool.createDestDirectoryIfNotExists("data/combine/");
+                /** 解压上传的文件 */
                 ZIPTool.unZipToFolder(zipFile.getFile().getAbsolutePath(), "data/combine/");
-                List<String> dirlist = FileTool.getFileListInDirectory("data/combine/");
-                String dirpath = "";
-                for (String s : dirlist) {
+                /** 获取解压后的所有文件 */
+                List<String> dirList = FileTool.getFileListInDirectory("data/combine/");
+                String dirPath = "";
+                for (String s : dirList) {
                     if (s.contains("__")) {
                         continue;
                     }
-                    dirpath = s;
+                    dirPath = s;
                 }
-                if (dirpath.equals("")) {
-                    flash("batch_error", "file error!");
+                if (dirPath.equals("")) {
+                    flash("error", "上传失败!");
                     return redirect(
                             routes.CombineTask.combineShopBuyer()
                     );
@@ -55,25 +60,29 @@ public class CombineTask extends Controller{
                 GlobalTool.initCombineShopBuyer();
 
                 /** 获取目录下的所有xls文件,依次处理 */
-                List<String> fileList = FileTool.getFileListInDirectory(dirpath);
+                List<String> fileList = FileTool.getFileListInDirectory(dirPath);
                 for(String fileName:fileList){
                     if(fileName.endsWith(".xls")) {
-                        int doret = addOneShopBuyer(fileName);
-                        if (doret == -1) {
-                            flash("error", "文件解析失败");
+                        try {
+                            addOneShopBuyer(fileName);
+                        } catch (Exception e) {
+                            flash("error", e.getMessage());
                             return redirect(routes.CombineTask.combineShopBuyer());
                         }
-                        if (doret == -2) {
-                            flash("error", "文件插入数据库异常");
-                            return redirect(routes.CombineTask.combineShopBuyer());
-                        }
+
+                        fileNameListStr += "  " + fileName.replaceAll("data/combine/", "") + ";";
                     }
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
+                flash("error", "解析文件失败");
+                return redirect(
+                        routes.CombineTask.combineShopBuyer()
+                );
             }
-            flash("success", "上传成功");
+
+            flash("success", "上传成功,文件列表:" + fileNameListStr);
             return redirect(
                     routes.CombineTask.combineShopBuyer()
             );
@@ -87,10 +96,10 @@ public class CombineTask extends Controller{
 
 
     /** 解析单个xls文件,并写入数据库 */
-    private int addOneShopBuyer(String excelFileName){
+    private void addOneShopBuyer(String excelFileName) throws Exception {
         ArrayList<ArrayList<String>> excel = ExcelUtil.parse(excelFileName);
         if(excel == null || excel.get(0).size()==0 ) {
-            return -1;
+            throw new Exception("文件解析失败:" + excelFileName);
         }
 
         try {
@@ -109,10 +118,8 @@ public class CombineTask extends Controller{
                 }
             }
         } catch (Exception e) {
-            return -2;
+            throw new Exception("插入数据库异常:" + excelFileName);
         }
-
-        return 0;
     }
 
 
