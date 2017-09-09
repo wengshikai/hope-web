@@ -8,5 +8,7 @@ target
 /RUNNING_PID
 .DS_Store
 .jpg
+.zip
 exceltmp/
+combineExcelTmp/
 data/
