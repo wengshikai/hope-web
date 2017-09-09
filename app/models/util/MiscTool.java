@@ -1,13 +1,9 @@
 package models.util;
 
+import models.BuyerManager;
 import models.dbtable.CombineShopBuyer;
 import models.dbtable.TaskTables;
-import models.excel.BuyerTask;
-import models.excel.ShopkeeperTask;
-import models.excel.ShopkeeperTaskBook;
-import models.excel.ShopkeeperTaskList;
-import models.excel.BuyerTaskList;
-import org.apache.poi.ss.usermodel.CreationHelper;
+import models.excel.*;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -21,9 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-
-import models.BuyerManager;
 
 /**
  * Created by weng on 15-12-10.
@@ -287,7 +280,6 @@ public class MiscTool {
     /** 生成商家刷手映射表 */
     public static String buildCombineShopBuyerExcel(List<CombineShopBuyer> combineShopBuyerList) throws Exception {
         Workbook wb = new XSSFWorkbook();
-        CreationHelper createHelper = wb.getCreationHelper();
         Sheet sheet = ExcelUtil.getOrCreateSheet(wb, "sheet1");
 
         //第一列第一行填写店铺名
@@ -306,9 +298,10 @@ public class MiscTool {
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
         String dateToday = sdf.format(d);
-        String excelName = "combineExcelTmp/" + dateToday + combineShopBuyerList.get(0).getShopName()
-                + "+" + combineShopBuyerList.size()
-                + "+" + AmountUtil.changeF2Y(String.valueOf(price)) + ".xls";
+        String excelName = "combineExcelTmp/" + dateToday + "+"
+                + combineShopBuyerList.get(0).getShopName() + "+"
+                + combineShopBuyerList.size() + "+"
+                + AmountUtil.changeF2Y(String.valueOf(price)) + ".xls";
 
         try {
             Path p = Paths.get(excelName);
@@ -323,7 +316,7 @@ public class MiscTool {
     }
 
 
-    /** 生成商家刷手映射表的压缩包 */
+    /** 生成压缩包 */
     public static byte[] buildDownloadCombineZip(List<String> excelNameList, String zipName) {
         ZIPTool.compressFiles2Zip(excelNameList.toArray(new String[excelNameList.size()]), zipName);
         excelNameList.forEach(FileTool::delete);
@@ -334,8 +327,36 @@ public class MiscTool {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
-        } finally {
-            FileTool.delete(zipName);
         }
     }
+
+
+    /** 生成商家汇总表 */
+    public static void buildShopCollectionExcel(List<ShopCollectionExcel> shopCollectionExcels, String zipName) throws Exception {
+        Workbook wb = new XSSFWorkbook();
+        Sheet sheet = ExcelUtil.getOrCreateSheet(wb, "sheet1");
+
+        //第一列填写标题
+        ExcelUtil.getOrCreateCell(sheet,0,0).setCellValue("店铺名");
+        ExcelUtil.getOrCreateCell(sheet,0,1).setCellValue("总单数");
+        ExcelUtil.getOrCreateCell(sheet,0,2).setCellValue("总金额");
+
+        for (int index=0; index<shopCollectionExcels.size(); index++) {
+            ExcelUtil.getOrCreateCell(sheet,index+1,0).setCellValue(shopCollectionExcels.get(index).getShopName());
+            ExcelUtil.getOrCreateCell(sheet,index+1,1).setCellValue(shopCollectionExcels.get(index).getOrderNum());
+            ExcelUtil.getOrCreateCell(sheet,index+1,2).setCellValue(AmountUtil.changeF2Y(String.valueOf(shopCollectionExcels.get(index).getTotalAmount())));
+        }
+
+        try {
+            //生成xls文件
+            Path p = Paths.get(zipName);
+            OutputStream fileOut = Files.newOutputStream(p);
+            wb.write(fileOut);
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

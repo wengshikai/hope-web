@@ -1,17 +1,20 @@
 package controllers;
 
+import com.google.common.collect.Lists;
 import models.CombineShopBuyerManager;
 import models.GlobalTool;
 import models.dbtable.CombineShopBuyer;
+import models.excel.ShopCollectionExcel;
 import models.util.MiscTool;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.Security;
 import util.AmountUtil;
 import util.ExcelUtil;
-import play.mvc.*;
 import util.FileTool;
 import util.ZIPTool;
-import views.html.*;
+import views.html.combineShopBuyer;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,17 +157,37 @@ public class CombineTask extends Controller{
         //获取所有的店铺名
         List<String> shopNames = CombineShopBuyerManager.getAllShopNames();
         if (shopNames != null && shopNames.size() !=0 ) { //判断存在数据才会生成表格
-            List<String> excelNameList = new ArrayList<String>();
-            for (String shopname : shopNames) {
+            List<String> excelNameList = Lists.newArrayList();
+            List<ShopCollectionExcel> shopCollectionExcels = Lists.newArrayList();
+            for (String shopName : shopNames) {
                 //每个店铺名获取相应的刷手列表
-                List<CombineShopBuyer> combineShopBuyerList = CombineShopBuyerManager.getBuyerByShopName(shopname);
+                List<CombineShopBuyer> combineShopBuyerList = CombineShopBuyerManager.getBuyerByShopName(shopName);
                 //生成xls文件
                 String excelName = MiscTool.buildCombineShopBuyerExcel(combineShopBuyerList);
                 excelNameList.add(excelName);
-            }
 
+                //统计单数和金额
+                ShopCollectionExcel shopCollectionExcel = new ShopCollectionExcel();
+                shopCollectionExcel.setShopName(shopName);
+                shopCollectionExcel.setOrderNum(combineShopBuyerList == null ? 0 : combineShopBuyerList.size());
+                int totalAmount = 0;
+                for(CombineShopBuyer combineShopBuyer: combineShopBuyerList) {
+                    totalAmount += combineShopBuyer.getPrice();
+                }
+                shopCollectionExcel.setTotalAmount(totalAmount);
+                shopCollectionExcels.add(shopCollectionExcel);
+            }
             //打成zip包
-            byte[] ret = MiscTool.buildDownloadCombineZip(excelNameList, "combineExcelTmp/combine.zip");
+            MiscTool.buildDownloadCombineZip(excelNameList, "combineExcelTmp/combine.zip");
+
+            //生成商家金额汇总表
+            MiscTool.buildShopCollectionExcel(shopCollectionExcels, "combineExcelTmp/商家汇总.xls");
+
+            //打成总的压缩包
+            List<String> zipFiles = Lists.newArrayList();
+            zipFiles.add("combineExcelTmp/combine.zip");
+            zipFiles.add("combineExcelTmp/商家汇总.xls");
+            byte[] ret = MiscTool.buildDownloadCombineZip(zipFiles, "combineExcelTmp/商家刷手映射表.zip");
 
             response().setHeader("Content-Disposition", "attachment;filename=combine.zip");
             return ok(ret);
