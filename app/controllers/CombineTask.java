@@ -90,20 +90,14 @@ public class CombineTask extends Controller{
                 List<String> fileList = FileTool.getFileListInDirectory(dirPath);
                 for(String fileName:fileList){
                     if(fileName.endsWith(".xls")) {
-                        try {
-                            addOneShopBuyer(fileName);
-                        } catch (Exception e) {
-                            flash("error", e.getMessage());
-                            return redirect(routes.CombineTask.combineShopBuyer());
-                        }
-
+                        addOneShopBuyer(fileName);
                         fileNameListStr += "  " + fileName.replaceAll("data/combine/", "") + ";";
                     }
                 }
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                flash("error", "解析文件失败");
+                flash("error", e.getMessage());
                 return redirect(
                         routes.CombineTask.combineShopBuyer()
                 );

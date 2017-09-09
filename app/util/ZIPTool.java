@@ -204,11 +204,15 @@ public class ZIPTool {
                     FileTool.createDestDirectoryIfNotExists(outputDir + zipArchiveEntry.getName() + File.separator);
                     //FileUtils.forceMkdir(new File(outputDir + zipArchiveEntry.getName() + File.separator));
                 } else {
-                    IOUtils.copy(zf.getInputStream(zipArchiveEntry), Files.newOutputStream(Paths.get(outputDir + zipArchiveEntry.getName())));
+                    try {
+                        IOUtils.copy(zf.getInputStream(zipArchiveEntry), Files.newOutputStream(Paths.get(outputDir + zipArchiveEntry.getName())));
+                    } catch (Exception e) {
+                        throw new IOException("解压这个文件时发生错误:" + zipArchiveEntry.getName());
+                    }
                 }
             }
         } else {
-            throw new IOException("指定的解压文件不存在：\t" + zipFileName);
+            throw new IOException("解压zip包失败:\t" + zipFileName);
         }
     }
 
