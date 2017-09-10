@@ -244,10 +244,11 @@ public class MiscTool {
                         if(!shopIds.containsKey(taskTables.getShopName())) {
                             shopIds.put(taskTables.getShopName(), 0);  //value代表店铺对应的刷手数
                             //sheet1第一列从第三行开始填写店铺名称
-                            ExcelUtil.getOrCreateCell(sheet1,shopIndex+2,0).setCellValue(taskTables.getShopWangwang());
+                            ExcelUtil.getOrCreateCell(sheet1,shopIndex+2,0).setCellValue(taskTables.getShopName());
 
                             //sheet2填写店铺信息
-                            ExcelUtil.getOrCreateCell(sheet2,0,shopIndex*2).setCellValue(taskTables.getShopWangwang());
+                            ExcelUtil.getOrCreateCell(sheet2,0,shopIndex*2).setCellType(Cell.CELL_TYPE_FORMULA);
+                            ExcelUtil.getOrCreateCell(sheet2,0,shopIndex*2).setCellFormula("Sheet1!A" + (shopIndex+3));
                             //背景调整为黄色
                             ExcelUtil.setRegionColor(sheet2, IndexedColors.YELLOW.getIndex(), shopIndex*2, 0, shopIndex*2, 0);
                             shopIndex++;
