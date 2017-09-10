@@ -264,7 +264,8 @@ public class MiscTool {
                         //店铺对应的刷手数+1
                         shopIds.put(taskTables.getShopName(), shopIds.get(taskTables.getShopName()) + 1);
                         //sheet2填写刷手旺旺名和价格
-                        ExcelUtil.getOrCreateCell(sheet2, shopIds.get(taskTables.getShopName()), shopIndex*2-2).setCellValue(buyer.getWangwang());
+                        ExcelUtil.getOrCreateCell(sheet2, shopIds.get(taskTables.getShopName()), shopIndex*2-2).setCellType(Cell.CELL_TYPE_FORMULA);
+                        ExcelUtil.getOrCreateCell(sheet2, shopIds.get(taskTables.getShopName()), shopIndex*2-2).setCellFormula("Sheet1!" + ExcelUtil.getColumnLabels(buyerIndex+1) + "1");
                         ExcelUtil.getOrCreateCell(sheet2, shopIds.get(taskTables.getShopName()), shopIndex*2-1).setCellType(Cell.CELL_TYPE_FORMULA);
                         ExcelUtil.getOrCreateCell(sheet2, shopIds.get(taskTables.getShopName()), shopIndex*2-1).setCellFormula("Sheet1!" + ExcelUtil.getColumnLabels(buyerIndex+1) + (shopIndex+2));
                     }
