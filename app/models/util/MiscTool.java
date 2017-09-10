@@ -33,7 +33,7 @@ public class MiscTool {
         buildDownloadShuashouZip(all, "刷手.zip");
         buildTeamCollectionZip(all, "小组汇总.zip");
         buildDownloadShopkeeperZip(all, "商家.zip");
-        String[] ss = new String[3];
+        String[] ss = new String[4];
         ss[0] = "刷手.zip";
         ss[1] = "小组汇总.zip";
         ss[2] = "商家.zip";
@@ -219,16 +219,18 @@ public class MiscTool {
             List<Buyer> buyerLists = BuyerManager.getALlByTeam(team);
 
             Workbook wb = new XSSFWorkbook();
-            Sheet sheet = ExcelUtil.getOrCreateSheet(wb, "sheet1");
+            Sheet sheet1 = ExcelUtil.getOrCreateSheet(wb, "sheet1");
+            Sheet sheet2 = ExcelUtil.getOrCreateSheet(wb, "sheet2");
 
             //第一行填写标题,第二行填写任务书编号
-            ExcelUtil.getOrCreateCell(sheet,0,0).setCellValue("旺旺昵称");
-            ExcelUtil.getOrCreateCell(sheet,1,0).setCellValue("任务书编号");
+            ExcelUtil.getOrCreateCell(sheet1,0,0).setCellValue("旺旺昵称");
+            ExcelUtil.getOrCreateCell(sheet1,1,0).setCellValue("任务书编号");
+            //这几个单元格的背景调整为黄色
+            ExcelUtil.setRegionColor(sheet1, IndexedColors.YELLOW.getIndex(), 0, 0, 0, 1);
 
             //第一行填写刷手旺旺名
             for (int index=0; index<buyerLists.size(); index++) {
-
-                ExcelUtil.getOrCreateCell(sheet, 0, index+1).setCellValue(buyerLists.get(index).getWangwang());
+                ExcelUtil.getOrCreateCell(sheet1, 0, index+1).setCellValue(buyerLists.get(index).getWangwang());
             }
 
             //从第行开始填写商家信息
@@ -240,59 +242,74 @@ public class MiscTool {
                     if (taskTables.getBuyerWangwang().equals(buyer.getWangwang())) {
                         //如果这个商家id没有被加到索引中，那么添加一下
                         if(!shopIds.containsKey(taskTables.getShopName())) {
-                            shopIds.put(taskTables.getShopName(), shopIndex);
-                            //第一列从第三行开始填写店铺名称
-                            ExcelUtil.getOrCreateCell(sheet,shopIndex+2,0).setCellValue(taskTables.getShopWangwang());
+                            shopIds.put(taskTables.getShopName(), 0);  //value代表店铺对应的刷手数
+                            //sheet1第一列从第三行开始填写店铺名称
+                            ExcelUtil.getOrCreateCell(sheet1,shopIndex+2,0).setCellValue(taskTables.getShopWangwang());
+
+                            //sheet2填写店铺信息
+                            ExcelUtil.getOrCreateCell(sheet2,0,shopIndex*2).setCellValue(taskTables.getShopWangwang());
+                            //背景调整为黄色
+                            ExcelUtil.setRegionColor(sheet2, IndexedColors.YELLOW.getIndex(), shopIndex*2, 0, shopIndex*2, 0);
                             shopIndex++;
                         }
-                        //第二行填写店铺任务书编号,会重复填写,临时方案,待优化
-                        ExcelUtil.getOrCreateCell(sheet,1,buyerIndex+1).setCellValue(taskTables.getBuyerTaskBookId());
+                        //sheet1第二行填写店铺任务书编号,会重复填写,临时方案,待优化
+                        ExcelUtil.getOrCreateCell(sheet1,1,buyerIndex+1).setCellValue(taskTables.getBuyerTaskBookId());
                         if(type.equals("A")) {
-                            //填写商家-刷手对应单元格的价格
-                            ExcelUtil.getOrCreateCell(sheet, shopIndex+1, buyerIndex + 1).setCellValue(taskTables.getUnitPrice());
+                            //sheet1填写商家-刷手对应单元格的价格
+                            ExcelUtil.getOrCreateCell(sheet1, shopIndex+1, buyerIndex + 1).setCellValue(taskTables.getUnitPrice());
                         } else if(type.equals("B")) {
-                            //填写1
-                            ExcelUtil.getOrCreateCell(sheet, shopIndex+1, buyerIndex + 1).setCellValue(1);
+                            //sheet1填写1
+                            ExcelUtil.getOrCreateCell(sheet1, shopIndex+1, buyerIndex + 1).setCellValue(1);
                         }
+                        //店铺对应的刷手数+1
+                        shopIds.put(taskTables.getShopName(), shopIds.get(taskTables.getShopName()) + 1);
+                        //sheet2填写刷手旺旺名和价格
+                        ExcelUtil.getOrCreateCell(sheet2, shopIds.get(taskTables.getShopName()), shopIndex*2-2).setCellValue(buyer.getWangwang());
+                        ExcelUtil.getOrCreateCell(sheet2, shopIds.get(taskTables.getShopName()), shopIndex*2-1).setCellType(Cell.CELL_TYPE_FORMULA);
+                        ExcelUtil.getOrCreateCell(sheet2, shopIds.get(taskTables.getShopName()), shopIndex*2-1).setCellFormula("Sheet1!" + ExcelUtil.getColumnLabels(buyerIndex+1) + (shopIndex+2));
                     }
                 }
             }
 
-            //获取商家的总数
+            //sheet1获取商家的总数
             int shopCount = shopIds.size();
-            //最后几行填写刷手的汇总信息
-            ExcelUtil.getOrCreateCell(sheet, shopCount+2,0).setCellValue("合计单数");
-            ExcelUtil.getOrCreateCell(sheet, shopCount+3,0).setCellValue("合计货款");
-            ExcelUtil.getOrCreateCell(sheet, shopCount+4,0).setCellValue("合计佣金");
-            ExcelUtil.getOrCreateCell(sheet, shopCount+5,0).setCellValue("合计打款金额");
-            ExcelUtil.getOrCreateCell(sheet, shopCount+6,0).setCellValue("单笔佣金");
-            //这几个单元格的背景调整为绿色
-            ExcelUtil.setRegionColor(sheet, IndexedColors.GREEN.getIndex(), 0, shopCount+2, 0, shopCount+6);
-
+            //sheet1最后几行填写刷手的汇总信息
+            ExcelUtil.getOrCreateCell(sheet1, shopCount+2,0).setCellValue("合计单数");
+            ExcelUtil.getOrCreateCell(sheet1, shopCount+3,0).setCellValue("合计货款");
+            ExcelUtil.getOrCreateCell(sheet1, shopCount+4,0).setCellValue("单笔佣金");
+            ExcelUtil.getOrCreateCell(sheet1, shopCount+5,0).setCellValue("合计佣金");
+            ExcelUtil.getOrCreateCell(sheet1, shopCount+6,0).setCellValue("合计打款金额");
+            //sheet1这几个单元格的背景调整为绿色
+            ExcelUtil.setRegionColor(sheet1, IndexedColors.GREEN.getIndex(), 0, shopCount+2, 0, shopCount+6);
             for (int columnNum = 0; columnNum < buyerLists.size(); columnNum++) {
                 //获取列序号对应的字母
                 String columnStr = ExcelUtil.getColumnLabels(columnNum+1);
-                //合计单数
-                ExcelUtil.getOrCreateCell(sheet,shopCount+2, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
-                ExcelUtil.getOrCreateCell(sheet,shopCount+2, columnNum+1).setCellFormula("COUNT(" + columnStr + "3:" + columnStr + (shopCount+2) + ")");
-                //合计货款
-                ExcelUtil.getOrCreateCell(sheet,shopCount+3, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
-                ExcelUtil.getOrCreateCell(sheet,shopCount+3, columnNum+1).setCellFormula("SUM(" + columnStr + "3:" + columnStr + (shopCount+2) + ")");
-                //合计佣金
-                ExcelUtil.getOrCreateCell(sheet,shopCount+4, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
-                ExcelUtil.getOrCreateCell(sheet,shopCount+4, columnNum+1).setCellFormula(columnStr + (shopCount+3) + "*4");
-                //合计打款金额
-                ExcelUtil.getOrCreateCell(sheet,shopCount+5, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
-                ExcelUtil.getOrCreateCell(sheet,shopCount+5, columnNum+1).setCellFormula(columnStr + (shopCount+4) + "+" + columnStr + (shopCount+5));
+                //sheet1合计单数
+                ExcelUtil.getOrCreateCell(sheet1,shopCount+2, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
+                ExcelUtil.getOrCreateCell(sheet1,shopCount+2, columnNum+1).setCellFormula("COUNT(" + columnStr + "3:" + columnStr + (shopCount+2) + ")");
+                //sheet1合计货款
+                ExcelUtil.getOrCreateCell(sheet1,shopCount+3, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
+                ExcelUtil.getOrCreateCell(sheet1,shopCount+3, columnNum+1).setCellFormula("SUM(" + columnStr + "3:" + columnStr + (shopCount+2) + ")");
+                //sheet1合计佣金
+                ExcelUtil.getOrCreateCell(sheet1,shopCount+5, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
+                ExcelUtil.getOrCreateCell(sheet1,shopCount+5, columnNum+1).setCellFormula(columnStr + (shopCount+3) + "*" + columnStr + (shopCount+5));
+                //sheet1合计打款金额
+                ExcelUtil.getOrCreateCell(sheet1,shopCount+6, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
+                ExcelUtil.getOrCreateCell(sheet1,shopCount+6, columnNum+1).setCellFormula(columnStr + (shopCount+4) + "+" + columnStr + (shopCount+6));
             }
 
-            //最后一列商家汇总信息
-            for (int row = 0; row < shopCount + 4; row++) {
+            //sheet1最后一列商家汇总信息
+            for (int row = 0; row < shopCount + 5; row++) {
+                //单笔佣金不汇总
+                if (row == shopCount+2) {
+                    continue;
+                }
+
                 //合计单数
-                ExcelUtil.getOrCreateCell(sheet, row+2, buyerLists.size()+1).setCellType(Cell.CELL_TYPE_FORMULA);
+                ExcelUtil.getOrCreateCell(sheet1, row+2, buyerLists.size()+1).setCellType(Cell.CELL_TYPE_FORMULA);
                 String columnStrBegin = ExcelUtil.getColumnLabels(1);
                 String columnStrEnd = ExcelUtil.getColumnLabels(buyerLists.size());
-                ExcelUtil.getOrCreateCell(sheet,row+2, buyerLists.size()+1).setCellFormula("SUM(" + columnStrBegin + (row+3) + ":" + columnStrEnd + (row+3) + ")");
+                ExcelUtil.getOrCreateCell(sheet1,row+2, buyerLists.size()+1).setCellFormula("SUM(" + columnStrBegin + (row+3) + ":" + columnStrEnd + (row+3) + ")");
             }
 
             try {
