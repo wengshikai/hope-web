@@ -1,9 +1,13 @@
 package models.util;
 
+import com.google.common.collect.Lists;
 import models.BuyerManager;
+import models.dbtable.Buyer;
 import models.dbtable.CombineShopBuyer;
 import models.dbtable.TaskTables;
 import models.excel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -23,39 +27,17 @@ import java.util.*;
  */
 public class MiscTool {
 
-    public static byte[] buildDownloadBuyerZip(List<TaskTables> all){
-        buildDownloadShuashouZip(all, "刷手.zip");
-        try {
-            return FileTool.getFileContent("刷手.zip");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }finally {
-            FileTool.delete("刷手.zip");
-        }
-    }
-
-    public static byte[] buildDownloadShopkeeperZip(List<TaskTables> all){
-        buildDownloadShopkeeperZip(all, "商家.zip");
-        try {
-            return FileTool.getFileContent("商家.zip");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }finally {
-            FileTool.delete("商家.zip");
-        }
-    }
-
-
-
     public static byte[] buildDownloadTaskZip(List<TaskTables> all){
+        FileTool.deleteDirectory("exceltmp");
+        FileTool.createDestDirectoryIfNotExists("exceltmp/");
         buildDownloadShuashouZip(all, "刷手.zip");
+        buildTeamCollectionZip(all, "小组汇总.zip");
         buildDownloadShopkeeperZip(all, "商家.zip");
         String[] ss = new String[3];
         ss[0] = "刷手.zip";
-        ss[1] = "商家.zip";
-        ss[2] = "账单.txt";
+        ss[1] = "小组汇总.zip";
+        ss[2] = "商家.zip";
+        ss[3] = "账单.txt";
         ZIPTool.compressFiles2Zip(ss, "task.zip");
         try {
             byte[] ret = FileTool.getFileContent("task.zip");
@@ -65,12 +47,15 @@ public class MiscTool {
             return null;
         }finally {
             FileTool.delete("刷手.zip");
+            FileTool.delete("小组汇总.zip");
             FileTool.delete("商家.zip");
-            FileTool.delete("task.zip");
             FileTool.delete("账单.txt");
+            FileTool.delete("task.zip");
         }
     }
 
+
+    /** 生成所有刷手任务书(按刷手维度分表) */
     public static void buildDownloadShuashouZip(List<TaskTables> all,String zipname){
         List<models.dbtable.Buyer> ssl = BuyerManager.getALl();
         Map<String,Integer> levelMap = new HashMap();
@@ -83,8 +68,6 @@ public class MiscTool {
         }
         Map<String,String> levelArrayMap = new HashMap();
 
-        FileTool.deleteDirectory("exceltmp");
-        FileTool.createDestDirectoryIfNotExists("exceltmp/");
         Map<Integer,String> idtobuyer = new HashMap<Integer,String>();
         Map<Integer,BuyerTaskList> stlmap = new HashMap<Integer,BuyerTaskList>();
         for(TaskTables task:all){
@@ -137,6 +120,7 @@ public class MiscTool {
             names_realname.add("exceltmp/"+real_n);
             levelArrayMap.put("exceltmp/"+real_n,""+levelMap.get(idtobuyer.get(entry.getKey())));
             try {
+                //生成任务书excel文件
                 ((BuyerTaskList)entry.getValue()).Deal();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -171,8 +155,9 @@ public class MiscTool {
             FileTool.delete(s);
         }
 
-        Map<String,Map<String,List<Double>>> money = new HashMap<String,Map<String,List<Double>>>();
 
+        /* 生成汇总账单 */
+        Map<String,Map<String,List<Double>>> money = new HashMap<String,Map<String,List<Double>>>();
         for(TaskTables taskTables:all){
             Integer index1 = levelMap.get(taskTables.getBuyerWangwang());
             if(money.get(""+index1) == null){
@@ -211,14 +196,121 @@ public class MiscTool {
         try{
             FileTool.putFileContent("账单.txt",sb.toString().getBytes());
         }catch (Exception e){
-            
+            e.printStackTrace();
         }
-
     }
 
+
+
+    public static void buildTeamCollectionZip(List<TaskTables> allTaskTables, String zipName) {
+        List<String> fileNames = Lists.newArrayList();
+        buildTeamCollectionExcel(allTaskTables, "A", fileNames);
+        buildTeamCollectionExcel(allTaskTables, "B", fileNames);
+        //打包
+        MiscTool.buildDownloadZip(fileNames, zipName);
+    }
+
+    /** 生成小组汇总表  type=1:填写价格; type=2:不填写价格*/
+    public static void buildTeamCollectionExcel(List<TaskTables> allTaskTables, String type, List<String> fileNames) {
+        //获取所有的刷手分组
+        List<Integer> buyerTeams =  BuyerManager.getALlTeams();
+        for (Integer team: buyerTeams) {
+            //获取每个小组内的刷手列表
+            List<Buyer> buyerLists = BuyerManager.getALlByTeam(team);
+
+            Workbook wb = new XSSFWorkbook();
+            Sheet sheet = ExcelUtil.getOrCreateSheet(wb, "sheet1");
+
+            //第一行填写标题,第二行填写任务书编号
+            ExcelUtil.getOrCreateCell(sheet,0,0).setCellValue("旺旺昵称");
+            ExcelUtil.getOrCreateCell(sheet,1,0).setCellValue("任务书编号");
+
+            //第一行填写刷手旺旺名
+            for (int index=0; index<buyerLists.size(); index++) {
+
+                ExcelUtil.getOrCreateCell(sheet, 0, index+1).setCellValue(buyerLists.get(index).getWangwang());
+            }
+
+            //从第行开始填写商家信息
+            Map<String,Integer> shopIds = new HashMap<>();
+            Integer shopIndex = 0;
+            for(TaskTables taskTables: allTaskTables) {
+                for (int buyerIndex = 0; buyerIndex < buyerLists.size(); buyerIndex ++) {
+                    Buyer buyer = buyerLists.get(buyerIndex);
+                    if (taskTables.getBuyerWangwang().equals(buyer.getWangwang())) {
+                        //如果这个商家id没有被加到索引中，那么添加一下
+                        if(!shopIds.containsKey(taskTables.getShopName())) {
+                            shopIds.put(taskTables.getShopName(), shopIndex);
+                            //第一列从第三行开始填写店铺名称
+                            ExcelUtil.getOrCreateCell(sheet,shopIndex+2,0).setCellValue(taskTables.getShopWangwang());
+                            shopIndex++;
+                        }
+                        //第二行填写店铺任务书编号,会重复填写,临时方案,待优化
+                        ExcelUtil.getOrCreateCell(sheet,1,buyerIndex+1).setCellValue(taskTables.getBuyerTaskBookId());
+                        if(type.equals("A")) {
+                            //填写商家-刷手对应单元格的价格
+                            ExcelUtil.getOrCreateCell(sheet, shopIndex+1, buyerIndex + 1).setCellValue(taskTables.getUnitPrice());
+                        } else if(type.equals("B")) {
+                            //填写1
+                            ExcelUtil.getOrCreateCell(sheet, shopIndex+1, buyerIndex + 1).setCellValue(1);
+                        }
+                    }
+                }
+            }
+
+            //获取商家的总数
+            int shopCount = shopIds.size();
+            //最后几行填写刷手的汇总信息
+            ExcelUtil.getOrCreateCell(sheet, shopCount+2,0).setCellValue("合计单数");
+            ExcelUtil.getOrCreateCell(sheet, shopCount+3,0).setCellValue("合计货款");
+            ExcelUtil.getOrCreateCell(sheet, shopCount+4,0).setCellValue("合计佣金");
+            ExcelUtil.getOrCreateCell(sheet, shopCount+5,0).setCellValue("合计打款金额");
+            ExcelUtil.getOrCreateCell(sheet, shopCount+6,0).setCellValue("单笔佣金");
+            //这几个单元格的背景调整为绿色
+            ExcelUtil.setRegionColor(sheet, IndexedColors.GREEN.getIndex(), 0, shopCount+2, 0, shopCount+6);
+
+            for (int columnNum = 0; columnNum < buyerLists.size(); columnNum++) {
+                //获取列序号对应的字母
+                String columnStr = ExcelUtil.getColumnLabels(columnNum+1);
+                //合计单数
+                ExcelUtil.getOrCreateCell(sheet,shopCount+2, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
+                ExcelUtil.getOrCreateCell(sheet,shopCount+2, columnNum+1).setCellFormula("COUNT(" + columnStr + "3:" + columnStr + (shopCount+2) + ")");
+                //合计货款
+                ExcelUtil.getOrCreateCell(sheet,shopCount+3, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
+                ExcelUtil.getOrCreateCell(sheet,shopCount+3, columnNum+1).setCellFormula("SUM(" + columnStr + "3:" + columnStr + (shopCount+2) + ")");
+                //合计佣金
+                ExcelUtil.getOrCreateCell(sheet,shopCount+4, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
+                ExcelUtil.getOrCreateCell(sheet,shopCount+4, columnNum+1).setCellFormula(columnStr + (shopCount+3) + "*4");
+                //合计打款金额
+                ExcelUtil.getOrCreateCell(sheet,shopCount+5, columnNum+1).setCellType(Cell.CELL_TYPE_FORMULA);
+                ExcelUtil.getOrCreateCell(sheet,shopCount+5, columnNum+1).setCellFormula(columnStr + (shopCount+4) + "+" + columnStr + (shopCount+5));
+            }
+
+            //最后一列商家汇总信息
+            for (int row = 0; row < shopCount + 4; row++) {
+                //合计单数
+                ExcelUtil.getOrCreateCell(sheet, row+2, buyerLists.size()+1).setCellType(Cell.CELL_TYPE_FORMULA);
+                String columnStrBegin = ExcelUtil.getColumnLabels(1);
+                String columnStrEnd = ExcelUtil.getColumnLabels(buyerLists.size());
+                ExcelUtil.getOrCreateCell(sheet,row+2, buyerLists.size()+1).setCellFormula("SUM(" + columnStrBegin + (row+3) + ":" + columnStrEnd + (row+3) + ")");
+            }
+
+            try {
+                String fileName = "exceltmp/小组汇总" + team + type + ".xls";
+                fileNames.add(fileName);
+                Path p = Paths.get(fileName);
+                OutputStream fileOut = Files.newOutputStream(p);
+                wb.write(fileOut);
+                fileOut.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    /** 生成所有刷手任务书(按商家维度分表) */
     public static void buildDownloadShopkeeperZip(List<TaskTables> all,String zipname){
-        FileTool.deleteDirectory("exceltmp");
-        FileTool.createDestDirectoryIfNotExists("exceltmp/");
         Map<String,ShopkeeperTaskList> stbmap = new HashMap<String,ShopkeeperTaskList>();
         for(TaskTables task:all){
             String uuid = task.getTaskbookUuid()+task.getSubTaskbookId();
@@ -317,7 +409,7 @@ public class MiscTool {
 
 
     /** 生成压缩包 */
-    public static byte[] buildDownloadCombineZip(List<String> excelNameList, String zipName) {
+    public static byte[] buildDownloadZip(List<String> excelNameList, String zipName) {
         ZIPTool.compressFiles2Zip(excelNameList.toArray(new String[excelNameList.size()]), zipName);
         excelNameList.forEach(FileTool::delete);
 

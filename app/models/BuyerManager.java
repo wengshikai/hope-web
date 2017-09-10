@@ -52,6 +52,33 @@ public class BuyerManager {
         }
     }
 
+
+    /** 获取所有刷手分组 */
+    public static List<Integer> getALlTeams(){
+        try {
+            Query query = DatabaseTool.defaultEm.createQuery("select distinct level from Buyer");
+            List<Integer> teams =(List<Integer>)query.getResultList();
+            return teams;
+        } catch (Exception e) {
+            GlobalTool.loger.error("something error!",e);
+            return null;
+        }
+    }
+
+
+    /** 获取指定小组的所有刷手 */
+    public static List<Buyer> getALlByTeam(int level){
+        try {
+            Query query = DatabaseTool.defaultEm.createQuery("select u from Buyer u where u.level = " + level);
+            List<Buyer> entry =(List<Buyer>)query.getResultList();
+            return entry;
+        } catch (Exception e) {
+            GlobalTool.loger.error("something error!",e);
+            return null;
+        }
+    }
+
+
     public static Long getBuyerCount(){
         try {
             Query query = DatabaseTool.defaultEm.createQuery("select count(u) from Buyer u");

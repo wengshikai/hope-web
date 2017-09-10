@@ -13,7 +13,7 @@ import util.AmountUtil;
 import util.ExcelUtil;
 import util.FileTool;
 import util.ZIPTool;
-import views.html.combineShopBuyer;
+import views.html.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +178,7 @@ public class CombineTask extends Controller{
                 shopCollectionExcels.add(shopCollectionExcel);
             }
             //打成zip包
-            MiscTool.buildDownloadCombineZip(excelNameList, "combineExcelTmp/combine.zip");
+            MiscTool.buildDownloadZip(excelNameList, "combineExcelTmp/combine.zip");
 
             //生成商家金额汇总表
             MiscTool.buildShopCollectionExcel(shopCollectionExcels, "combineExcelTmp/商家汇总.xls");
@@ -187,7 +187,7 @@ public class CombineTask extends Controller{
             List<String> zipFiles = Lists.newArrayList();
             zipFiles.add("combineExcelTmp/combine.zip");
             zipFiles.add("combineExcelTmp/商家汇总.xls");
-            byte[] ret = MiscTool.buildDownloadCombineZip(zipFiles, "combineExcelTmp/商家刷手映射表.zip");
+            byte[] ret = MiscTool.buildDownloadZip(zipFiles, "combineExcelTmp/商家刷手映射表.zip");
 
             response().setHeader("Content-Disposition", "attachment;filename=combine.zip");
             return ok(ret);

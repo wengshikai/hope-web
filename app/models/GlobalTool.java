@@ -1,11 +1,10 @@
 package models;
 
 import models.util.DatabaseTool;
-import play.Application;
-import util.FileTool;
 import play.Configuration;
 import play.Logger;
 import play.Play;
+import util.FileTool;
 
 /**
  * Created by weng on 15-9-29.
@@ -82,7 +81,7 @@ public class GlobalTool {
             "`buyerWangwang` varchar(64)," +
             "`price` int ," +
             "PRIMARY KEY (`id`), " +
-            "UNIQUE (`shopName`, `buyerWangwang`))";
+            "UNIQUE (`shopName`, `buyerWangwang`)); ";
 
     static {
         Configuration config = Play.application().configuration();
