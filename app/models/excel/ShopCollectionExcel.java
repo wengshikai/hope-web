@@ -3,6 +3,8 @@ package models.excel;
 
 /**
  * Created by shanmao on 17/9/9.
+ *
+ * 商家汇总信息
  */
 public class ShopCollectionExcel {
     /** 店铺名 */
