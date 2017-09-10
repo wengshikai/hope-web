@@ -10,7 +10,6 @@ GET         /assets/*file                                      controllers.Asset
 # static source, the same as assets
 GET         /static/*file                                      controllers.Assets.at(path="/public", file)
 
-GET         /test                                              controllers.Test.index
 GET         /init                                              controllers.Init.index
 GET         /initLock                                          controllers.BusinessTask.initLock
 GET         /initLockverybegin                                 controllers.BusinessTask.initLockverybegin

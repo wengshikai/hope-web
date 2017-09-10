@@ -1,13 +1,10 @@
 package controllers;
 
-
-import play.*;
-import play.data.Form;
-import play.mvc.*;
-
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.Security;
 import util.HTTPTool;
 import util.LocalStoreTool;
-import views.html.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
