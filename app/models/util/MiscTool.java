@@ -156,7 +156,7 @@ public class MiscTool {
         }
 
 
-        /* 生成汇总账单 */
+        /** 生成汇总账单 */
         Map<String,Map<String,List<Double>>> money = new HashMap<String,Map<String,List<Double>>>();
         for(TaskTables taskTables:all){
             Integer index1 = levelMap.get(taskTables.getBuyerWangwang());
@@ -201,7 +201,7 @@ public class MiscTool {
     }
 
 
-
+    /** 生成小组汇总表的压缩包 */
     public static void buildTeamCollectionZip(List<TaskTables> allTaskTables, String zipName) {
         List<String> fileNames = Lists.newArrayList();
         buildTeamCollectionExcel(allTaskTables, "A", fileNames);
@@ -257,7 +257,7 @@ public class MiscTool {
                         ExcelUtil.getOrCreateCell(sheet1,1,buyerIndex+1).setCellValue(taskTables.getBuyerTaskBookId());
                         if(type.equals("A")) {
                             //sheet1填写商家-刷手对应单元格的价格
-                            ExcelUtil.getOrCreateCell(sheet1, shopIndex+1, buyerIndex + 1).setCellValue(taskTables.getUnitPrice());
+                            ExcelUtil.getOrCreateCell(sheet1, shopIndex+1, buyerIndex + 1).setCellValue(taskTables.getAllPrice());
                         } else if(type.equals("B")) {
                             //sheet1填写1
                             ExcelUtil.getOrCreateCell(sheet1, shopIndex+1, buyerIndex + 1).setCellValue(1);
@@ -433,8 +433,7 @@ public class MiscTool {
         excelNameList.forEach(FileTool::delete);
 
         try {
-            byte[] ret = FileTool.getFileContent(zipName);
-            return ret;
+            return FileTool.getFileContent(zipName);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
