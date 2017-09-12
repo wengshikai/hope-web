@@ -12,6 +12,7 @@ import models.excel.BuyerTaskList;
 import models.excel.ShopkeeperTask;
 import models.excel.ShopkeeperTaskBook;
 import models.excel.ShopkeeperTaskList;
+import models.util.DatabaseTool;
 import models.util.MiscTool;
 import models.util.TaskHelper;
 import play.data.Form;
@@ -71,7 +72,6 @@ public class BusinessTask  extends Controller {
     }
 
     public Result doaddshopkeepertask() {
-        LockTableManager.update("TaskTables",1);
         play.mvc.Http.MultipartFormData body = request().body().asMultipartFormData();
         play.mvc.Http.MultipartFormData.FilePart zip = body.getFile("shopkeeperzip");
         if (zip != null) {
@@ -122,7 +122,6 @@ public class BusinessTask  extends Controller {
 
     /** 批量添加商家任务书 */
     public Result dobatchaddshopkeepertask() {
-        LockTableManager.update("TaskTables",1);
         play.mvc.Http.MultipartFormData body = request().body().asMultipartFormData();
         play.mvc.Http.MultipartFormData.FilePart zip = body.getFile("shopkeeperzip");
         if (zip != null) {
@@ -246,8 +245,17 @@ public class BusinessTask  extends Controller {
             );
         }
 
+        //分配任务
         TaskTablesManager.updatenew(i, BuyerManager.getALl());
-        LockTableManager.update("TaskTables",0);
+
+        //锁定上传功能
+        models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, "TaskTables");
+        if(entry == null) {
+            LockTableManager.insert("TaskTables", 1);
+        } else {
+            LockTableManager.update("TaskTables", 1);
+        }
+
         return redirect(
                 routes.BusinessTask.allnowtask()
         );
@@ -256,7 +264,15 @@ public class BusinessTask  extends Controller {
 
     @Security.Authenticated(Secured.class)
     public Result clear() {
-        LockTableManager.update("TaskTables",1);
+        //解锁上传功能
+        models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, "TaskTables");
+        if(entry == null) {
+            LockTableManager.insert("TaskTables", 0);
+        } else {
+            LockTableManager.update("TaskTables", 0);
+        }
+
+        //清空任务表
         GlobalTool.initTask();
         return redirect(
                 routes.BusinessTask.allnowtask()
@@ -264,8 +280,8 @@ public class BusinessTask  extends Controller {
     }
 
     @Security.Authenticated(Secured.class)
-    public Result initLock() {
-        GlobalTool.initLock();
+    public Result unLockTaskTables() {
+        GlobalTool.initLock("TaskTables");
         return redirect(
                 routes.BusinessTask.allnowtask()
         );
@@ -298,7 +314,13 @@ public class BusinessTask  extends Controller {
 
     @Security.Authenticated(Secured.class)
     public Result deleteByTaskbookName() {
-        LockTableManager.update("TaskTables",1);
+        //解锁上传功能
+        models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, "TaskTables");
+        if(entry == null) {
+            LockTableManager.insert("TaskTables", 0);
+        } else {
+            LockTableManager.update("TaskTables", 0);
+        }
         Form<taskbookNameForm> form = Form.form(taskbookNameForm.class).bindFromRequest();
         String bookName = form.get().taskbookName;
         TaskTablesManager.deleteByTaskbookName(bookName);

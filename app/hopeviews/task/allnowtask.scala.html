@@ -71,14 +71,15 @@
         <br/><br/><br/><br/>
             <h1>获取商家和刷手任务书</h1>
             <p>
-                @if(isLock("TaskTables")){
-                        <button class="btn disabled " type="button">获取</button>
+                @if(!isLock("TaskTables")){
+                    <button class="btn disabled " type="button">获取</button>
                     <span class="text-danger">有新上传或者删除，下载功能已经锁定，请先分配任务</span>
                 }else{
                     @helper.form(routes.BusinessTask.getAllTaskList()) {
                         <p><button type="submit" class="btn btn-info">获取</button></p>
                     }
-                    @helper.form(routes.BusinessTask.initLock()) {
+                    @helper.form(routes.BusinessTask.unLockTaskTables()) {
+                        @*已锁定,可以解锁上传功能*@
                         <button type="submit" class="btn btn-danger">解锁上传功能</button>
                     }
                     <span class="text-danger">任务已经分配，上传功能已经锁定，若要继续上传，需要先解锁上传功能</span>

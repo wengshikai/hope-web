@@ -44,7 +44,7 @@ public class LockTableManager {
     public static boolean isLock(String key){
         try {
             models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, key);
-            if(entry != null && entry.getValue() != 0){
+            if(entry != null && entry.getValue() == 1){
                 return true;
             }else{
                 return false;

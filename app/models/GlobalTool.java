@@ -12,17 +12,11 @@ import util.FileTool;
 public class GlobalTool {
     public static final Logger.ALogger loger =  Logger.of("GLOBAL");
     public static String urlprefix =  "";
-    public static final  String CreateUserId = "CREATE TABLE `UserId` " +
-            "(`tablename` varchar(64) NOT NULL DEFAULT '',`id` BIGINT NOT NULL DEFAULT 0,PRIMARY KEY (`tablename`)) ; ";
 
     public static final  String CreateBuyer = "CREATE TABLE `Buyer` (`id` bigint auto_increment ,`name`  varchar(64) ,"+
             "`wangwang` varchar(64),`mobilephone` varchar(64),`level` int, PRIMARY KEY (`id`)) ; ";
 
     public static final  String CreateUser = "CREATE TABLE `User` (`name` varchar(64) NOT NULL DEFAULT '',`salt` varchar(64) NOT NULL DEFAULT '',`password` varchar(64) NOT NULL DEFAULT '',PRIMARY KEY (`name`)) ;";
-
-    public static final  String CreateShop = "CREATE TABLE `Shop` (`shopId` bigint auto_increment ," +
-            "`shopkeeperId`  bigint ,`shopName`  varchar(64) ,`shopWangwang`  varchar(64) ," +
-            "PRIMARY KEY (`shopId`)) ; ";
 
     public static final  String CreateTaskHistory = "CREATE TABLE `TaskHistory` (`id` varchar(64) NOT NULL DEFAULT '',`shuashou` varchar(64) NOT NULL DEFAULT ''," +
             "`dianpu`  varchar(64) NOT NULL DEFAULT '', `timestamp` INT NOT NULL DEFAULT 0 ,PRIMARY KEY (`id`)) ; ";
@@ -90,9 +84,7 @@ public class GlobalTool {
 
     public static void initDB() {
         DatabaseTool.dropTable("user", "User");
-        DatabaseTool.dropTable("default","UserId");
         DatabaseTool.dropTable("default","Buyer");
-        DatabaseTool.dropTable("default","Shop");
         DatabaseTool.dropTable("default","TaskHistory");
         DatabaseTool.dropTable("default","NowTask");
         DatabaseTool.dropTable("default","TaskTables");
@@ -104,31 +96,21 @@ public class GlobalTool {
         UserManager.insertUser("weng", "123456");
         UserManager.insertUser("yanjue", "yanjue123");
 
-
-        DatabaseTool.dosql("default",CreateUserId);
-        UserIdManager.insertId("ShangjiaUser", 0);
-        UserIdManager.insertId("ShuashouUser",0);
-
-        DatabaseTool.dosql("default",CreateTaskTables);
         DatabaseTool.dosql("default",CreateBuyer);
-        DatabaseTool.dosql("default",CreateShop);
         DatabaseTool.dosql("default",CreateTaskHistory);
         DatabaseTool.dosql("default",CreateNowTask);
+        DatabaseTool.dosql("default",CreateTaskTables);
         DatabaseTool.dosql("default",CreateLockTable);
+        LockTableManager.insert("TaskTables", 0);
         DatabaseTool.dosql("default",CreateCombineShopBuyer);
-        LockTableManager.insert("TaskTables", 1);
     }
 
     public static void initBuyer(){
-        //DatabaseTool.dropTable("default","Buyer");
-        //DatabaseTool.dosql("default",CreateBuyer);
         DatabaseTool.dosql("default","truncate table `Buyer`");
 
     }
 
     public static void initTask(){
-//        DatabaseTool.dropTable("default","TaskTables");
-//        DatabaseTool.dosql("default",CreateTaskTables);
         DatabaseTool.dosql("default","truncate table `TaskTables`");
         FileTool.deleteDirectory("data/image/");
         FileTool.createDestDirectoryIfNotExists("data/image/");
@@ -137,11 +119,17 @@ public class GlobalTool {
     public static void initLockverybegin(){
         DatabaseTool.dropTable("default","LockTable");
         DatabaseTool.dosql("default", CreateLockTable);
-        LockTableManager.insert("TaskTables", 1);
+        LockTableManager.insert("TaskTables", 0);
     }
 
-    public static void initLock(){
-        LockTableManager.update("TaskTables", 1);
+
+    public static void initLock(String key){
+        models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, key);
+        if(entry == null) {
+            LockTableManager.insert("TaskTables", 0);
+        } else {
+            LockTableManager.update("TaskTables", 0);
+        }
     }
 
 

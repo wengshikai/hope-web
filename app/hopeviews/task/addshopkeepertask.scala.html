@@ -3,8 +3,8 @@
 @global{
     <div class="container">
         <br/><br/><br/><br/>
-        @if(isLock("TaskTables")){
-
+        @if(!isLock("TaskTables")){
+            @*没有锁定,才允许上传商家任务书*@
             @helper.form(action = routes.BusinessTask.doaddshopkeepertask() ,'enctype -> "multipart/form-data") {
                 @if(flash.contains("succ")) {
                     <p class="text-success">
@@ -54,8 +54,9 @@
 
 
         }else{
+            @*已锁定,必须先解锁*@
             <p>
-            @helper.form(routes.BusinessTask.initLock()) {
+            @helper.form(routes.BusinessTask.unLockTaskTables()) {
                 <button type="submit" class="btn btn-danger">解锁上传功能</button>
             }
             </p>

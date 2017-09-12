@@ -10,7 +10,7 @@ import javax.persistence.Id;
  */
 @Entity
 public class CombineShopBuyer {
-    @Id @GeneratedValue(strategy= GenerationType.AUTO)
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     /** 买家Id,主键 */
     int id;
     String shopName;
