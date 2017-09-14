@@ -14,12 +14,19 @@ public class CombineShopBuyerManager {
     public static boolean insert(String shopName,String buyerWangwang,int price){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
-            CombineShopBuyer entry = new CombineShopBuyer();
-            entry.setShopName(shopName);
-            entry.setBuyerWangwang(buyerWangwang);
-            entry.setPrice(price);
-            DatabaseTool.defaultEm.persist(entry);
-            DatabaseTool.defaultEm.getTransaction().commit();
+            try {
+                CombineShopBuyer entry = new CombineShopBuyer();
+                entry.setShopName(shopName);
+                entry.setBuyerWangwang(buyerWangwang);
+                entry.setPrice(price);
+                DatabaseTool.defaultEm.persist(entry);
+                DatabaseTool.defaultEm.getTransaction().commit();
+            } catch (Exception e) {
+                //如果插入失败,需要回滚
+                DatabaseTool.defaultEm.getTransaction().rollback();
+                GlobalTool.loger.error("something error!",e);
+                return false;
+            }
         } catch (Exception e) {
             GlobalTool.loger.error("something error!",e);
             return false;

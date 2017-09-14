@@ -93,6 +93,7 @@ public class CombineTask extends Controller{
                 List<String> fileList = FileTool.getFileListInDirectory(dirPath);
                 for(String fileName:fileList){
                     if(fileName.endsWith(".xls")) {
+                        //将表信息写入数据库
                         addOneShopBuyer(fileName);
                         fileNameListStr += "  " + fileName.replaceAll("data/combine/", "") + ";";
                     }
@@ -137,12 +138,14 @@ public class CombineTask extends Controller{
                         }
                         //价格转化为分,存成整数
                         int price = Integer.parseInt(AmountUtil.changeY2F(excel.get(rowIndex).get(columnIndex + 1)));
-                        CombineShopBuyerManager.insert(shopName, buyerWangwang, price);
+                        if(!CombineShopBuyerManager.insert(shopName, buyerWangwang, price)) {
+                            throw new Exception("插入数据库异常!文件名:" + excelFileName + ",店铺名:" + shopName + ",买家旺旺名:" + buyerWangwang);
+                        }
                     }
                 }
             }
         } catch (Exception e) {
-            throw new Exception("插入数据库异常:" + excelFileName);
+            throw new Exception(e);
         }
     }
 
