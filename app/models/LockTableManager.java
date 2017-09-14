@@ -32,7 +32,7 @@ public class LockTableManager {
             DatabaseTool.defaultEm.merge(entry);
             DatabaseTool.defaultEm.getTransaction().commit();
         } catch (Exception e) {
-            GlobalTool.loger.error("calculate password error!",e);
+            GlobalTool.loger.error("update lockTable error!",e);
             return false;
         }finally {
 
@@ -50,7 +50,7 @@ public class LockTableManager {
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.loger.error("calculate password error!",e);
+            GlobalTool.loger.error("find lockTable error!",e);
             return false;
         }finally {
 
