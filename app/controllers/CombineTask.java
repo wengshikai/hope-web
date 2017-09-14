@@ -137,9 +137,15 @@ public class CombineTask extends Controller{
                             break;
                         }
                         //价格转化为分,存成整数
-                        int price = Integer.parseInt(AmountUtil.changeY2F(excel.get(rowIndex).get(columnIndex + 1)));
+                        int price = 0;
+                        try {
+                            price = Integer.parseInt(AmountUtil.changeY2F(excel.get(rowIndex).get(columnIndex + 1)));
+                        } catch (Exception e) {
+                            throw new Exception("读取价格异常:" + excelFileName + ",单元格:" + ExcelUtil.getColumnLabels(columnIndex + 1) + (rowIndex+1));
+                        }
+
                         if(!CombineShopBuyerManager.insert(shopName, buyerWangwang, price)) {
-                            throw new Exception("插入数据库异常!文件名:" + excelFileName + ",店铺名:" + shopName + ",买家旺旺名:" + buyerWangwang);
+                            throw new Exception("插入数据库异常,请检查同一个店铺是否有重复刷手!文件名:" + excelFileName + ",店铺名:" + shopName + ",买家旺旺名:" + buyerWangwang);
                         }
                     }
                 }
