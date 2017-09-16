@@ -11,11 +11,18 @@ public class LockTableManager {
     public static boolean insert(String key,int value){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
-            models.dbtable.LockTable entry = new models.dbtable.LockTable();
-            entry.setKey(key);
-            entry.setValue(value);
-            DatabaseTool.defaultEm.persist(entry);
-            DatabaseTool.defaultEm.getTransaction().commit();
+            try {
+                models.dbtable.LockTable entry = new models.dbtable.LockTable();
+                entry.setKey(key);
+                entry.setValue(value);
+                DatabaseTool.defaultEm.persist(entry);
+                DatabaseTool.defaultEm.getTransaction().commit();
+            } catch (Exception e) {
+                //插入失败,回滚
+                DatabaseTool.defaultEm.getTransaction().rollback();
+                GlobalTool.loger.error("something error!",e);
+                return false;
+            }
         } catch (Exception e) {
             GlobalTool.loger.error("something error!",e);
             return false;
@@ -27,10 +34,17 @@ public class LockTableManager {
     public static boolean update(String key,int value){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
-            models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, key);
-            entry.setValue(value);
-            DatabaseTool.defaultEm.merge(entry);
-            DatabaseTool.defaultEm.getTransaction().commit();
+            try {
+                models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, key);
+                entry.setValue(value);
+                DatabaseTool.defaultEm.merge(entry);
+                DatabaseTool.defaultEm.getTransaction().commit();
+            } catch (Exception e) {
+                //更新失败,回滚
+                DatabaseTool.defaultEm.getTransaction().rollback();
+                GlobalTool.loger.error("something error!",e);
+                return false;
+            }
         } catch (Exception e) {
             GlobalTool.loger.error("update lockTable error!",e);
             return false;

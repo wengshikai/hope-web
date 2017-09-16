@@ -57,27 +57,61 @@ public class Buyer   extends Controller{
         play.mvc.Http.MultipartFormData body = request().body().asMultipartFormData();
         play.mvc.Http.MultipartFormData.FilePart shangjiaexcel = body.getFile("buyerexcel");
         if (shangjiaexcel != null) {
-            java.io.File file = shangjiaexcel.getFile();
-            ArrayList<ArrayList<String>> res = ExcelUtil.parse(file.getAbsolutePath());
-            for(int i=0;i<res.size();i++){
-                ArrayList<String> res_i = res.get(i);
-                if(res_i.get(0).trim().equals("")||res_i.get(1).trim().equals("")||res_i.get(2).trim().equals("")||res_i.get(3).trim().equals("")){
-                    continue;
-                }
-                try{
-                    BuyerManager.insert(res_i.get(0), res_i.get(1), res_i.get(2), Double.valueOf(res_i.get(3)).intValue());
-                }catch (Exception e){
-                    continue;
+            ArrayList<ArrayList<String>> excel;
+            try {
+                try {
+                    java.io.File file = shangjiaexcel.getFile();
+                    excel = ExcelUtil.parse(file.getAbsolutePath());
+                } catch (Exception e) {
+                    throw new Exception("解析文件失败,请确认文件格式是否正确!");
                 }
 
+                if (excel == null || excel.size() == 0) {
+                    throw new Exception("excel中没有读取到数据!");
+                }
+
+                int buyerIndex = 0;
+                for (ArrayList<String> row : excel) {
+                    String name = row.get(0).trim();
+                    if (name.equals("")) {
+                        throw new Exception("刷手名称不能为空!单元格:A" + (buyerIndex+1));
+                    }
+
+                    String wangwang = row.get(1).trim();
+                    if (wangwang.equals("")) {
+                        throw new Exception("刷手旺旺名不能为空!单元格:B" + (buyerIndex+1));
+                    }
+
+                    String mobilephone = row.get(2).trim();
+
+                    int level;
+                    try {
+                        level = Double.valueOf((row.get(3).trim())).intValue();
+                    } catch (Exception e) {
+                        throw new Exception("组别填写错误,当前只能填写整数!单元格:D" + (buyerIndex+1));
+                    }
+
+                    if (!BuyerManager.insert(name, wangwang, mobilephone, level)) {
+                        throw new Exception("插入数据库异常,请检查刷手是否重复!" + "刷手旺旺名:" + wangwang);
+                    }
+                    buyerIndex ++;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                //如果有一条数据插入失败,全部删除
+                GlobalTool.initBuyer();
+                flash("error", e.getMessage());
+                return redirect(
+                        routes.Buyer.batchadd()
+                );
             }
-            String rets = "批量添加刷手成功！";
-            flash("success", rets);
+
+            flash("success", "批量添加刷手成功！");
             return redirect(
                     routes.Buyer.batchadd()
             );
         } else {
-            flash("error", "Missing file");
+            flash("error", "文件不存在");
             return redirect(
                     routes.Buyer.batchadd()
             );

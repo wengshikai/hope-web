@@ -28,47 +28,85 @@ public class TaskTablesManager {
                                  String itemLink,double pcCost,double phoneCost,int subTaskbookId){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
-            TaskTables entry = new TaskTables();
-            entry.setTaskbookUuid(taskbookUuid);
-            entry.setTaskbookName(taskbookName);
-            entry.setId(id);
-            entry.setKeyword(keyword);
-            entry.setTaskRequirement(taskRequirement);
-            entry.setUnitPrice(unitPrice);
-            entry.setGoodsNumber(goodsNumber);
-            entry.setAllPrice(allPrice);
-            entry.setPic1(pic1);
-            entry.setPic2(pic2);
-            entry.setPic3(pic3);
-            entry.setShopkeeperName(shopkeeperName);
-            entry.setShopName(shopName);
-            entry.setShopWangwang(shopWangwang);
-            entry.setItemLink(itemLink);
-            entry.setPcCost(pcCost);
-            entry.setPhoneCost(phoneCost);
-            entry.setSubTaskbookId(subTaskbookId);
-            DatabaseTool.defaultEm.persist(entry);
-            DatabaseTool.defaultEm.getTransaction().commit();
+            try {
+                TaskTables entry = new TaskTables();
+                entry.setTaskbookUuid(taskbookUuid);
+                entry.setTaskbookName(taskbookName);
+                entry.setId(id);
+                entry.setKeyword(keyword);
+                entry.setTaskRequirement(taskRequirement);
+                entry.setUnitPrice(unitPrice);
+                entry.setGoodsNumber(goodsNumber);
+                entry.setAllPrice(allPrice);
+                entry.setPic1(pic1);
+                entry.setPic2(pic2);
+                entry.setPic3(pic3);
+                entry.setShopkeeperName(shopkeeperName);
+                entry.setShopName(shopName);
+                entry.setShopWangwang(shopWangwang);
+                entry.setItemLink(itemLink);
+                entry.setPcCost(pcCost);
+                entry.setPhoneCost(phoneCost);
+                entry.setSubTaskbookId(subTaskbookId);
+                DatabaseTool.defaultEm.persist(entry);
+                DatabaseTool.defaultEm.getTransaction().commit();
+            } catch (Exception e) {
+                //插入失败,回滚
+                DatabaseTool.defaultEm.getTransaction().rollback();
+                GlobalTool.loger.error("something error!",e);
+                return false;
+            }
         } catch (Exception e) {
             GlobalTool.loger.error("something error!",e);
-            DatabaseTool.defaultEm.getTransaction().rollback();
             return false;
         }
         return true;
     }
 
+
     public static boolean insert(TaskTables entry){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
-            DatabaseTool.defaultEm.persist(entry);
-            DatabaseTool.defaultEm.getTransaction().commit();
+            try {
+                DatabaseTool.defaultEm.persist(entry);
+                DatabaseTool.defaultEm.getTransaction().commit();
+            } catch (Exception e) {
+                //插入失败,回滚
+                DatabaseTool.defaultEm.getTransaction().rollback();
+                GlobalTool.loger.error("something error!",e);
+                return false;
+            }
         } catch (Exception e) {
             GlobalTool.loger.error("something error!",e);
-            DatabaseTool.defaultEm.getTransaction().rollback();
             return false;
         }
         return true;
     }
+
+
+    /** 将商家任务设置对应的刷手旺旺名和刷手Id */
+    public static boolean setBuyerWangwangAndtaskbookid(int taskid,String buyerWangwang,int buyerTaskBookId){
+        try {
+            DatabaseTool.defaultEm.getTransaction().begin();
+            try {
+                models.dbtable.TaskTables task = DatabaseTool.defaultEm.find(models.dbtable.TaskTables.class, taskid);
+                task.setBuyerWangwang(buyerWangwang);
+                task.setBuyerTaskBookId(buyerTaskBookId);
+                DatabaseTool.defaultEm.merge(task);
+                DatabaseTool.defaultEm.getTransaction().commit();
+            } catch (Exception e) {
+                //更新失败,回滚
+                DatabaseTool.defaultEm.getTransaction().rollback();
+                GlobalTool.loger.error("something error!",e);
+                return false;
+            }
+        } catch (Exception e) {
+            GlobalTool.loger.error("calculate password error!",e);
+            return false;
+        }
+        return true;
+    }
+
 
     public static List<String> getALlTaskBookName(){
         try {
@@ -223,24 +261,6 @@ public class TaskTablesManager {
             }
         }
         return ret;
-    }
-
-
-    /** 将商家任务设置对应的刷手旺旺名和刷手Id */
-    public static boolean setBuyerWangwangAndtaskbookid(int taskid,String buyerWangwang,int buyerTaskBookId){
-        try {
-            DatabaseTool.defaultEm.getTransaction().begin();
-            models.dbtable.TaskTables  task = DatabaseTool.defaultEm.find(models.dbtable.TaskTables.class, taskid);
-            task.setBuyerWangwang(buyerWangwang);
-            task.setBuyerTaskBookId(buyerTaskBookId);
-            DatabaseTool.defaultEm.merge(task);
-            DatabaseTool.defaultEm.getTransaction().commit();
-        } catch (Exception e) {
-            GlobalTool.loger.error("calculate password error!",e);
-            DatabaseTool.defaultEm.getTransaction().rollback();
-            return false;
-        }
-        return true;
     }
 
 

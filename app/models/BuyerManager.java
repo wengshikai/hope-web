@@ -13,13 +13,20 @@ public class BuyerManager {
     public static boolean insert(String name,String wangwang,String mobilephone,int level){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
-            Buyer  entry = new Buyer();
-            entry.setName(name);
-            entry.setWangwang(wangwang);
-            entry.setMobilephone(mobilephone);
-            entry.setLevel(level);
-            DatabaseTool.defaultEm.persist(entry);
-            DatabaseTool.defaultEm.getTransaction().commit();
+            try {
+                Buyer entry = new Buyer();
+                entry.setName(name);
+                entry.setWangwang(wangwang);
+                entry.setMobilephone(mobilephone);
+                entry.setLevel(level);
+                DatabaseTool.defaultEm.persist(entry);
+                DatabaseTool.defaultEm.getTransaction().commit();
+            } catch (Exception e) {
+                //插入失败,回滚
+                DatabaseTool.defaultEm.getTransaction().rollback();
+                GlobalTool.loger.error("something error!",e);
+                return false;
+            }
         } catch (Exception e) {
             GlobalTool.loger.error("something error!",e);
             return false;

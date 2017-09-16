@@ -93,7 +93,7 @@ public class CombineTask extends Controller{
                 List<String> fileList = FileTool.getFileListInDirectory(dirPath);
                 for(String fileName:fileList){
                     if(fileName.endsWith(".xls")) {
-                        //将表信息写入数据库
+                        //解析单个文件,并将表信息写入数据库
                         addOneShopBuyer(fileName);
                         fileNameListStr += "  " + fileName.replaceAll("data/combine/", "") + ";";
                     }
@@ -130,18 +130,26 @@ public class CombineTask extends Controller{
         try {
             for (int columnIndex = 0; columnIndex < excel.get(0).size(); columnIndex++) {
                 if (columnIndex % 2 == 0) {
-                    String shopName = excel.get(0).get(columnIndex);
+                    String shopName = excel.get(0).get(columnIndex).trim();
+                    if(shopName.equals("")) {
+                        throw new Exception("没有读取到店铺名,请确认是否填写正确!" + excelFileName + ",单元格:" + ExcelUtil.getColumnLabels(columnIndex) + "1");
+                    }
+
                     for (int rowIndex = 1; rowIndex < excel.size(); rowIndex++) {
-                        String buyerWangwang = excel.get(rowIndex).get(columnIndex);
-                        if (buyerWangwang == null || buyerWangwang.equals("")) {
+                        String buyerWangwang = excel.get(rowIndex).get(columnIndex).trim();
+                        if (buyerWangwang.equals("")) {
                             break;
                         }
                         //价格转化为分,存成整数
-                        int price = 0;
+                        int price;
                         try {
-                            price = Integer.parseInt(AmountUtil.changeY2F(excel.get(rowIndex).get(columnIndex + 1)));
+                            price = Integer.parseInt(AmountUtil.changeY2F(excel.get(rowIndex).get(columnIndex + 1).trim()));
                         } catch (Exception e) {
-                            throw new Exception("读取价格异常:" + excelFileName + ",单元格:" + ExcelUtil.getColumnLabels(columnIndex + 1) + (rowIndex+1));
+                            throw new Exception("读取价格异常!" + excelFileName + ",单元格:" + ExcelUtil.getColumnLabels(columnIndex + 1) + (rowIndex+1));
+                        }
+
+                        if(price == 0) {
+                            throw new Exception("读取到的价格为0,请确认是否填写正确!" + excelFileName + ",单元格:" + ExcelUtil.getColumnLabels(columnIndex + 1) + (rowIndex+1));
                         }
 
                         if(!CombineShopBuyerManager.insert(shopName, buyerWangwang, price)) {

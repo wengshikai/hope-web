@@ -18,12 +18,16 @@ public class UserManager {
         try {
             md5password = Security.getMD5(name+password+salt);
             DatabaseTool.userEm.getTransaction().begin();
-            models.data.User  user = new User();
-            user.setName(name);
-            user.setSalt("" + salt);
-            user.setPassword(md5password);
-            DatabaseTool.userEm.persist(user);
-            DatabaseTool.userEm.getTransaction().commit();
+            try {
+                models.data.User user = new User();
+                user.setName(name);
+                user.setSalt("" + salt);
+                user.setPassword(md5password);
+                DatabaseTool.userEm.persist(user);
+                DatabaseTool.userEm.getTransaction().commit();
+            } catch (Exception e) {
+                DatabaseTool.userEm.getTransaction().rollback();
+            }
         } catch (Exception e) {
             GlobalTool.loger.error("calculate password error!",e);
             return false;

@@ -14,7 +14,7 @@ public class GlobalTool {
     public static String urlprefix =  "";
 
     public static final  String CreateBuyer = "CREATE TABLE `Buyer` (`id` bigint auto_increment ,`name`  varchar(64) ,"+
-            "`wangwang` varchar(64),`mobilephone` varchar(64),`level` int, PRIMARY KEY (`id`)) ; ";
+            "`wangwang` varchar(64),`mobilephone` varchar(64),`level` int, PRIMARY KEY (`id`), UNIQUE (`wangwang`)); ";
 
     public static final  String CreateUser = "CREATE TABLE `User` (`name` varchar(64) NOT NULL DEFAULT '',`salt` varchar(64) NOT NULL DEFAULT '',`password` varchar(64) NOT NULL DEFAULT '',PRIMARY KEY (`name`)) ;";
 
@@ -93,6 +93,7 @@ public class GlobalTool {
 
 
         DatabaseTool.dosql("user",CreateUser );
+        DatabaseTool.dosql("user","truncate table `User`");
         UserManager.insertUser("weng", "123456");
         UserManager.insertUser("yanjue", "yanjue123");
 
@@ -101,13 +102,13 @@ public class GlobalTool {
         DatabaseTool.dosql("default",CreateNowTask);
         DatabaseTool.dosql("default",CreateTaskTables);
         DatabaseTool.dosql("default",CreateLockTable);
+        DatabaseTool.dosql("default","truncate table `LockTable`");
         LockTableManager.insert("TaskTables", 0);
         DatabaseTool.dosql("default",CreateCombineShopBuyer);
     }
 
     public static void initBuyer(){
         DatabaseTool.dosql("default","truncate table `Buyer`");
-
     }
 
     public static void initTask(){
