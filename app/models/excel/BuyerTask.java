@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by weng on 15-11-25.
+ * Created by shanmao on 15-11-25.
  */
 public class BuyerTask {
     class imageandtype{

@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by weng on 15-12-10.
+ * Created by shanmao on 15-12-10.
  */
 public class MiscTool {
 

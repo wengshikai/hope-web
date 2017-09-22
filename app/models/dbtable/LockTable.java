@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * Created by weng on 15-12-28.
+ * Created by shanmao on 15-12-28.
  *
  * 任务书上传锁定状态
  */

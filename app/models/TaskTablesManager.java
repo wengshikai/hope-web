@@ -17,11 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by weng on 15-12-16.
+ * Created by shanmao on 15-12-16.
  */
 
 
 public class TaskTablesManager {
+
+    /** 添加任务 */
     public static boolean insert(String taskbookUuid,String taskbookName,int id,String keyword,String taskRequirement,
                                  double unitPrice,int goodsNumber,double allPrice,String pic1,String pic2,String pic3,
                                  String shopkeeperName,String shopName,String shopWangwang,
@@ -51,41 +53,21 @@ public class TaskTablesManager {
                 DatabaseTool.defaultEm.persist(entry);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
+                GlobalTool.loger.error("insert TableTask error!",e);
                 //插入失败,回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
-                GlobalTool.loger.error("something error!",e);
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.loger.error("insert TableTask error!",e);
             return false;
         }
+
         return true;
     }
-
-
-    public static boolean insert(TaskTables entry){
-        try {
-            DatabaseTool.defaultEm.getTransaction().begin();
-            try {
-                DatabaseTool.defaultEm.persist(entry);
-                DatabaseTool.defaultEm.getTransaction().commit();
-            } catch (Exception e) {
-                //插入失败,回滚
-                DatabaseTool.defaultEm.getTransaction().rollback();
-                GlobalTool.loger.error("something error!",e);
-                return false;
-            }
-        } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
-            return false;
-        }
-        return true;
-    }
-
 
     /** 将商家任务设置对应的刷手旺旺名和刷手Id */
-    public static boolean setBuyerWangwangAndtaskbookid(int taskid,String buyerWangwang,int buyerTaskBookId){
+    public static boolean setBuyerWangwangAndTaskBookId(int taskid,String buyerWangwang,int buyerTaskBookId){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
             try {
@@ -95,15 +77,16 @@ public class TaskTablesManager {
                 DatabaseTool.defaultEm.merge(task);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
+                GlobalTool.loger.error("update TableTask error!",e);
                 //更新失败,回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
-                GlobalTool.loger.error("something error!",e);
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.loger.error("calculate password error!",e);
+            GlobalTool.loger.error("update TableTask error!",e);
             return false;
         }
+
         return true;
     }
 
@@ -114,7 +97,7 @@ public class TaskTablesManager {
             List<String> entry =(List<String>)query.getResultList();
             return entry;
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.loger.error("get TableTask error!",e);
             return null;
         }
     }
@@ -143,38 +126,29 @@ public class TaskTablesManager {
         }
     }
 
-    public static boolean deleteByTaskbookUuid(String uuid){
-        EntityManager em = DatabaseTool.defaultFactory.createEntityManager();
-        try {
-            Query query = em.createQuery("delete from TaskTables u where u.taskbookUuid=?1");
-            query.setParameter(1,uuid);
-            em.getTransaction().begin();
-            query.executeUpdate();
-            em.getTransaction().commit();
-            return true;
-        } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
-            return false;
-        }finally {
-            em.close();
-        }
-    }
-
     public static boolean deleteByTaskbookName(String taskbookName){
         EntityManager em = DatabaseTool.defaultFactory.createEntityManager();
         try {
             Query query = em.createQuery("delete from TaskTables u where u.taskbookName=?1");
             query.setParameter(1,taskbookName);
             em.getTransaction().begin();
-            query.executeUpdate();
-            em.getTransaction().commit();
-            return true;
+            try {
+                query.executeUpdate();
+                em.getTransaction().commit();
+            } catch (Exception e) {
+                GlobalTool.loger.error("something error!",e);
+                //更新失败,事务回滚
+                em.getTransaction().rollback();
+                return false;
+            }
         } catch (Exception e) {
             GlobalTool.loger.error("something error!",e);
             return false;
         }finally {
             em.close();
         }
+
+        return true;
     }
 
     public static List<TaskTables> getShopkeeperBookByTaskbookName(String taskbookName){
@@ -265,14 +239,14 @@ public class TaskTablesManager {
 
 
     /** 分配任务 */
-    public static boolean updatenew(int num,List<models.dbtable.Buyer> ssu){
+    public static boolean updateNew(int num,List<models.dbtable.Buyer> ssu){
         Map<String,ArrayList<TaskTables>> alltask = getALlByShopkeeperTaskList();
         int index=0;
         for(Map.Entry<String,ArrayList<TaskTables>> entry:alltask.entrySet()){
             ArrayList<TaskTables> ant = entry.getValue();
             for(TaskTables nt:ant){
                 String ww = ssu.get(index).getWangwang();
-                setBuyerWangwangAndtaskbookid(nt.getTaskid(),ww,index+1);
+                setBuyerWangwangAndTaskBookId(nt.getTaskid(),ww,index+1);
                 index = (index+1)%num;
             }
         }

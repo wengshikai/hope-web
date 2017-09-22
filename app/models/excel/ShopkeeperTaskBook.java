@@ -28,7 +28,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import util.LocalStoreTool;
 
 /**
- * Created by weng on 15-12-16.
+ * Created by shanmao on 15-12-16.
  */
 public class ShopkeeperTaskBook {
     private String taskbookUuid;

@@ -1,7 +1,7 @@
 package util;
 
 /**
- * Created by weng on 15-12-21.
+ * Created by shanmao on 15-12-21.
  */
 public class HTTPTool {
     /**

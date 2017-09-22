@@ -3,7 +3,7 @@ package util;
 import java.math.BigDecimal;
 
 /**
- * Created by weng on 15-12-26.
+ * Created by shanmao on 15-12-26.
  */
 public class Misc {
     public static double formatDoubleForMoney(double d){

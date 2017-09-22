@@ -22,9 +22,9 @@ public class CombineShopBuyerManager {
                 DatabaseTool.defaultEm.persist(entry);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
+                GlobalTool.loger.error("something error!",e);
                 //如果插入失败,需要回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
-                GlobalTool.loger.error("something error!",e);
                 return false;
             }
         } catch (Exception e) {

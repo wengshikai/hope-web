@@ -6,7 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * Created by weng on 15-11-25.
+ * Created by shanmao on 15-11-25.
  */
 public class ImageUtil {
     public static int[] getImageSize(byte[] content) throws IOException {

@@ -10,7 +10,7 @@ import play.Play;
 import java.util.List;
 
 /**
- * Created by weng on 15-9-29.
+ * Created by shanmao on 15-9-29.
  */
 public class SendEmail {
     Email email = new SimpleEmail();

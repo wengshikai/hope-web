@@ -7,7 +7,7 @@ import play.Play;
 import util.FileTool;
 
 /**
- * Created by weng on 15-9-29.
+ * Created by shanmao on 15-9-29.
  */
 public class GlobalTool {
     public static final Logger.ALogger loger =  Logger.of("GLOBAL");

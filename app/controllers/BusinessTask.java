@@ -34,7 +34,7 @@ import java.util.Map;
 
 
 /**
- * Created by weng on 15-11-25.
+ * Created by shanmao on 15-11-25.
  */
 public class BusinessTask  extends Controller {
     public Result addshopkeepertask() {
@@ -63,6 +63,7 @@ public class BusinessTask  extends Controller {
                         task.getKeyword(),task.getTaskRequirement(),task.getUnitPrice(),task.getGoodsNumber(),
                         task.getAllPrice(),task.getPic1(),task.getPic2(),task.getPic3(),task.getShopkeeperName(),
                         task.getShopName(),task.getShopWangwang(),task.getItemLink(),task.getPcCost(),task.getPhoneCost(),task.getSubTaskBookId())){
+                    GlobalTool.loger.error("插入错误:" + tasklist);
                     return 2;
                 }
             }
@@ -152,7 +153,7 @@ public class BusinessTask  extends Controller {
                         return redirect(routes.BusinessTask.addshopkeepertask());
                     }
                     if(doret==2){
-                        flash("batch_error", "插入出错，请删除后重新插入！");
+                        flash("batch_error", "插入出错，请删除后重新插入！文件名:" + subpath);
                         return redirect(routes.BusinessTask.addshopkeepertask());
                     }
                 }
@@ -246,7 +247,7 @@ public class BusinessTask  extends Controller {
         }
 
         //分配任务
-        TaskTablesManager.updatenew(i, BuyerManager.getALl());
+        TaskTablesManager.updateNew(i, BuyerManager.getALl());
 
         //锁定上传功能
         models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, "TaskTables");

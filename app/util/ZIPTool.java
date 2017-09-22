@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.Enumeration;
 
 /**
- * Created by weng on 15-12-8.
+ * Created by shanmao on 15-12-8.
  */
 public class ZIPTool {
     /**

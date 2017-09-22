@@ -7,7 +7,7 @@ import javax.persistence.Query;
 import java.util.List;
 
 /**
- * Created by weng on 15-12-16.
+ * Created by shanmao on 15-12-16.
  */
 public class BuyerManager {
     public static boolean insert(String name,String wangwang,String mobilephone,int level){
@@ -22,30 +22,18 @@ public class BuyerManager {
                 DatabaseTool.defaultEm.persist(entry);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
+                GlobalTool.loger.error("insert Buyer error!",e);
                 //插入失败,回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
-                GlobalTool.loger.error("something error!",e);
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.loger.error("insert Buyer error!",e);
             return false;
         }
+
         return true;
     }
-
-    public static Buyer getByWangwang(String wangwang){
-        try {
-            Query query = DatabaseTool.defaultEm.createQuery("select u from Buyer u where u.wangwang=?1");
-            query.setParameter(1,wangwang);
-            Buyer  entry =(Buyer)query.getSingleResult();
-            return entry;
-        } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
-            return null;
-        }
-    }
-
 
     /** 获取所有刷手 */
     public static List<Buyer> getALl(){
@@ -54,7 +42,7 @@ public class BuyerManager {
             List<Buyer> entry =(List<Buyer>)query.getResultList();
             return entry;
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.loger.error("insert Buyer error!",e);
             return null;
         }
     }

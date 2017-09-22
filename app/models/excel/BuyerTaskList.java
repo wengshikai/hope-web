@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by weng on 15-11-25.
+ * Created by shanmao on 15-11-25.
  */
 public class BuyerTaskList {
     private String filepath;

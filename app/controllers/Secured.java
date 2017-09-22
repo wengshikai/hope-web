@@ -7,7 +7,7 @@ import play.mvc.Http.*;
 import models.*;
 
 /**
- * Created by weng on 15-10-28.
+ * Created by shanmao on 15-10-28.
  */
 public class Secured extends Security.Authenticator{
     @Override
