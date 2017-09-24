@@ -41,37 +41,6 @@ public class BusinessTask  extends Controller {
         return ok(addshopkeepertask.render());
     }
 
-    private int doAddOneTaskBook(String dirpath){
-        ShopkeeperTaskBook shopkeeperTaskBook = new ShopkeeperTaskBook();
-        shopkeeperTaskBook.parse(dirpath);
-        List<TaskTables> test= TaskTablesManager.getShopkeeperBookByTaskbookName(shopkeeperTaskBook.getTaskbookName());
-        if(test != null && test.size() != 0){
-            return 1;
-        }
-
-        // save image
-        Map<String,byte[]> imgContentMap = shopkeeperTaskBook.getPicContentMap();
-        for(Map.Entry<String,byte[]> entry:imgContentMap.entrySet()){
-            LocalStoreTool.putImage(shopkeeperTaskBook.getTaskbookUuid()+entry.getKey(),entry.getValue());
-        }
-        // insert db
-        List<ShopkeeperTaskList> tasklists = shopkeeperTaskBook.getTasklist();
-        for(ShopkeeperTaskList tasklist:tasklists){
-            List<ShopkeeperTask> tasks = tasklist.getTasklist();
-            for(ShopkeeperTask task:tasks){
-                if(!TaskTablesManager.insert(task.getTaskbookUuid(),task.getTaskbookName(),task.getId(),
-                        task.getKeyword(),task.getTaskRequirement(),task.getUnitPrice(),task.getGoodsNumber(),
-                        task.getAllPrice(),task.getPic1(),task.getPic2(),task.getPic3(),task.getShopkeeperName(),
-                        task.getShopName(),task.getShopWangwang(),task.getItemLink(),task.getPcCost(),task.getPhoneCost(),task.getSubTaskBookId())){
-                    GlobalTool.loger.error("插入错误:" + tasklist);
-                    return 2;
-                }
-            }
-        }
-        return 0;
-
-    }
-
     public Result doaddshopkeepertask() {
         play.mvc.Http.MultipartFormData body = request().body().asMultipartFormData();
         play.mvc.Http.MultipartFormData.FilePart zip = body.getFile("shopkeeperzip");
@@ -127,33 +96,38 @@ public class BusinessTask  extends Controller {
         play.mvc.Http.MultipartFormData.FilePart zip = body.getFile("shopkeeperzip");
         if (zip != null) {
             try {
+                //解压zip包
                 FileTool.deleteDirectory("data/zip/");
                 FileTool.createDestDirectoryIfNotExists("data/zip/");
                 ZIPTool.unZipToFolder(zip.getFile().getAbsolutePath(),"data/zip/");
-                List<String> dirlist = FileTool.getFileListInDirectory("data/zip/");
-                String dirpath = "";
-                for(String s:dirlist){
+
+                //读取文件夹(要求必须唯一)
+                List<String> dirList = FileTool.getFileListInDirectory("data/zip/");
+                String dirPath = "";
+                for(String s:dirList){
                     if(s.contains("__")){
                         continue;
                     }
-                    dirpath = s;
+                    dirPath = s;
                 }
-                if(dirpath.equals("")){
-                    flash("batch_error", "file error!");
+                if(dirPath.equals("")){
+                    flash("batch_error", "压缩包内没有读取到文件夹!");
                     return redirect(
                             routes.BusinessTask.addshopkeepertask()
                     );
                 }
 
-                List<String> newdirlist = FileTool.getFileListInDirectoryWithoutDot(dirpath);
-                for(String subpath:newdirlist){
-                    int doret = doAddOneTaskBook(subpath);
-                    if(doret==1){
+                //遍历文件夹中的子目录
+                List<String> newDirList = FileTool.getFileListInDirectoryWithoutDot(dirPath);
+                for(String subPath:newDirList){
+                    //添加每个商家任务书中的所有任务
+                    int rsAddOneBook = doAddOneTaskBook(subPath);
+                    if(rsAddOneBook==1){
                         flash("batch_error", "重复添加");
                         return redirect(routes.BusinessTask.addshopkeepertask());
                     }
-                    if(doret==2){
-                        flash("batch_error", "插入出错，请删除后重新插入！文件名:" + subpath);
+                    if(rsAddOneBook==2){
+                        flash("batch_error", "插入出错，请删除后重新插入！文件名:" + subPath);
                         return redirect(routes.BusinessTask.addshopkeepertask());
                     }
                 }
@@ -161,17 +135,53 @@ public class BusinessTask  extends Controller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            flash("batch_succ", "成功添加");
+            flash("batch_succ", "成功添加!");
             return redirect(
                     routes.BusinessTask.addshopkeepertask()
             );
         } else {
-            flash("batch_error", "Missing file");
+            flash("batch_error", "文件内容为空!");
             return redirect(
                     routes.BusinessTask.addshopkeepertask()
             );
         }
     }
+
+    /** 将一个商家任务书中的所有任务添加到数据库 */
+    private int doAddOneTaskBook(String dirPath){
+        ShopkeeperTaskBook shopkeeperTaskBook = new ShopkeeperTaskBook();
+        //解析商家任务书
+        shopkeeperTaskBook.parse(dirPath);
+
+        //判断是否重复插入
+        List<TaskTables> test= TaskTablesManager.getShopkeeperBookByTaskbookName(shopkeeperTaskBook.getTaskbookName());
+        if(test != null && test.size() != 0){
+            return 1;
+        }
+
+        //保存图片
+        Map<String,byte[]> imgContentMap = shopkeeperTaskBook.getPicContentMap();
+        for(Map.Entry<String,byte[]> entry:imgContentMap.entrySet()){
+            LocalStoreTool.putImage(shopkeeperTaskBook.getTaskbookUuid()+entry.getKey(),entry.getValue());
+        }
+
+        //插入数据
+        List<ShopkeeperTaskList> tasklists = shopkeeperTaskBook.getTasklist();
+        for(ShopkeeperTaskList tasklist:tasklists){
+            List<ShopkeeperTask> tasks = tasklist.getTasklist();
+            for(ShopkeeperTask task:tasks){
+                if(!TaskTablesManager.insert(task.getTaskbookUuid(),task.getTaskbookName(),task.getId(),
+                        task.getKeyword(),task.getTaskRequirement(),task.getUnitPrice(),task.getGoodsNumber(),
+                        task.getAllPrice(),task.getPic1(),task.getPic2(),task.getPic3(),task.getShopkeeperName(),
+                        task.getShopName(),task.getShopWangwang(),task.getItemLink(),task.getPcCost(),task.getPhoneCost(),task.getSubTaskBookId())){
+                    GlobalTool.loger.error("插入错误:" + tasklist);
+                    return 2;
+                }
+            }
+        }
+        return 0;
+    }
+
 
 
 

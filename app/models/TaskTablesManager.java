@@ -156,8 +156,8 @@ public class TaskTablesManager {
         try {
             Query query = em.createQuery("select u from TaskTables u where u.taskbookName=?1");
             query.setParameter(1,taskbookName);
-            List<TaskTables> entrys = (List<TaskTables>)query.getResultList();
-            return entrys;
+            List<TaskTables> taskTablesList = (List<TaskTables>)query.getResultList();
+            return taskTablesList;
         } catch (Exception e) {
             GlobalTool.loger.error("something error!",e);
             return null;
