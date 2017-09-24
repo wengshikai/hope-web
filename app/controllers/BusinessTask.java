@@ -123,7 +123,7 @@ public class BusinessTask  extends Controller {
                     //添加每个商家任务书中的所有任务
                     int rsAddOneBook = doAddOneTaskBook(subPath);
                     if(rsAddOneBook==1){
-                        flash("batch_error", "重复添加");
+                        flash("batch_error", "同一份任务书重复添加！文件名:" + subPath);
                         return redirect(routes.BusinessTask.addshopkeepertask());
                     }
                     if(rsAddOneBook==2){
