@@ -150,6 +150,15 @@ public class BusinessTask  extends Controller {
     /** 将一个商家任务书中的所有任务添加到数据库 */
     private int doAddOneTaskBook(String dirPath){
         ShopkeeperTaskBook shopkeeperTaskBook = new ShopkeeperTaskBook();
+
+        //从文件夹名称中获取商家编号
+        int shopId = 0;
+        try {
+            shopId = Integer.parseInt(dirPath.split("\\s+")[1]);
+        } catch (Exception e) {
+            GlobalTool.loger.error("获取商家编号失败", e);
+        }
+
         //解析商家任务书
         shopkeeperTaskBook.parse(dirPath);
 
@@ -170,7 +179,7 @@ public class BusinessTask  extends Controller {
         for(ShopkeeperTaskList tasklist:tasklists){
             List<ShopkeeperTask> tasks = tasklist.getTasklist();
             for(ShopkeeperTask task:tasks){
-                if(!TaskTablesManager.insert(task.getTaskbookUuid(),task.getTaskbookName(),task.getId(),
+                if(!TaskTablesManager.insert(shopId, task.getTaskbookUuid(),task.getTaskbookName(),task.getId(),
                         task.getKeyword(),task.getTaskRequirement(),task.getUnitPrice(),task.getGoodsNumber(),
                         task.getAllPrice(),task.getPic1(),task.getPic2(),task.getPic3(),task.getShopkeeperName(),
                         task.getShopName(),task.getShopWangwang(),task.getItemLink(),task.getPcCost(),task.getPhoneCost(),task.getSubTaskBookId())){

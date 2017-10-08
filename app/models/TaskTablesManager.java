@@ -24,7 +24,7 @@ import java.util.Map;
 public class TaskTablesManager {
 
     /** 添加任务 */
-    public static boolean insert(String taskbookUuid,String taskbookName,int id,String keyword,String taskRequirement,
+    public static boolean insert(int ShopId, String taskbookUuid,String taskbookName,int id,String keyword,String taskRequirement,
                                  double unitPrice,int goodsNumber,double allPrice,String pic1,String pic2,String pic3,
                                  String shopkeeperName,String shopName,String shopWangwang,
                                  String itemLink,double pcCost,double phoneCost,int subTaskbookId){
@@ -32,6 +32,7 @@ public class TaskTablesManager {
             DatabaseTool.defaultEm.getTransaction().begin();
             try {
                 TaskTables entry = new TaskTables();
+                entry.setShopId(ShopId);
                 entry.setTaskbookUuid(taskbookUuid);
                 entry.setTaskbookName(taskbookName);
                 entry.setId(id);

@@ -21,6 +21,8 @@ public class TaskTables {
     /** 商家任务书名称 */
     String taskbookName;
 
+    /** 商家编号 */
+    int shopId;
     /** 商家姓名 */
     String shopkeeperName;
     /** 店铺名 */
@@ -165,6 +167,14 @@ public class TaskTables {
 
     public void setPic3(String pic3) {
         this.pic3 = pic3;
+    }
+
+    public int getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(int shopId) {
+        this.shopId = shopId;
     }
 
     public String getShopkeeperName() {

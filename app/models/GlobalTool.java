@@ -34,6 +34,7 @@ public class GlobalTool {
             "`pic1` varchar(512)," +
             "`pic2` varchar(512)," +
             "`pic3` varchar(512)," +
+            "`shopId` int ," +
             "`shopkeeperName` varchar(64)," +
             "`shopName` varchar(64)," +
             "`shopWangwang` varchar(64)," +

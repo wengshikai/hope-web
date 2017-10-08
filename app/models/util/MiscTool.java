@@ -59,9 +59,11 @@ public class MiscTool {
     public static void buildDownloadShuashouZip(List<TaskTables> all,String zipname){
         List<models.dbtable.Buyer> ssl = BuyerManager.getALl();
         Map<String,Integer> levelMap = new HashMap();
-        Map<String,String> wangwang2shopname = new HashMap<String,String>();
+        Map<String,String> wangwang2shopName = new HashMap<String,String>();
+        Map<String,Integer> wangwang2shopId = new HashMap<String,Integer>();
         for(TaskTables taskTables:all){
-            wangwang2shopname.put(taskTables.getShopWangwang(),taskTables.getShopName());
+            wangwang2shopName.put(taskTables.getShopWangwang(),taskTables.getShopName());
+            wangwang2shopId.put(taskTables.getShopWangwang(),taskTables.getShopId());
         }
         for(models.dbtable.Buyer buyer:ssl){
             levelMap.put(buyer.getWangwang(),buyer.getLevel());
@@ -171,7 +173,7 @@ public class MiscTool {
             money.get(""+index1).get(sw).add(taskTables.getAllPrice());
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("分组\t旺旺\t店铺\t总单数\t总金额\n");
+        sb.append("分组\t旺旺\t店铺\t商家编号\t总单数\t总金额\n");
         for(Map.Entry<String,Map<String,List<Double>>> entry:money.entrySet()){
             String group = entry.getKey();
             Map<String,List<Double>>  loop2 = entry.getValue();
@@ -180,7 +182,9 @@ public class MiscTool {
                 sb.append("\t");
                 sb.append(entry2.getKey());
                 sb.append("\t");
-                sb.append(wangwang2shopname.get(entry2.getKey()));
+                sb.append(wangwang2shopName.get(entry2.getKey()));
+                sb.append("\t");
+                sb.append(wangwang2shopId.get(entry2.getKey()));
                 sb.append("\t");
                 sb.append(entry2.getValue().size());
                 sb.append("\t");

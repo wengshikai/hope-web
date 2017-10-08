@@ -228,6 +228,7 @@ public class ShopkeeperTask {
         sb.append("pcCost:"+pcCost+" , ");
         sb.append("phoneCost:"+phoneCost+" , ");
         sb.append("buyerWangwang:"+buyerWangwang+" , ");
+        sb.append("buyerTeam:"+buyerTeam+" , ");
         sb.append("buyerTaskBookId:"+buyerTaskBookId+" , ");
         return sb.toString();
     }
