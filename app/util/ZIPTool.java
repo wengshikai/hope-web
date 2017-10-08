@@ -81,7 +81,6 @@ public class ZIPTool {
             files[i] = tmpf;
         }
         compressFiles2Zip(files,zipFilePath);
-
     }
 
     /**

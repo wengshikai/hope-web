@@ -54,11 +54,13 @@ public class TaskTables {
     /** 手机端价格 */
     double phoneCost;
 
-    /** 买家旺旺名 */
+    /** 刷手旺旺名 */
     String buyerWangwang;
-    /** 买家任务书Id */
+    /** 刷手分组 */
+    int buyerTeam;
+    /** 刷手任务书Id */
     int buyerTaskBookId;
-    /** 买家任务书子Id */
+    /** 刷手任务书子Id */
     int subTaskbookId;
 
     public int getSubTaskbookId() {
@@ -211,6 +213,14 @@ public class TaskTables {
 
     public void setPhoneCost(double phoneCost) {
         this.phoneCost = phoneCost;
+    }
+
+    public int getBuyerTeam() {
+        return buyerTeam;
+    }
+
+    public void setBuyerTeam(int buyerTeam) {
+        this.buyerTeam = buyerTeam;
     }
 
     public String getBuyerWangwang() {

@@ -20,25 +20,6 @@ public class GlobalTool {
 
     public static final  String CreateTaskHistory = "CREATE TABLE `TaskHistory` (`id` varchar(64) NOT NULL DEFAULT '',`shuashou` varchar(64) NOT NULL DEFAULT ''," +
             "`dianpu`  varchar(64) NOT NULL DEFAULT '', `timestamp` INT NOT NULL DEFAULT 0 ,PRIMARY KEY (`id`)) ; ";
-    public static final  String CreateNowTask = "CREATE TABLE `NowTask` (" +
-            "`realid` varchar(128) NOT NULL DEFAULT ''," +
-            "`taskbookid` varchar(64) ," +
-            "`id` int ," +
-            "`keyword` varchar(64) ," +
-            "`taskrequirement` varchar(64) ," +
-            "`unit_price` double ," +
-            "`goods_number` int," +
-            "`all_price` double ," +
-            "`pics` varchar(512)," +
-            "`shangjia_name` varchar(64)," +
-            "`shop_name` varchar(64)," +
-            "`shop_wangwang` varchar(64)," +
-            "`item_link` varchar(640)," +
-            "`pc_cost` double ," +
-            "`phone_cost` double ," +
-            "`shuashou_wangwang` varchar(64)," +
-            "`shuashoutaskbookid` int ," +
-            "PRIMARY KEY (`realid`)) ; ";
 
     public static final  String CreateTaskTables = "CREATE TABLE `TaskTables` (" +
             "`taskid` bigint auto_increment ," +
@@ -60,6 +41,7 @@ public class GlobalTool {
             "`pcCost` double ," +
             "`phoneCost` double ," +
             "`buyerWangwang` varchar(64)," +
+            "`buyerTeam` int," +
             "`buyerTaskBookId` int ," +
             "`subTaskbookId` int ," +
             "PRIMARY KEY (`taskid`)); ";
@@ -99,7 +81,6 @@ public class GlobalTool {
 
         DatabaseTool.dosql("default",CreateBuyer);
         DatabaseTool.dosql("default",CreateTaskHistory);
-        DatabaseTool.dosql("default",CreateNowTask);
         DatabaseTool.dosql("default",CreateTaskTables);
         DatabaseTool.dosql("default",CreateLockTable);
         DatabaseTool.dosql("default","truncate table `LockTable`");

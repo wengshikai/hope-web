@@ -26,6 +26,7 @@ public class ShopkeeperTask {
     double pcCost;
     double phoneCost;
     String buyerWangwang;
+    int buyerTeam;
     int buyerTaskBookId;
     int subTaskBookId;
 
@@ -185,6 +186,14 @@ public class ShopkeeperTask {
         return buyerWangwang;
     }
 
+    public void setBuyerTeam(int buyerTeam) {
+        this.buyerTeam = buyerTeam;
+    }
+
+    public int getBuyerTeam() {
+        return buyerTeam;
+    }
+
     public void setBuyerWangwang(String buyerWangwang) {
         this.buyerWangwang = buyerWangwang;
     }
@@ -243,6 +252,7 @@ public class ShopkeeperTask {
         pcCost = task.getPcCost();
         phoneCost = task.getPhoneCost();
         buyerWangwang = task.getBuyerWangwang();
+        buyerTeam = task.getBuyerTeam();
         buyerTaskBookId = task.getBuyerTaskBookId();
     }
 

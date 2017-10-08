@@ -66,13 +66,14 @@ public class TaskTablesManager {
         return true;
     }
 
-    /** 将商家任务设置对应的刷手旺旺名和刷手Id */
-    public static boolean setBuyerWangwangAndTaskBookId(int taskid,String buyerWangwang,int buyerTaskBookId){
+    /** 分配刷手 */
+    public static boolean setBuyerAndTaskBookId(int taskid,String buyerWangwang,int buyerTeam, int buyerTaskBookId){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
             try {
                 models.dbtable.TaskTables task = DatabaseTool.defaultEm.find(models.dbtable.TaskTables.class, taskid);
                 task.setBuyerWangwang(buyerWangwang);
+                task.setBuyerTeam(buyerTeam);
                 task.setBuyerTaskBookId(buyerTaskBookId);
                 DatabaseTool.defaultEm.merge(task);
                 DatabaseTool.defaultEm.getTransaction().commit();
@@ -246,7 +247,9 @@ public class TaskTablesManager {
             ArrayList<TaskTables> ant = entry.getValue();
             for(TaskTables nt:ant){
                 String ww = ssu.get(index).getWangwang();
-                setBuyerWangwangAndTaskBookId(nt.getTaskid(),ww,index+1);
+                int buyerTeam = ssu.get(index).getLevel();
+                //分配刷手
+                setBuyerAndTaskBookId(nt.getTaskid(),ww,buyerTeam,index+1);
                 index = (index+1)%num;
             }
         }

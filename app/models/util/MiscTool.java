@@ -328,7 +328,7 @@ public class MiscTool {
     }
 
 
-    /** 生成所有刷手任务书(按商家维度分表) */
+    /** 生成所有刷手任务书(按商家维度分配) */
     public static void buildDownloadShopkeeperZip(List<TaskTables> all,String zipname){
         Map<String,ShopkeeperTaskList> stbmap = new HashMap<String,ShopkeeperTaskList>();
         for(TaskTables task:all){
@@ -377,6 +377,7 @@ public class MiscTool {
         List<String> names = new ArrayList<String>();
         for(Map.Entry<String,ShopkeeperTaskBook> entry:bookMap.entrySet()){
             ShopkeeperTaskBook stb = entry.getValue();
+            //生成刷手任务书(商家维度)
             stb.generateExcel("exceltmp/"+stb.getTaskbookName());
             names.add("exceltmp/"+stb.getTaskbookName());
         }

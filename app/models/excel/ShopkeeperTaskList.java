@@ -1,17 +1,15 @@
 package models.excel;
 
-import models.excel.ShopkeeperTask;
-import org.apache.poi.hssf.usermodel.HSSFPictureData;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.IOException;
-import java.util.*;
 import util.ExcelUtil;
 import util.ImageUtil;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by shanmao on 15-12-10.
@@ -256,6 +254,7 @@ public class ShopkeeperTaskList {
         ExcelUtil.getOrCreateCell(sheet,top+7,5).setCellValue("总价");
         ExcelUtil.getOrCreateCell(sheet,top+7,6).setCellValue("刷手旺旺账号");
         ExcelUtil.getOrCreateCell(sheet,top+7,7).setCellValue("任务书");
+        ExcelUtil.getOrCreateCell(sheet,top+7,8).setCellValue("刷书分组");
         for(ShopkeeperTask st:tasklist){
             ExcelUtil.getOrCreateCell(sheet,top+7+st.getId()-prelinenum,0).setCellValue(st.getId());
             ExcelUtil.getOrCreateCell(sheet,top+7+st.getId()-prelinenum,1).setCellValue(st.getKeyword());
@@ -265,6 +264,7 @@ public class ShopkeeperTaskList {
             ExcelUtil.getOrCreateCell(sheet,top+7+st.getId()-prelinenum,5).setCellValue(st.getAllPrice());
             ExcelUtil.getOrCreateCell(sheet,top+7+st.getId()-prelinenum,6).setCellValue(st.getBuyerWangwang());
             ExcelUtil.getOrCreateCell(sheet,top+7+st.getId()-prelinenum,7).setCellValue(st.getBuyerTaskBookId());
+            ExcelUtil.getOrCreateCell(sheet,top+7+st.getId()-prelinenum,8).setCellValue(st.getBuyerTeam());
         }
 
 
