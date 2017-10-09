@@ -28,10 +28,6 @@ libraryDependencies += "org.apache.poi" % "poi" %  "3.13"
 libraryDependencies += "org.apache.commons" % "commons-compress" % "1.10"
 libraryDependencies += "commons-io" % "commons-io" % "2.4"
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.4"
-
-//libraryDependencies += "org.glassfish.main.common" % "common-util" % "3.1.2"
-
-
-// libraryDependencies += "com.google.guava" % "guava" % "18.0"
+libraryDependencies += "org.projectlombok" % "lombok" % "1.16.2"
 
 PlayKeys.externalizeResources := false //这句要不要加的？

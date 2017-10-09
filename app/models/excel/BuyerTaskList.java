@@ -47,7 +47,6 @@ public class BuyerTaskList {
             sst.setSheet(sheet);
             sst.setTaskindex(taskindex + 1);
 
-
             sst.deal();
             next();
         }

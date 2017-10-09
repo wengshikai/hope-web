@@ -1,4 +1,6 @@
 package models.dbtable;
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +12,7 @@ import javax.persistence.Id;
  * 买家(刷手)实体
  */
 @Entity
+@Data
 public class Buyer {
     @Id @GeneratedValue(strategy= GenerationType.AUTO)
     /** 买家Id,主键 */
@@ -22,44 +25,4 @@ public class Buyer {
     protected String mobilephone;
     /** 买家所在的组 */
     protected int level;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getWangwang() {
-        return wangwang;
-    }
-
-    public void setWangwang(String wangwang) {
-        this.wangwang = wangwang;
-    }
-
-    public String getMobilephone() {
-        return mobilephone;
-    }
-
-    public void setMobilephone(String mobilephone) {
-        this.mobilephone = mobilephone;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
 }
