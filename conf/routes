@@ -13,13 +13,10 @@ GET         /static/*file                                      controllers.Asset
 GET         /init                                              controllers.Init.index
 GET         /initLockverybegin                                 controllers.BusinessTask.initLockverybegin
 
-# web service
-POST        /service/sendmail                                  controllers.Service.sendemail
 
 GET         /login                                             controllers.Application.login()
 POST        /login                                             controllers.Application.authenticate()
 GET         /logout                                            controllers.Application.logout()
-
 
 
 GET         /buyer/addbuyer                                    controllers.Buyer.addbuyer()

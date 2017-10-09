@@ -1,10 +1,9 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-import play.mvc.Http.*;
-
-import models.*;
+import play.mvc.Http;
+import play.mvc.Http.Context;
+import play.mvc.Result;
+import play.mvc.Security;
 
 /**
  * Created by shanmao on 15-10-28.
