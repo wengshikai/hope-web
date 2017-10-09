@@ -1,7 +1,7 @@
 package models.util;
 
 import com.google.common.collect.Lists;
-import models.BuyerManager;
+import models.dbmanager.BuyerManager;
 import models.dbtable.Buyer;
 import models.dbtable.CombineShopBuyer;
 import models.dbtable.TaskTables;

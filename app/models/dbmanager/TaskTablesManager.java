@@ -1,4 +1,4 @@
-package models;
+package models.dbmanager;
 
 import models.dbtable.TaskTables;
 import models.util.DatabaseTool;

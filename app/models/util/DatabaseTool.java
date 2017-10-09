@@ -1,6 +1,6 @@
 package models.util;
 
-import models.GlobalTool;
+import models.dbmanager.GlobalTool;
 import play.db.DB;
 
 import javax.persistence.EntityManager;

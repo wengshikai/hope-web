@@ -1,7 +1,7 @@
 package controllers;
 
-import models.BuyerManager;
-import models.GlobalTool;
+import models.dbmanager.BuyerManager;
+import models.dbmanager.GlobalTool;
 import util.ExcelUtil;
 import play.data.Form;
 import play.mvc.*;
@@ -99,7 +99,7 @@ public class Buyer   extends Controller{
             } catch (Exception e) {
                 e.printStackTrace();
                 //如果有一条数据插入失败,全部删除
-                GlobalTool.initBuyer();
+                //GlobalTool.initBuyer();
                 flash("error", e.getMessage());
                 return redirect(
                         routes.Buyer.batchadd()

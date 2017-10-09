@@ -1,4 +1,4 @@
-package models;
+package models.dbmanager;
 
 import models.dbtable.Buyer;
 import models.util.DatabaseTool;
@@ -29,6 +29,7 @@ public class BuyerManager {
                 return false;
             }
         } catch (Exception e) {
+            DatabaseTool.defaultEm.getTransaction().rollback();
             GlobalTool.loger.error("insert Buyer error!",e);
             return false;
         }

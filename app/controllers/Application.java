@@ -1,7 +1,6 @@
 package controllers;
 
-import models.UserManager;
-import play.*;
+import models.dbmanager.UserManager;
 import play.data.Form;
 import play.mvc.*;
 

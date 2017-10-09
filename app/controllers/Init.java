@@ -1,6 +1,6 @@
 package controllers;
 
-import models.*;
+import models.dbmanager.GlobalTool;
 import play.mvc.*;
 
 

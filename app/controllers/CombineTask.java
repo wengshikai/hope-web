@@ -1,8 +1,8 @@
 package controllers;
 
 import com.google.common.collect.Lists;
-import models.CombineShopBuyerManager;
-import models.GlobalTool;
+import models.dbmanager.CombineShopBuyerManager;
+import models.dbmanager.GlobalTool;
 import models.dbtable.CombineShopBuyer;
 import models.excel.ShopCollectionExcel;
 import models.util.MiscTool;

@@ -1,4 +1,4 @@
-package models;
+package models.dbmanager;
 
 import models.data.User;
 import models.util.DatabaseTool;

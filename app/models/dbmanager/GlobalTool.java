@@ -1,4 +1,4 @@
-package models;
+package models.dbmanager;
 
 import models.util.DatabaseTool;
 import play.Configuration;
