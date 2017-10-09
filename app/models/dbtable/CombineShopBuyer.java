@@ -16,7 +16,13 @@ public class CombineShopBuyer {
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     /** 买家Id,主键 */
     int id;
+
+    /** 店铺名 */
     String shopName;
+
+    /** 刷手旺旺名 */
     String buyerWangwang;
+
+    /** 价格 */
     int price;
 }

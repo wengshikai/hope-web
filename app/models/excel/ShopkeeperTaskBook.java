@@ -1,13 +1,18 @@
 package models.excel;
 
+import lombok.Data;
 import models.dbtable.TaskTables;
-import util.FileTool;
-import org.apache.poi.hssf.usermodel.HSSFPictureData;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import util.ExcelUtil;
+import util.FileTool;
+import util.ImageUtil;
+import util.LocalStoreTool;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,20 +21,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import util.ExcelUtil;
-import util.ImageUtil;
-
-import org.apache.poi.hssf.usermodel.HSSFPictureData;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import util.LocalStoreTool;
 
 /**
  * Created by shanmao on 15-12-16.
  */
+@Data
 public class ShopkeeperTaskBook {
     private String taskbookUuid;
     private String taskbookName;
@@ -38,30 +34,6 @@ public class ShopkeeperTaskBook {
     private Map<String,byte[]> picContentMap = new HashMap<String,byte[]>();
     private Integer idIndex = 0;
     private Map<String,Integer> allline = new HashMap<String,Integer>();
-
-    public String getTaskbookUuid() {
-        return taskbookUuid;
-    }
-
-    public void setTaskbookUuid(String taskbookUuid) {
-        this.taskbookUuid = taskbookUuid;
-    }
-
-    public String getTaskbookName() {
-        return taskbookName;
-    }
-
-    public void setTaskbookName(String taskbookName) {
-        this.taskbookName = taskbookName;
-    }
-
-    public List<ShopkeeperTaskList> getTasklist() {
-        return tasklist;
-    }
-
-    public void setTasklist(List<ShopkeeperTaskList> tasklist) {
-        this.tasklist = tasklist;
-    }
 
     public int getTaskNum(){
         int ret = 0;
@@ -153,31 +125,6 @@ public class ShopkeeperTaskBook {
         return true;
     }
 
-    @Override
-    public String toString(){
-        StringBuffer sb = new StringBuffer();
-        for(ShopkeeperTaskList stl: tasklist){
-            sb.append(stl.toString());
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
-
-    public static void main(String argv[]){
-        ShopkeeperTaskBook shopkeeperTaskBook = new ShopkeeperTaskBook();
-        shopkeeperTaskBook.parse("/Users/weng/Downloads/10151216/12.17商家任务书/hodo红豆宾慕专卖店/");
-        System.out.print(shopkeeperTaskBook.toString());
-
-    }
-
-    public Map<String, byte[]> getPicContentMap() {
-        return picContentMap;
-    }
-
-    public void setPicContentMap(Map<String, byte[]> picContentMap) {
-        this.picContentMap = picContentMap;
-    }
 
     public void generateExcel(String excelName){
         allline.put("allline",0);

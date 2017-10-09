@@ -2,6 +2,7 @@ package models.excel;
 
 
 
+import lombok.Data;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
@@ -17,6 +18,7 @@ import java.util.Map;
 /**
  * Created by shanmao on 15-11-25.
  */
+@Data
 public class BuyerTask {
     class imageandtype{
         byte[] content;
@@ -175,68 +177,6 @@ public class BuyerTask {
     }
 
 
-
-
-
-
-
-
-
-    public int getTop() {
-        return top;
-    }
-
-    public void setTop(int top) {
-        this.top = top;
-    }
-
-    public int getLeft() {
-        return left;
-    }
-
-    public void setLeft(int left) {
-        this.left = left;
-    }
-
-    public Sheet getSheet() {
-        return sheet;
-    }
-
-    public void setSheet(Sheet sheet) {
-        this.sheet = sheet;
-    }
-    public int getGoodnum() {
-        return goodnum;
-    }
-
-    public void setGoodnum(int goodnum) {
-        this.goodnum = goodnum;
-    }
-
-    public double getUnit_price() {
-        return unit_price;
-    }
-
-    public void setUnit_price(double unit_price) {
-        this.unit_price = unit_price;
-    }
-
-    public String getKeyword() {
-        return keyword;
-    }
-
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
-
-    public String getShopname() {
-        return shopname;
-    }
-
-    public void setShopname(String shopname) {
-        this.shopname = shopname;
-    }
-
     private XSSFRichTextString getOpStr1(){
         XSSFRichTextString richString = new XSSFRichTextString("先点开别人的3样东西，再找到下面这个一模一样的图片点击进去");
         richString.applyFont( 0, 14, BuyerTaskList.blackfont );
@@ -281,43 +221,10 @@ public class BuyerTask {
     }
 
 
-
-    public int getTaskindex() {
-        return taskindex;
-    }
-
-    public void setTaskindex(int taskindex) {
-        this.taskindex = taskindex;
-    }
-
     public void  addPic(byte[] content,String type){
         imageandtype img = new imageandtype();
         img.content = content;
         img.type = type;
         images.add(img);
-    }
-
-    public String getRequirement() {
-        return requirement;
-    }
-
-    public void setRequirement(String requirement) {
-        this.requirement = requirement;
-    }
-
-    public double getPhoneCost() {
-        return phoneCost;
-    }
-
-    public void setPhoneCost(double phoneCost) {
-        this.phoneCost = phoneCost;
-    }
-
-    public double getAllPrice() {
-        return allPrice;
-    }
-
-    public void setAllPrice(double allPrice) {
-        this.allPrice = allPrice;
     }
 }

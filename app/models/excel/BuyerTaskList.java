@@ -1,5 +1,6 @@
 package models.excel;
 
+import lombok.Data;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  * Created by shanmao on 15-11-25.
  */
+@Data
 public class BuyerTaskList {
     private String filepath;
     private Workbook wb;
@@ -135,29 +137,12 @@ public class BuyerTaskList {
 
     }
 
-    public String getFilepath() {
-        return filepath;
-    }
-
-    public void setFilepath(String filepath) {
-        this.filepath = filepath;
-    }
-
     public void next() {
         taskindex++;
         int tmprow = taskindex/3;
         int tmpcolumn = taskindex%3;
         top = 5+13*tmprow;
         left = 1+8*tmpcolumn;
-    }
-
-
-    public int getTaskbookid() {
-        return taskbookid;
-    }
-
-    public void setTaskbookid(int taskbookid) {
-        this.taskbookid = taskbookid;
     }
 
     //G O W
@@ -262,13 +247,5 @@ public class BuyerTaskList {
             sum += (alph.charAt(i)-'A'+1);
         }
         return sum;
-    }
-
-    public List<BuyerTask> getStlist() {
-        return stlist;
-    }
-
-    public void setStlist(List<BuyerTask> stlist) {
-        this.stlist = stlist;
     }
 }

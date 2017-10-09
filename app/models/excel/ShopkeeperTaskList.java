@@ -1,5 +1,6 @@
 package models.excel;
 
+import lombok.Data;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.*;
 import util.ExcelUtil;
@@ -14,6 +15,7 @@ import java.util.Map;
 /**
  * Created by shanmao on 15-12-10.
  */
+@Data
 public class ShopkeeperTaskList {
 
     private List<ShopkeeperTask> tasklist = new ArrayList<ShopkeeperTask>();
@@ -110,111 +112,6 @@ public class ShopkeeperTaskList {
         return index;
     }
 
-    @Override
-    public String toString(){
-        StringBuffer sb = new StringBuffer();
-        for(ShopkeeperTask st:tasklist){
-            sb.append(st.toString());
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
-    public List<ShopkeeperTask> getTasklist() {
-        return tasklist;
-    }
-
-    public void setTasklist(List<ShopkeeperTask> tasklist) {
-        this.tasklist = tasklist;
-    }
-
-    public String getShopkeeperName() {
-        return shopkeeperName;
-    }
-
-    public void setShopkeeperName(String shopkeeperName) {
-        this.shopkeeperName = shopkeeperName;
-    }
-
-    public Map<String, byte[]> getPicContent() {
-        return picContent;
-    }
-
-    public void setPicContent(Map<String, byte[]> picContent) {
-        this.picContent = picContent;
-    }
-
-    public Map<String, String> getPicType() {
-        return picType;
-    }
-
-    public void setPicType(Map<String, String> picType) {
-        this.picType = picType;
-    }
-
-    public String getShopName() {
-        return shopName;
-    }
-
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
-    }
-
-    public String getShopWangwang() {
-        return shopWangwang;
-    }
-
-    public void setShopWangwang(String shopWangwang) {
-        this.shopWangwang = shopWangwang;
-    }
-
-    public String getItemLink() {
-        return itemLink;
-    }
-
-    public void setItemLink(String itemLink) {
-        this.itemLink = itemLink;
-    }
-
-    public double getPcCost() {
-        return pcCost;
-    }
-
-    public void setPcCost(double pcCost) {
-        this.pcCost = pcCost;
-    }
-
-    public double getPhoneCost() {
-        return phoneCost;
-    }
-
-    public void setPhoneCost(double phoneCost) {
-        this.phoneCost = phoneCost;
-    }
-
-    public String getPic1() {
-        return pic1;
-    }
-
-    public void setPic1(String pic1) {
-        this.pic1 = pic1;
-    }
-
-    public String getPic2() {
-        return pic2;
-    }
-
-    public void setPic2(String pic2) {
-        this.pic2 = pic2;
-    }
-
-    public String getPic3() {
-        return pic3;
-    }
-
-    public void setPic3(String pic3) {
-        this.pic3 = pic3;
-    }
 
     public int generateExcel(Sheet sheet,int top,Map<String,Integer> allline,Map<String,byte[]> picContentMap){
         int prelinenum = allline.get("allline");
@@ -337,13 +234,6 @@ public class ShopkeeperTaskList {
         return 7+tasklist.size()+4;
     }
 
-    public int getSubTaskBookid() {
-        return subTaskBookid;
-    }
-
-    public void setSubTaskBookid(int subTaskBookid) {
-        this.subTaskBookid = subTaskBookid;
-    }
 
     public void initByTask(ShopkeeperTask task){
         shopkeeperName = task.shopkeeperName;
@@ -361,10 +251,4 @@ public class ShopkeeperTaskList {
     public void addShopkeeperTask(ShopkeeperTask st){
         tasklist.add(st);
     }
-
-
-
-
-
-
 }

@@ -17,12 +17,16 @@ public class Buyer {
     @Id @GeneratedValue(strategy= GenerationType.AUTO)
     /** 买家Id,主键 */
     int id;
-    /** 买家姓名 */
+
+    /** 刷手姓名 */
     protected String name;
-    /** 买家旺旺名 */
+
+    /** 刷手旺旺名 */
     protected String wangwang;
-    /** 买家手机号 */
+
+    /** 刷手手机号 */
     protected String mobilephone;
-    /** 买家所在的组 */
+
+    /** 刷手分组 */
     protected int level;
 }
