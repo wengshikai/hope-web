@@ -131,10 +131,10 @@ public class BusinessTask  extends Controller {
                 //添加每个商家任务书中的所有任务
                 int rsAddOneBook = doAddOneTaskBook(subPath);
                 if (rsAddOneBook == 1) {
-                    throw new Exception("任务书重复添加！文件名:" + subPath);
+                    throw new Exception("重复添加!目录:" + subPath + "\n");
                 }
                 if (rsAddOneBook == 2) {
-                    throw new Exception("插入数据库出错！文件名:" + subPath);
+                    throw new Exception("插入数据库出错!目录:" + subPath + "\n");
                 }
             } catch (Exception e) {
                 //如果异常,流程不中断,继续解析下一个文件
@@ -146,7 +146,12 @@ public class BusinessTask  extends Controller {
             flash("batch_succ", "成功添加!");
             return redirect(routes.BusinessTask.addShopkeeperTask());
         } else {
-            flash("batch_error", "添加失败!" + exceptionMessage);
+            GlobalTool.loger.error(exceptionMessage);
+            if (exceptionMessage.length() < 1024) { //flash储存的字符串有长度限制,先临时这么做
+                flash("batch_error", "添加失败!" + exceptionMessage);
+            } else {
+                flash("batch_error", "添加失败!" + exceptionMessage.substring(0, 1023));
+            }
             return redirect(routes.BusinessTask.addShopkeeperTask());
         }
     }
@@ -168,7 +173,7 @@ public class BusinessTask  extends Controller {
         try {
             shopkeeperTaskBook.parse(dirPath);
         } catch (Exception e) {
-            throw new Exception("解析任务书出错!文件名:" + dirPath + "  错误详情:" + e.getMessage());
+            throw new Exception("解析文件出错!目录:" + dirPath + "; 详情:" + e.getMessage() + "\n");
         }
 
         //判断是否重复插入

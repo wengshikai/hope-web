@@ -130,8 +130,9 @@ public class ShopkeeperTaskBook {
                     idIndex += stl.parse(sheet, taskListStart.get(i), taskListEnd.get(i), taskbookUuid, taskbookName, picMap, idIndex, tmpSubTaskBookId);
                     tasklist.add(stl);
                 } catch(Exception e) {
+                    //e.printStackTrace();
                     //如果解析过程中有单元格解析失败,那么把报错信息添加到全局变量中
-                    exceptionMessage = exceptionMessage + e.getMessage() + "  ";
+                    exceptionMessage = exceptionMessage + e.getMessage() + ";";
                 }
                 tmpSubTaskBookId++;
             }

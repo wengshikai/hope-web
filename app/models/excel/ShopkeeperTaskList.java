@@ -61,14 +61,14 @@ public class ShopkeeperTaskList {
         try {
             pcCost = ExcelUtil.getCellDouble(sheet, start + 2, 1);
         } catch (Exception e) {
-            throw new Exception("读取单元格出错:" + ExcelUtil.getUnitNo(start + 2, 1));
+            throw new Exception("单元格" + ExcelUtil.getUnitNo(start + 2, 1));
         }
 
         //读取商品移动端价格
         try {
             phoneCost = ExcelUtil.getCellDouble(sheet, start + 3, 1);
         } catch (Exception e) {
-            throw new Exception("读取单元格出错:" + ExcelUtil.getUnitNo(start + 3, 1));
+            throw new Exception("单元格" + ExcelUtil.getUnitNo(start + 3, 1));
         }
 
         String pic = ExcelUtil.getCellString(sheet,start+4,1);
@@ -86,9 +86,15 @@ public class ShopkeeperTaskList {
             if(!ExcelUtil.hasRow(sheet,i)){
                 continue;
             }
-            if(ExcelUtil.getCellDouble(sheet,i,4)==null){
-                continue;
+
+            try {
+                if (ExcelUtil.getCellDouble(sheet, i, 4) == null) {
+                    continue;
+                }
+            } catch (Exception e) {
+                throw new Exception("单元格" + ExcelUtil.getUnitNo(i, 4));
             }
+
             index++;
             ShopkeeperTask st = new ShopkeeperTask();
             st.setId(index+idIndex);
@@ -99,14 +105,14 @@ public class ShopkeeperTaskList {
             try {
                 st.setUnitPrice(ExcelUtil.getCellDouble(sheet, i, 3));
             } catch (Exception e) {
-                throw new Exception("读取单元格出错:" + ExcelUtil.getUnitNo(i, 3));
+                throw new Exception("单元格" + ExcelUtil.getUnitNo(i, 3));
             }
 
             //读取商品数量
             try {
                 st.setGoodsNumber(ExcelUtil.getCellInt(sheet, i, 4));
             } catch (Exception e) {
-                throw new Exception("读取单元格出错:" + ExcelUtil.getUnitNo(i, 4));
+                throw new Exception("单元格" + ExcelUtil.getUnitNo(i, 4));
             }
 
             if(ExcelUtil.getCellDouble(sheet, i, 5) != null){
@@ -114,7 +120,7 @@ public class ShopkeeperTaskList {
                 try {
                     st.setAllPrice(ExcelUtil.getCellDouble(sheet, i, 5));
                 } catch (Exception e) {
-                    throw new Exception("读取单元格出错:" + ExcelUtil.getUnitNo(i, 5));
+                    throw new Exception("单元格" + ExcelUtil.getUnitNo(i, 5));
                 }
             } else {
                 //计算任务总价
