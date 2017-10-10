@@ -33,6 +33,56 @@ public class ShopkeeperTaskList {
     private String pic3 = "";
     private int subTaskBookid;
 
+    //前端打包有些bug,需要手动添加get函数
+    public List<ShopkeeperTask> getTasklist() {
+        return tasklist;
+    }
+
+    public String getShopkeeperName() {
+        return shopkeeperName;
+    }
+
+    public Map<String, byte[]> getPicContent() {
+        return picContent;
+    }
+
+    public Map<String, String> getPicType() {
+        return picType;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public String getShopWangwang() {
+        return shopWangwang;
+    }
+
+    public String getItemLink() {
+        return itemLink;
+    }
+
+    public double getPcCost() {
+        return pcCost;
+    }
+
+    public double getPhoneCost() {
+        return phoneCost;
+    }
+
+    public String getPic1() {
+        return pic1;
+    }
+
+    public String getPic2() {
+        return pic2;
+    }
+
+    public String getPic3() {
+        return pic3;
+    }
+
+
     public int getTaskNum(){
         int ret = 0;
         for(ShopkeeperTask task:tasklist){

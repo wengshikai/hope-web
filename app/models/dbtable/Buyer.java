@@ -29,4 +29,24 @@ public class Buyer {
 
     /** 刷手分组 */
     protected int level;
+
+
+    //前端打包有些bug,需要手动添加get函数
+    public String getName() {
+        return name;
+    }
+
+    public String getWangwang() {
+        return wangwang;
+    }
+
+
+    public String getMobilephone() {
+        return mobilephone;
+    }
+
+
+    public int getLevel() {
+        return level;
+    }
 }

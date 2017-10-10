@@ -35,6 +35,17 @@ public class ShopkeeperTaskBook {
     private Integer idIndex = 0;
     private Map<String,Integer> allline = new HashMap<String,Integer>();
 
+
+    //前端打包有些bug,需要手动添加get函数
+    public List<ShopkeeperTaskList> getTasklist() {
+        return tasklist;
+    }
+
+    public String getTaskbookUuid() {
+        return taskbookUuid;
+    }
+
+
     public int getTaskNum(){
         int ret = 0;
         for(ShopkeeperTaskList task:tasklist){

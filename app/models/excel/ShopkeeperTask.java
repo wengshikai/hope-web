@@ -31,6 +31,103 @@ public class ShopkeeperTask {
     int buyerTaskBookId;
     int subTaskBookId;
 
+    //前端打包有些bug,需要手动添加get函数
+    public int getSubTaskBookId() {
+        return subTaskBookId;
+    }
+
+    public int getTaskid() {
+        return taskid;
+    }
+
+    public String getTaskbookUuid() {
+        return taskbookUuid;
+    }
+
+    public String getTaskbookName() {
+        return taskbookName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public String getTaskRequirement() {
+        return taskRequirement;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public int getGoodsNumber() {
+        return goodsNumber;
+    }
+
+    public double getAllPrice() {
+        return allPrice;
+    }
+
+    public String getPic1() {
+        return pic1;
+    }
+
+    public void setPic1(String pic1) {
+        this.pic1 = pic1;
+    }
+
+    public String getPic2() {
+        return pic2;
+    }
+
+    public String getPic3() {
+        return pic3;
+    }
+
+    public void setPic3(String pic3) {
+        this.pic3 = pic3;
+    }
+
+    public String getShopkeeperName() {
+        return shopkeeperName;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public String getShopWangwang() {
+        return shopWangwang;
+    }
+
+    public String getItemLink() {
+        return itemLink;
+    }
+
+    public double getPcCost() {
+        return pcCost;
+    }
+
+    public double getPhoneCost() {
+        return phoneCost;
+    }
+
+    public String getBuyerWangwang() {
+        return buyerWangwang;
+    }
+
+    public int getBuyerTeam() {
+        return buyerTeam;
+    }
+
+    public int getBuyerTaskBookId() {
+        return buyerTaskBookId;
+    }
+
     public void initByTables(TaskTables task){
         taskid = task.getTaskid();
         taskbookUuid = task.getTaskbookUuid();

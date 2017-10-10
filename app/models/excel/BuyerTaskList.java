@@ -31,6 +31,11 @@ public class BuyerTaskList {
     public static Font bluegreyfont; //灰蓝
     public static Font blackfont; //灰蓝
 
+    //前端打包有些bug,需要手动添加get函数
+    public List<BuyerTask> getStlist() {
+        return stlist;
+    }
+
 
     public void Deal() throws IOException {
         wb = new XSSFWorkbook();
