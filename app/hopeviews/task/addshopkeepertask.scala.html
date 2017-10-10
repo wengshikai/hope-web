@@ -5,7 +5,7 @@
         <br/><br/><br/><br/>
         @if(!isLock("TaskTables")){
             @*没有锁定,才允许上传商家任务书*@
-            @helper.form(action = routes.BusinessTask.doaddshopkeepertask() ,'enctype -> "multipart/form-data") {
+            @helper.form(action = routes.BusinessTask.doAddShopKeeperTask() ,'enctype -> "multipart/form-data") {
                 @if(flash.contains("succ")) {
                     <p class="text-success">
                     @flash.get("succ")
@@ -20,7 +20,7 @@
                 <h1>添加商家任务书</h1>
 
                 <p>
-                    <input type="file" name="shopkeeperzip">
+                    <input type="file" name="shopKeeperZip">
                 </p>
                 <p>
                     <button type="submit" class="btn btn-info">提交</button>
@@ -30,7 +30,7 @@
             }
 
             <br/><br/><br/><br/>
-            @helper.form(action = routes.BusinessTask.dobatchaddshopkeepertask() ,'enctype -> "multipart/form-data") {
+            @helper.form(action = routes.BusinessTask.doBatchAddShopKeeperTask() ,'enctype -> "multipart/form-data") {
                 @if(flash.contains("batch_succ")) {
                     <p class="text-success">
                     @flash.get("batch_succ")
@@ -45,7 +45,7 @@
                 <h1>批量添加商家任务书</h1>
 
                 <p>
-                    <input type="file" name="shopkeeperzip">
+                    <input type="file" name="shopKeeperZip">
                 </p>
                 <p>
                     <button type="submit" class="btn btn-info">提交</button>

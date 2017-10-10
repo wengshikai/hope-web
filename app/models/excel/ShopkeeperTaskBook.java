@@ -53,44 +53,58 @@ public class ShopkeeperTaskBook {
 
 
     /** 解析商家任务书excel */
-    public boolean parse(String dirpath){
-        List<String> list = FileTool.getFileListInDirectory(dirpath);
-        Set<String> imgNames = new HashSet<String>();
-        String excelfile = "";
+    public boolean parse(String dirPath) throws Exception {
+        //用于记录报错信息
+        String exceptionMessage = "";
+
+        //获取目录下的第一个.xls文件
+        List<String> list = FileTool.getFileListInDirectory(dirPath);
+        String excelFile = "";
         for(String s:list){
             if(s.endsWith(".xls")) {
-                excelfile = s;
+                excelFile = s;
                 break;
             }
         }
-        // scan pic
 
+        //随机生成一个uuid
         taskbookUuid = UUID.randomUUID().toString();
-        String[]  exceltmpstrings = excelfile.split(File.separator);
-        taskbookName = exceltmpstrings[exceltmpstrings.length-1];
 
-        List<String> picList = FileTool.getFileListInDirectory(dirpath+ File.separator+"图片");
-        for(String s:picList){
-            if(!ImageUtil.allowPicType(s)){
-                continue;
-            }
-            String[] tmp1 = s.split(File.separator);
-            String tmp2 = tmp1[tmp1.length-1].split("\\.")[0];//.split(File.separator)[1].split("\\.");
-            picMap.put(tmp2,tmp1[tmp1.length-1]);
-            try {
-                picContentMap.put(tmp1[tmp1.length-1], FileTool.getFileContent(s));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        //获取文件名
+        try {
+            String[] excelTmpStrings = excelFile.split(File.separator);
+            taskbookName = excelTmpStrings[excelTmpStrings.length - 1];
+        } catch(Exception e) {
+            throw new Exception("读取文件名异常,文件夹:" + dirPath);
         }
 
-
+        //获取图片
         try {
-            POIFSFileSystem fs = new POIFSFileSystem(Files.newInputStream(Paths.get(excelfile)));
+            List<String> picList = FileTool.getFileListInDirectory(dirPath + File.separator + "图片");
+            for (String s : picList) {
+                if (!ImageUtil.allowPicType(s)) {
+                    continue;
+                }
+                String[] tmp1 = s.split(File.separator);
+                String tmp2 = tmp1[tmp1.length - 1].split("\\.")[0];//.split(File.separator)[1].split("\\.");
+                picMap.put(tmp2, tmp1[tmp1.length - 1]);
+                try {
+                    picContentMap.put(tmp1[tmp1.length - 1], FileTool.getFileContent(s));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception("读取图片异常,文件夹:" + dirPath);
+        }
+
+        //解析excel表格
+        try {
+            POIFSFileSystem fs = new POIFSFileSystem(Files.newInputStream(Paths.get(excelFile)));
             HSSFWorkbook wb = new HSSFWorkbook(fs);
             HSSFSheet sheet = wb.getSheetAt(0);
-            List<Integer> taskliststart = new ArrayList<Integer>();
-            List<Integer> tasklistend = new ArrayList<Integer>();
+            List<Integer> taskListStart = new ArrayList<Integer>();
+            List<Integer> taskListEnd = new ArrayList<Integer>();
 
             // 获取所有的表起始和结束
             for(int i=0;i<(sheet.getLastRowNum()+1);i++){
@@ -99,27 +113,38 @@ public class ShopkeeperTaskBook {
                 }
                 String s = ExcelUtil.getCellString(sheet, i, 0);
                 if(s!=null && s.equals("商家姓名")){
-                    taskliststart.add(i);
+                    taskListStart.add(i);
                     if(i>0){
-                        tasklistend.add(i-1);
+                        taskListEnd.add(i-1);
                     }
                 }
             }
-            tasklistend.add(sheet.getLastRowNum());
+            taskListEnd.add(sheet.getLastRowNum());
 
-            int tmpsubtaskbookid = 0;
-            for(int i=0;i<tasklistend.size();i++){
+            //一份excel下会有多个商品
+            int tmpSubTaskBookId = 0;
+            for(int i=0;i<taskListEnd.size();i++){
                 ShopkeeperTaskList stl = new ShopkeeperTaskList();
-                idIndex += stl.parse(sheet,taskliststart.get(i),tasklistend.get(i),taskbookUuid,taskbookName,picMap,idIndex,tmpsubtaskbookid);
-                tasklist.add(stl);
-                tmpsubtaskbookid++;
+                try {
+                    //解析任务
+                    idIndex += stl.parse(sheet, taskListStart.get(i), taskListEnd.get(i), taskbookUuid, taskbookName, picMap, idIndex, tmpSubTaskBookId);
+                    tasklist.add(stl);
+                } catch(Exception e) {
+                    //如果解析过程中有单元格解析失败,那么把报错信息添加到全局变量中
+                    exceptionMessage = exceptionMessage + e.getMessage() + "  ";
+                }
+                tmpSubTaskBookId++;
             }
             wb.close();
             fs.close();
-
         } catch(Exception ioe) {
             ioe.printStackTrace();
             return false;
+        }
+
+        //如果有解析失败的报错,那么直接抛出
+        if(!exceptionMessage.equals("")) {
+            throw new Exception(exceptionMessage);
         }
 
         return true;

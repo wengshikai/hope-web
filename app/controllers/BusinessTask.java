@@ -24,7 +24,6 @@ import util.LocalStoreTool;
 import util.ZIPTool;
 import views.html.showoneshopkeeperbook;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +36,17 @@ import java.util.Map;
  * Created by shanmao on 15-11-25.
  */
 public class BusinessTask  extends Controller {
-    public Result addshopkeepertask() {
+
+    /** 渲染添加任务书页面 */
+    public Result addShopkeeperTask() {
         return ok(addshopkeepertask.render());
     }
 
-    public Result doaddshopkeepertask() {
+
+    /** 添加单个商家任务书 */
+    public Result doAddShopKeeperTask() {
         play.mvc.Http.MultipartFormData body = request().body().asMultipartFormData();
-        play.mvc.Http.MultipartFormData.FilePart zip = body.getFile("shopkeeperzip");
+        play.mvc.Http.MultipartFormData.FilePart zip = body.getFile("shopKeeperZip");
         if (zip != null) {
             try {
                 FileTool.deleteDirectory("data/zip/");
@@ -59,96 +62,98 @@ public class BusinessTask  extends Controller {
                 }
                 if(dirpath.equals("")){
                     flash("error", "file error!");
-                    return redirect(
-                            routes.BusinessTask.addshopkeepertask()
-                    );
+                    return redirect(routes.BusinessTask.addShopkeeperTask());
                 }
 
                 int doret  = doAddOneTaskBook(dirpath);
                 if(doret == 1){
                     flash("error", "重复添加");
-                    return redirect(routes.BusinessTask.addshopkeepertask());
+                    return redirect(routes.BusinessTask.addShopkeeperTask());
                 }
                 if(doret==2){
                     flash("error", "插入出错，请删除后重新插入！");
-                    return redirect(routes.BusinessTask.addshopkeepertask());
+                    return redirect(routes.BusinessTask.addShopkeeperTask());
                 }
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                flash("error", "文件解析失败！");
+                return redirect(routes.BusinessTask.addShopkeeperTask());
             }
+
             flash("succ", "成功添加");
-            return redirect(
-                    routes.BusinessTask.addshopkeepertask()
-            );
+            return redirect(routes.BusinessTask.addShopkeeperTask());
         } else {
             flash("error", "Missing file");
-            return redirect(
-                    routes.BusinessTask.addshopkeepertask()
-            );
+            return redirect(routes.BusinessTask.addShopkeeperTask());
         }
     }
+
 
     /** 批量添加商家任务书 */
-    public Result dobatchaddshopkeepertask() {
+    public Result doBatchAddShopKeeperTask() {
         play.mvc.Http.MultipartFormData body = request().body().asMultipartFormData();
-        play.mvc.Http.MultipartFormData.FilePart zip = body.getFile("shopkeeperzip");
-        if (zip != null) {
-            try {
-                //解压zip包
-                FileTool.deleteDirectory("data/zip/");
-                FileTool.createDestDirectoryIfNotExists("data/zip/");
-                ZIPTool.unZipToFolder(zip.getFile().getAbsolutePath(),"data/zip/");
+        play.mvc.Http.MultipartFormData.FilePart zip = body.getFile("shopKeeperZip");
 
-                //读取文件夹(要求必须唯一)
-                List<String> dirList = FileTool.getFileListInDirectory("data/zip/");
-                String dirPath = "";
-                for(String s:dirList){
-                    if(s.contains("__")){
-                        continue;
-                    }
-                    dirPath = s;
-                }
-                if(dirPath.equals("")){
-                    flash("batch_error", "压缩包内没有读取到文件夹!");
-                    return redirect(
-                            routes.BusinessTask.addshopkeepertask()
-                    );
-                }
-
-                //遍历文件夹中的子目录
-                List<String> newDirList = FileTool.getFileListInDirectoryWithoutDot(dirPath);
-                for(String subPath:newDirList){
-                    //添加每个商家任务书中的所有任务
-                    int rsAddOneBook = doAddOneTaskBook(subPath);
-                    if(rsAddOneBook==1){
-                        flash("batch_error", "同一份任务书重复添加！文件名:" + subPath);
-                        return redirect(routes.BusinessTask.addshopkeepertask());
-                    }
-                    if(rsAddOneBook==2){
-                        flash("batch_error", "插入出错，请删除后重新插入！文件名:" + subPath);
-                        return redirect(routes.BusinessTask.addshopkeepertask());
-                    }
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            flash("batch_succ", "成功添加!");
-            return redirect(
-                    routes.BusinessTask.addshopkeepertask()
-            );
-        } else {
+        if (zip == null) {
             flash("batch_error", "文件内容为空!");
-            return redirect(
-                    routes.BusinessTask.addshopkeepertask()
-            );
+            return redirect(routes.BusinessTask.addShopkeeperTask());
+        }
+
+        try {
+            //解压zip包
+            FileTool.deleteDirectory("data/zip/");
+            FileTool.createDestDirectoryIfNotExists("data/zip/");
+            ZIPTool.unZipToFolder(zip.getFile().getAbsolutePath(),"data/zip/");
+        } catch (Exception e) {
+            flash("batch_error", "解压zip文件失败!");
+            return redirect(routes.BusinessTask.addShopkeeperTask());
+        }
+
+        //读取文件夹(要求必须唯一)
+        List<String> dirList = FileTool.getFileListInDirectory("data/zip/");
+        String dirPath = "";
+        for(String s:dirList){
+            if(s.contains("__")){
+                continue;
+            }
+            dirPath = s;
+        }
+        if(dirPath.equals("")){
+            flash("batch_error", "压缩包内没有读取到文件夹!");
+            return redirect(routes.BusinessTask.addShopkeeperTask());
+        }
+
+        //用于记录报错信息
+        String exceptionMessage = "";
+        //遍历文件夹中的子目录
+        List<String> newDirList = FileTool.getFileListInDirectoryWithoutDot(dirPath);
+        for(String subPath:newDirList){
+            try {
+                //添加每个商家任务书中的所有任务
+                int rsAddOneBook = doAddOneTaskBook(subPath);
+                if (rsAddOneBook == 1) {
+                    throw new Exception("任务书重复添加！文件名:" + subPath);
+                }
+                if (rsAddOneBook == 2) {
+                    throw new Exception("插入数据库出错！文件名:" + subPath);
+                }
+            } catch (Exception e) {
+                //如果异常,流程不中断,继续解析下一个文件
+                exceptionMessage += e.getMessage();
+            }
+        }
+
+        if(exceptionMessage.equals("")) {
+            flash("batch_succ", "成功添加!");
+            return redirect(routes.BusinessTask.addShopkeeperTask());
+        } else {
+            flash("batch_error", "添加失败!" + exceptionMessage);
+            return redirect(routes.BusinessTask.addShopkeeperTask());
         }
     }
 
+
     /** 将一个商家任务书中的所有任务添加到数据库 */
-    private int doAddOneTaskBook(String dirPath){
+    private int doAddOneTaskBook(String dirPath) throws Exception {
         ShopkeeperTaskBook shopkeeperTaskBook = new ShopkeeperTaskBook();
 
         //从文件夹名称中获取商家编号
@@ -160,7 +165,11 @@ public class BusinessTask  extends Controller {
         }
 
         //解析商家任务书
-        shopkeeperTaskBook.parse(dirPath);
+        try {
+            shopkeeperTaskBook.parse(dirPath);
+        } catch (Exception e) {
+            throw new Exception("解析任务书出错!文件名:" + dirPath + "  错误详情:" + e.getMessage());
+        }
 
         //判断是否重复插入
         List<TaskTables> test= TaskTablesManager.getShopkeeperBookByTaskbookName(shopkeeperTaskBook.getTaskbookName());
@@ -175,23 +184,22 @@ public class BusinessTask  extends Controller {
         }
 
         //插入数据
-        List<ShopkeeperTaskList> tasklists = shopkeeperTaskBook.getTasklist();
-        for(ShopkeeperTaskList tasklist:tasklists){
-            List<ShopkeeperTask> tasks = tasklist.getTasklist();
+        List<ShopkeeperTaskList> taskLists = shopkeeperTaskBook.getTasklist();
+        for(ShopkeeperTaskList taskList:taskLists){
+            List<ShopkeeperTask> tasks = taskList.getTasklist();
             for(ShopkeeperTask task:tasks){
                 if(!TaskTablesManager.insert(shopId, task.getTaskbookUuid(),task.getTaskbookName(),task.getId(),
                         task.getKeyword(),task.getTaskRequirement(),task.getUnitPrice(),task.getGoodsNumber(),
                         task.getAllPrice(),task.getPic1(),task.getPic2(),task.getPic3(),task.getShopkeeperName(),
                         task.getShopName(),task.getShopWangwang(),task.getItemLink(),task.getPcCost(),task.getPhoneCost(),task.getSubTaskBookId())){
-                    GlobalTool.loger.error("插入错误:" + tasklist);
+                    GlobalTool.loger.error("插入错误:" + taskList);
                     return 2;
                 }
             }
         }
+
         return 0;
     }
-
-
 
 
     @Security.Authenticated(Secured.class)

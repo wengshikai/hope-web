@@ -243,4 +243,12 @@ public class ExcelUtil {
             return (sources[columnNum/26 - 1] + sources[columnNum % 26]);
         }
     }
+
+
+    /**
+     * 根据行号和列号获取单元格编号
+     */
+    public static String getUnitNo(int row, int column) {
+        return getColumnLabels(column) + String.valueOf(row + 1);
+    }
 }

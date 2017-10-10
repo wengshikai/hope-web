@@ -28,9 +28,9 @@ GET         /buyer/clear                                       controllers.Buyer
 
 
 GET         /unLockTaskTables                                  controllers.BusinessTask.unLockTaskTables
-GET         /task/addshopkeepertask                            controllers.BusinessTask.addshopkeepertask()
-POST        /task/addshopkeepertask                            controllers.BusinessTask.doaddshopkeepertask()
-POST        /task/batchaddshopkeepertask                       controllers.BusinessTask.dobatchaddshopkeepertask()
+GET         /task/addshopkeepertask                            controllers.BusinessTask.addShopkeeperTask()
+POST        /task/addshopkeepertask                            controllers.BusinessTask.doAddShopKeeperTask()
+POST        /task/batchaddshopkeepertask                       controllers.BusinessTask.doBatchAddShopKeeperTask()
 GET         /task/allnowtask                                   controllers.BusinessTask.allnowtask()
 GET         /task/allnowbuyertask                              controllers.BusinessTask.allnowbuyertask()
 POST        /task/caculatetaskList                             controllers.BusinessTask.caculateTaskList()

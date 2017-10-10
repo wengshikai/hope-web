@@ -50,14 +50,27 @@ public class ShopkeeperTaskList {
     }
 
     public int parse(HSSFSheet sheet,int start,int end,String taskbookUuid,String taskbookName,
-                     Map<String,String> picMap,Integer idIndex,int subtaskbookid){
+                     Map<String,String> picMap,Integer idIndex,int subtaskbookid) throws Exception {
 
         shopkeeperName = ExcelUtil.getCellString(sheet,start,1);
         shopName  = ExcelUtil.getCellString(sheet,start,3);
         shopWangwang = ExcelUtil.getCellString(sheet,start,5);
         itemLink = ExcelUtil.getCellString(sheet,start+1,1);
-        pcCost = ExcelUtil.getCellDouble(sheet, start + 2, 1);
-        phoneCost = ExcelUtil.getCellDouble(sheet,start+3,1);
+
+        //读取商品pc端价格
+        try {
+            pcCost = ExcelUtil.getCellDouble(sheet, start + 2, 1);
+        } catch (Exception e) {
+            throw new Exception("读取单元格出错:" + ExcelUtil.getUnitNo(start + 2, 1));
+        }
+
+        //读取商品移动端价格
+        try {
+            phoneCost = ExcelUtil.getCellDouble(sheet, start + 3, 1);
+        } catch (Exception e) {
+            throw new Exception("读取单元格出错:" + ExcelUtil.getUnitNo(start + 3, 1));
+        }
+
         String pic = ExcelUtil.getCellString(sheet,start+4,1);
         pic1 = picMap.get(pic);
         pic = ExcelUtil.getCellString(sheet,start+5,1);
@@ -67,7 +80,7 @@ public class ShopkeeperTaskList {
         this.subTaskBookid = subtaskbookid;
 
 
-
+        //遍历读取这个商品的所有任务
         int index = 0;
         for(int i=start+8;i<=end;i++){
             if(!ExcelUtil.hasRow(sheet,i)){
@@ -81,19 +94,39 @@ public class ShopkeeperTaskList {
             st.setId(index+idIndex);
             st.setKeyword(ExcelUtil.getCellString(sheet, i, 1));
             st.setTaskRequirement(ExcelUtil.getCellString(sheet, i, 2));
-            st.setUnitPrice(ExcelUtil.getCellDouble(sheet, i, 3));
-            st.setGoodsNumber(ExcelUtil.getCellInt(sheet, i, 4));
+
+            //读取任务单价
+            try {
+                st.setUnitPrice(ExcelUtil.getCellDouble(sheet, i, 3));
+            } catch (Exception e) {
+                throw new Exception("读取单元格出错:" + ExcelUtil.getUnitNo(i, 3));
+            }
+
+            //读取商品数量
+            try {
+                st.setGoodsNumber(ExcelUtil.getCellInt(sheet, i, 4));
+            } catch (Exception e) {
+                throw new Exception("读取单元格出错:" + ExcelUtil.getUnitNo(i, 4));
+            }
+
             if(ExcelUtil.getCellDouble(sheet, i, 5) != null){
-                st.setAllPrice(ExcelUtil.getCellDouble(sheet, i, 5));
-            }else{
+                //读取任务总价
+                try {
+                    st.setAllPrice(ExcelUtil.getCellDouble(sheet, i, 5));
+                } catch (Exception e) {
+                    throw new Exception("读取单元格出错:" + ExcelUtil.getUnitNo(i, 5));
+                }
+            } else {
+                //计算任务总价
                 Cell cell =  sheet.getRow(i).getCell(5);
                 if(cell.getCellType() == Cell.CELL_TYPE_FORMULA){
                     st.setAllPrice(cell.getNumericCellValue());
-                }else{
+                } else {
                     st.setAllPrice(ExcelUtil.getCellDouble(sheet, i, 3)*ExcelUtil.getCellDouble(sheet, i, 4));
                 }
-
             }
+
+
             st.setTaskbookUuid(taskbookUuid);
             st.setTaskbookName(taskbookName);
             st.setShopkeeperName(shopkeeperName);
