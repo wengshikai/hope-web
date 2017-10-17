@@ -22,13 +22,13 @@ public class CombineShopBuyerManager {
                 DatabaseTool.defaultEm.persist(entry);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
-                GlobalTool.logger.error("something error!",e);
+                e.printStackTrace();
                 //如果插入失败,需要回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.logger.error("something error!",e);
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -42,7 +42,7 @@ public class CombineShopBuyerManager {
             List<String> shopNames =(List<String>)query.getResultList();
             return shopNames;
         } catch (Exception e) {
-            GlobalTool.logger.error("something error!",e);
+            e.printStackTrace();
             return null;
         }
     }
@@ -55,7 +55,7 @@ public class CombineShopBuyerManager {
             List<CombineShopBuyer> combineShopBuyerList =(List<CombineShopBuyer>)query.getResultList();
             return combineShopBuyerList;
         } catch (Exception e) {
-            GlobalTool.logger.error("something error!",e);
+            e.printStackTrace();
             return null;
         }
     }

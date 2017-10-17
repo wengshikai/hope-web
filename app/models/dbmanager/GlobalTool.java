@@ -7,11 +7,14 @@ import play.Logger;
 import play.Play;
 import util.FileTool;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by shanmao on 15-9-29.
  */
 public class GlobalTool {
-    public static final Logger.ALogger logger =  Logger.of("GLOBAL");
+    public static final Logger.ALogger logger =  Logger.of("GLOBAL:" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
     public static String urlPrefix =  "";
 
     public static final  String CreateUser =

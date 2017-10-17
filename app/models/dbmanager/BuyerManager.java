@@ -22,15 +22,14 @@ public class BuyerManager {
                 DatabaseTool.defaultEm.persist(entry);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
-                GlobalTool.logger.error("insert Buyer error: " + entry.getName() + " " + entry.getWangwang()
-                        + " " + entry.getMobilephone()  + " " + entry.getTeam(),e);
+                e.printStackTrace();
                 //插入失败,回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
                 return false;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             DatabaseTool.defaultEm.getTransaction().rollback();
-            GlobalTool.logger.error("insert Buyer error!",e);
             return false;
         }
 
@@ -44,7 +43,7 @@ public class BuyerManager {
             List<Buyer> entry =(List<Buyer>)query.getResultList();
             return entry;
         } catch (Exception e) {
-            GlobalTool.logger.error("insert Buyer error!",e);
+            e.printStackTrace();;
             return null;
         }
     }
@@ -57,7 +56,7 @@ public class BuyerManager {
             List<Integer> teams =(List<Integer>)query.getResultList();
             return teams;
         } catch (Exception e) {
-            GlobalTool.logger.error("something error!",e);
+            e.printStackTrace();
             return null;
         }
     }
@@ -70,7 +69,7 @@ public class BuyerManager {
             List<Buyer> entry =(List<Buyer>)query.getResultList();
             return entry;
         } catch (Exception e) {
-            GlobalTool.logger.error("something error!",e);
+            e.printStackTrace();
             return null;
         }
     }
@@ -82,7 +81,7 @@ public class BuyerManager {
             Long entry =(Long)query.getSingleResult();
             return entry;
         } catch (Exception e) {
-            GlobalTool.logger.error("something error!",e);
+            e.printStackTrace();
             return 0L;
         }
     }

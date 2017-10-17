@@ -81,9 +81,7 @@ public class CombineTask extends Controller{
                 }
                 if (dirPath.equals("")) {
                     flash("error", "上传失败!");
-                    return redirect(
-                            routes.CombineTask.combineShopBuyer()
-                    );
+                    return redirect(routes.CombineTask.combineShopBuyer());
                 }
 
                 /* 先清空表中的所有数据 */
@@ -100,22 +98,16 @@ public class CombineTask extends Controller{
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                GlobalTool.logger.error("上传合并任务失败!", e.getMessage());
                 flash("error", e.getMessage());
-                return redirect(
-                        routes.CombineTask.combineShopBuyer()
-                );
+                return redirect(routes.CombineTask.combineShopBuyer());
             }
 
             flash("success", "上传成功,文件列表:" + fileNameListStr);
-            return redirect(
-                    routes.CombineTask.combineShopBuyer()
-            );
+            return redirect(routes.CombineTask.combineShopBuyer());
         } else {
             flash("error", "找不到文件");
-            return redirect(
-                    routes.CombineTask.combineShopBuyer()
-            );
+            return redirect(routes.CombineTask.combineShopBuyer());
         }
     }
 
@@ -210,9 +202,7 @@ public class CombineTask extends Controller{
             return ok(ret);
         } else {
             flash("download_error", "没有上传数据源");
-            return redirect(
-                    routes.CombineTask.combineShopBuyer()
-            );
+            return redirect(routes.CombineTask.combineShopBuyer());
         }
     }
 

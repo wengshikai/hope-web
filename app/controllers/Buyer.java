@@ -98,24 +98,18 @@ public class Buyer   extends Controller{
                     buyerIndex ++;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                GlobalTool.logger.error("批量添加刷手错误:" + e.getMessage());
                 //如果有一条数据插入失败,全部删除
                 //GlobalTool.initBuyer();
                 flash("error", e.getMessage());
-                return redirect(
-                        routes.Buyer.batchadd()
-                );
+                return redirect(routes.Buyer.batchadd());
             }
 
             flash("success", "批量添加刷手成功！");
-            return redirect(
-                    routes.Buyer.batchadd()
-            );
+            return redirect(routes.Buyer.batchadd());
         } else {
             flash("error", "文件不存在");
-            return redirect(
-                    routes.Buyer.batchadd()
-            );
+            return redirect(routes.Buyer.batchadd());
         }
     }
 
@@ -131,9 +125,7 @@ public class Buyer   extends Controller{
     @Security.Authenticated(Secured.class)
     public Result clear() {
         GlobalTool.initBuyer();
-        return redirect(
-                routes.Buyer.all()
-        );
+        return redirect(routes.Buyer.all());
     }
 }
 
