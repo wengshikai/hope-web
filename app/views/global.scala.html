@@ -9,14 +9,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="hope">
         <meta name="author" content="">
-        <link rel="icon" href="@{urlprefix}static/images/f.png">
+        <link rel="icon" href="@{urlPrefix}static/images/f.png">
 
         <title>hope</title>
 
             <!-- Bootstrap core CSS -->
-        <link href="@{urlprefix}static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="@{urlPrefix}static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
             <!-- Bootstrap theme -->
-        <link href="@{urlprefix}static/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+        <link href="@{urlPrefix}static/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 
     </head>
 
@@ -32,36 +32,36 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="@{urlprefix}">爵</a>
+                    <a class="navbar-brand" href="@{urlPrefix}">爵</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="@{urlprefix}">Home</a></li>
+                        <li><a href="@{urlPrefix}">Home</a></li>
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">刷手管理<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="@{urlprefix}buyer/addbuyer ">增加刷手</a></li>
-                                <li><a href="@{urlprefix}buyer/batchadd">批量增加刷手</a></li>
-                                <li><a href="@{urlprefix}buyer/all ">查看所有刷手</a></li>
-                                <li><a href="@{urlprefix}buyer/clear">清空刷手</a></li>
+                                <li><a href="@{urlPrefix}buyer/addbuyer ">增加刷手</a></li>
+                                <li><a href="@{urlPrefix}buyer/batchadd">批量增加刷手</a></li>
+                                <li><a href="@{urlPrefix}buyer/all ">查看所有刷手</a></li>
+                                <li><a href="@{urlPrefix}buyer/clear">清空刷手</a></li>
                             </ul>
                         </li>
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">任务管理<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="@{urlprefix}task/addshopkeepertask">商家任务上传</a></li>
-                                <li><a href="@{urlprefix}task/allnowtask">已上传任务</a></li>
-                                <li><a href="@{urlprefix}task/allnowbuyertask">查看刷手任务书</a></li>
-                                <li><a href="@{urlprefix}task/clear">清空任务</a></li>
+                                <li><a href="@{urlPrefix}task/addshopkeepertask">商家任务上传</a></li>
+                                <li><a href="@{urlPrefix}task/allnowtask">已上传任务</a></li>
+                                <li><a href="@{urlPrefix}task/allnowbuyertask">查看刷手任务书</a></li>
+                                <li><a href="@{urlPrefix}task/clear">清空任务</a></li>
                             </ul>
                         </li>
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">合并表格<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="@{urlprefix}combine/combineShopBuyer">刷手合并</a></li>
+                                <li><a href="@{urlPrefix}combine/combineShopBuyer">刷手合并</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -72,7 +72,7 @@
                                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">@ctx.session().get("name")<strong class="caret"></strong></a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="@{urlprefix}logout">logout</a>
+                                        <a href="@{urlPrefix}logout">logout</a>
                                     </li>
                                 </ul>
                             </li>
@@ -90,7 +90,7 @@
             <!-- Bootstrap core JavaScript
 ================================================== -->
             <!-- Placed at the end of the document so the pages load faster -->
-        <script src="@{urlprefix}static/javascripts/jquery.min.js"></script>
-        <script src="@{urlprefix}static/bootstrap/js/bootstrap.min.js"></script>
+        <script src="@{urlPrefix}static/javascripts/jquery.min.js"></script>
+        <script src="@{urlPrefix}static/bootstrap/js/bootstrap.min.js"></script>
     </body>
 </html>

@@ -9,14 +9,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="hope">
         <meta name="author" content="">
-        <link rel="icon" href="@{urlprefix}static/images/f.png">
+        <link rel="icon" href="@{urlPrefix}static/images/f.png">
 
         <title>hope</title>
 
             <!-- Bootstrap core CSS -->
-        <link href="@{urlprefix}static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="@{urlPrefix}static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
             <!-- Bootstrap theme -->
-        <link href="@{urlprefix}static/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+        <link href="@{urlPrefix}static/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 
     </head>
 
@@ -32,11 +32,11 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="@{urlprefix}">爵</a>
+                    <a class="navbar-brand" href="@{urlPrefix}">爵</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="@{urlprefix}">Home</a></li>
+                        <li><a href="@{urlPrefix}">Home</a></li>
                     </ul>
                     @if(ctx.session().get("name")) {
                         <ul class="nav navbar-nav pull-right">
@@ -44,7 +44,7 @@
                                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">@ctx.session().get("name")<strong class="caret"></strong></a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="@{urlprefix}logout">logout</a>
+                                        <a href="@{urlPrefix}logout">logout</a>
                                     </li>
                                 </ul>
                             </li>
@@ -87,8 +87,8 @@
             <!-- Bootstrap core JavaScript
 ================================================== -->
             <!-- Placed at the end of the document so the pages load faster -->
-        <script src="@{urlprefix}static/javascripts/jquery.min.js"></script>
-        <script src="@{urlprefix}static/bootstrap/js/bootstrap.min.js"></script>
+        <script src="@{urlPrefix}static/javascripts/jquery.min.js"></script>
+        <script src="@{urlPrefix}static/bootstrap/js/bootstrap.min.js"></script>
     </body>
 </html>
 
