@@ -10,7 +10,7 @@ import java.util.List;
  * Created by shanmao on 15-12-16.
  */
 public class BuyerManager {
-    public static boolean insert(String name,String wangwang,String mobilephone,int level){
+    public static boolean insert(String name,String wangwang,String mobilephone,int team){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
             Buyer entry = new Buyer();
@@ -18,12 +18,12 @@ public class BuyerManager {
                 entry.setName(name);
                 entry.setWangwang(wangwang);
                 entry.setMobilephone(mobilephone);
-                entry.setLevel(level);
+                entry.setTeam(team);
                 DatabaseTool.defaultEm.persist(entry);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
                 GlobalTool.logger.error("insert Buyer error: " + entry.getName() + " " + entry.getWangwang()
-                        + " " + entry.getMobilephone()  + " " + entry.getLevel(),e);
+                        + " " + entry.getMobilephone()  + " " + entry.getTeam(),e);
                 //插入失败,回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
                 return false;
@@ -53,7 +53,7 @@ public class BuyerManager {
     /** 获取所有刷手分组 */
     public static List<Integer> getALlTeams(){
         try {
-            Query query = DatabaseTool.defaultEm.createQuery("select distinct level from Buyer");
+            Query query = DatabaseTool.defaultEm.createQuery("select distinct team from Buyer");
             List<Integer> teams =(List<Integer>)query.getResultList();
             return teams;
         } catch (Exception e) {
@@ -64,9 +64,9 @@ public class BuyerManager {
 
 
     /** 获取指定小组的所有刷手 */
-    public static List<Buyer> getALlByTeam(int level){
+    public static List<Buyer> getALlByTeam(int team){
         try {
-            Query query = DatabaseTool.defaultEm.createQuery("select u from Buyer u where u.level = " + level);
+            Query query = DatabaseTool.defaultEm.createQuery("select u from Buyer u where u.team = " + team);
             List<Buyer> entry =(List<Buyer>)query.getResultList();
             return entry;
         } catch (Exception e) {

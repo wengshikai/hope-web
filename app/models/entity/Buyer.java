@@ -28,7 +28,7 @@ public class Buyer {
     protected String mobilephone;
 
     /** 刷手分组 */
-    protected int level;
+    protected int team;
 
 
     //前端打包有些bug,需要手动添加get函数
@@ -46,7 +46,7 @@ public class Buyer {
     }
 
 
-    public int getLevel() {
-        return level;
+    public int getTeam() {
+        return team;
     }
 }

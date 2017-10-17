@@ -58,7 +58,7 @@ public class MiscTool {
     /** 生成所有刷手任务书(按刷手维度分表) */
     public static void buildDownloadShuashouZip(List<TaskTables> all,String zipname){
         List<models.entity.Buyer> ssl = BuyerManager.getALl();
-        Map<String,Integer> levelMap = new HashMap();
+        Map<String,Integer> teamMap = new HashMap();
         Map<String,String> wangwang2shopName = new HashMap<String,String>();
         Map<String,Integer> wangwang2shopId = new HashMap<String,Integer>();
         for(TaskTables taskTables:all){
@@ -66,9 +66,9 @@ public class MiscTool {
             wangwang2shopId.put(taskTables.getShopWangwang(),taskTables.getShopId());
         }
         for(models.entity.Buyer buyer:ssl){
-            levelMap.put(buyer.getWangwang(),buyer.getLevel());
+            teamMap.put(buyer.getWangwang(),buyer.getTeam());
         }
-        Map<String,String> levelArrayMap = new HashMap();
+        Map<String,String> teamArrayMap = new HashMap();
 
         Map<Integer,String> idtobuyer = new HashMap<Integer,String>();
         Map<Integer,BuyerTaskList> stlmap = new HashMap<Integer,BuyerTaskList>();
@@ -120,7 +120,7 @@ public class MiscTool {
             String real_n =  entry.getKey()+"号-共"+sstl.getZongDanShuNum()+"单-"+f1bj+
                     "+"+sstl.getZongYongjinNum()+"="+f2benjin+"元-"+idtobuyer.get(entry.getKey())+".xls";
             names_realname.add("exceltmp/"+real_n);
-            levelArrayMap.put("exceltmp/"+real_n,""+levelMap.get(idtobuyer.get(entry.getKey())));
+            teamArrayMap.put("exceltmp/"+real_n,""+teamMap.get(idtobuyer.get(entry.getKey())));
             try {
                 //生成任务书excel文件
                 ((BuyerTaskList)entry.getValue()).Deal();
@@ -135,15 +135,15 @@ public class MiscTool {
                 e.printStackTrace();
             }
         }
-        Map<String,List<String>> levelArrayList = new HashMap();
-        for(Map.Entry<String, String> entry : levelArrayMap.entrySet()){
-            if(levelArrayList.get(entry.getValue()) == null){
-                levelArrayList.put(entry.getValue(),new ArrayList<String>());
+        Map<String,List<String>> teamArrayList = new HashMap();
+        for(Map.Entry<String, String> entry : teamArrayMap.entrySet()){
+            if(teamArrayList.get(entry.getValue()) == null){
+                teamArrayList.put(entry.getValue(),new ArrayList<String>());
             }
-            levelArrayList.get(entry.getValue()).add(entry.getKey());
+            teamArrayList.get(entry.getValue()).add(entry.getKey());
         }
         List<String> lastarray = new ArrayList();
-        for(Map.Entry<String, List<String>> entry : levelArrayList.entrySet()){
+        for(Map.Entry<String, List<String>> entry : teamArrayList.entrySet()){
             List<String> tmpl = entry.getValue();
             ZIPTool.compressFiles2Zip(tmpl.toArray(new String[tmpl.size()]), entry.getKey()+".zip");
             lastarray.add(entry.getKey()+".zip");
@@ -161,7 +161,7 @@ public class MiscTool {
         /** 生成汇总账单 */
         Map<String,Map<String,List<Double>>> money = new HashMap<String,Map<String,List<Double>>>();
         for(TaskTables taskTables:all){
-            Integer index1 = levelMap.get(taskTables.getBuyerWangwang());
+            Integer index1 = teamMap.get(taskTables.getBuyerWangwang());
             if(money.get(""+index1) == null){
                 Map<String,List<Double>> map1 = new HashMap<String,List<Double>>();
                 money.put(""+index1,map1);

@@ -16,7 +16,16 @@ public class GlobalTool {
 
     public static final  String CreateUser = "CREATE TABLE `User` (`name` varchar(64) NOT NULL DEFAULT '', `salt` varchar(64) NOT NULL DEFAULT '', `password` varchar(64) NOT NULL DEFAULT '', PRIMARY KEY (`name`));";
 
-    public static final  String CreateBuyer = "CREATE TABLE `Buyer` (`id` bigint auto_increment, `name` varchar(64), `wangwang` varchar(64), `mobilephone` varchar(64), `level` int, PRIMARY KEY (`id`), UNIQUE (`wangwang`));";
+    public static final  String CreateBuyer =
+            "CREATE TABLE `Buyer` (" +
+            "`id` bigint auto_increment," +
+            "`name` varchar(64)," +
+            "`wangwang` varchar(64)," +
+            "`mobilephone` varchar(64)," +
+            "`team` int," +
+            "PRIMARY KEY (`id`), UNIQUE (`wangwang`));" +
+            "CREATE INDEX `idx_shopName` ON `TaskTables` (`shopName`);" +
+            "CREATE INDEX `idx_batchNo` ON `TaskTables` (`batchNo`);";
 
     public static final  String CreateTaskTables =
             "CREATE TABLE `TaskTables` (" +
@@ -43,8 +52,10 @@ public class GlobalTool {
             "`buyerTeam` int," +
             "`buyerTaskBookId` int ," +
             "`subTaskBookId` int ," +
-            "`batchNo` int ," +
-            "PRIMARY KEY (`taskId`)); ";
+            "`batchNo` int default 0," +
+            "PRIMARY KEY (`taskId`)); " +
+            "CREATE INDEX `idx_shopName` ON `TaskTables` (`shopName`);" +
+            "CREATE INDEX `idx_batchNo` ON `TaskTables` (`batchNo`);";
 
     public static final  String CreateLockTable =
             "CREATE TABLE `LockTable` (" +

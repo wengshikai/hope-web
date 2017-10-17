@@ -248,7 +248,7 @@ public class TaskTablesManager {
             ArrayList<TaskTables> ant = entry.getValue();
             for(TaskTables nt:ant){
                 String ww = ssu.get(index).getWangwang();
-                int buyerTeam = ssu.get(index).getLevel();
+                int buyerTeam = ssu.get(index).getTeam();
                 //分配刷手
                 setBuyerAndTaskBookId(nt.getTaskId(),ww,buyerTeam,index+1);
                 index = (index+1)%num;

@@ -35,7 +35,7 @@ public class Buyer   extends Controller{
             return badRequest(addbuyer.render(form));
         } else {
             BuyerForm fc = form.get();
-            BuyerManager.insert(fc.getName(),fc.getWangwang(),fc.getMobilephone(),fc.getLevel());
+            BuyerManager.insert(fc.getName(),fc.getWangwang(),fc.getMobilephone(),fc.getTeam());
             flash("success", "成功添加刷手，姓名：" + fc.getName() + "\t旺旺名:" + fc.getWangwang());
             return redirect(
                     routes.Buyer.addbuyer()
@@ -84,14 +84,14 @@ public class Buyer   extends Controller{
 
                     String mobilephone = row.get(2).trim();
 
-                    int level;
+                    int team;
                     try {
-                        level = Double.valueOf((row.get(3).trim())).intValue();
+                        team = Double.valueOf((row.get(3).trim())).intValue();
                     } catch (Exception e) {
                         throw new Exception("组别填写错误,当前只能填写整数!单元格:D" + (buyerIndex+1));
                     }
 
-                    if (!BuyerManager.insert(name, wangwang, mobilephone, level)) {
+                    if (!BuyerManager.insert(name, wangwang, mobilephone, team)) {
                         throw new Exception("插入数据库异常,请检查刷手是否重复!" + "刷手旺旺名:" + wangwang);
                     }
                     buyerIndex ++;
