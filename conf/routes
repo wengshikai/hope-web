@@ -11,7 +11,6 @@ GET         /assets/*file                                      controllers.Asset
 GET         /static/*file                                      controllers.Assets.at(path="/public", file)
 
 GET         /init                                              controllers.Init.index
-GET         /initLockverybegin                                 controllers.BusinessTask.initLockverybegin
 
 
 GET         /login                                             controllers.Application.login()

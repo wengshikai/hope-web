@@ -14,7 +14,12 @@ public class GlobalTool {
     public static final Logger.ALogger logger =  Logger.of("GLOBAL");
     public static String urlPrefix =  "";
 
-    public static final  String CreateUser = "CREATE TABLE `User` (`name` varchar(64) NOT NULL DEFAULT '', `salt` varchar(64) NOT NULL DEFAULT '', `password` varchar(64) NOT NULL DEFAULT '', PRIMARY KEY (`name`));";
+    public static final  String CreateUser =
+            "CREATE TABLE `User` (" +
+            "`name` varchar(64) NOT NULL DEFAULT ''," +
+            "`salt` varchar(64) NOT NULL DEFAULT ''," +
+            "`password` varchar(64) NOT NULL DEFAULT ''," +
+            "PRIMARY KEY (`name`));";
 
     public static final  String CreateBuyer =
             "CREATE TABLE `Buyer` (" +
@@ -23,9 +28,8 @@ public class GlobalTool {
             "`wangwang` varchar(64)," +
             "`mobilephone` varchar(64)," +
             "`team` int," +
-            "PRIMARY KEY (`id`), UNIQUE (`wangwang`));" +
-            "CREATE INDEX `idx_shopName` ON `TaskTables` (`shopName`);" +
-            "CREATE INDEX `idx_batchNo` ON `TaskTables` (`batchNo`);";
+            "PRIMARY KEY (`id`)," +
+            "UNIQUE KEY (`wangwang`));";
 
     public static final  String CreateTaskTables =
             "CREATE TABLE `TaskTables` (" +
@@ -33,8 +37,8 @@ public class GlobalTool {
             "`taskBookUuid` varchar(64) ," +
             "`taskBookName` varchar(64) ," +
             "`id` int ," +
-            "`keyword` varchar(64) ," +
-            "`taskRequirement` varchar(64) ," +
+            "`keyword` varchar(64)," +
+            "`taskRequirement` varchar(64)," +
             "`unitPrice` double ," +
             "`goodsNumber` int," +
             "`allPrice` double ," +
@@ -53,9 +57,7 @@ public class GlobalTool {
             "`buyerTaskBookId` int ," +
             "`subTaskBookId` int ," +
             "`batchNo` int default 0," +
-            "PRIMARY KEY (`taskId`)); " +
-            "CREATE INDEX `idx_shopName` ON `TaskTables` (`shopName`);" +
-            "CREATE INDEX `idx_batchNo` ON `TaskTables` (`batchNo`);";
+            "PRIMARY KEY (`taskId`));";
 
     public static final  String CreateLockTable =
             "CREATE TABLE `LockTable` (" +
@@ -70,12 +72,13 @@ public class GlobalTool {
             "`buyerWangwang` varchar(64)," +
             "`price` int ," +
             "PRIMARY KEY (`id`), " +
-            "UNIQUE (`shopName`, `buyerWangwang`)); ";
+            "UNIQUE KEY (`shopName`, `buyerWangwang`)); ";
 
     static {
         Configuration config = Play.application().configuration();
         urlPrefix = config.getString("play.http.context", "");
     }
+
 
     public static void initDB() {
         DatabaseTool.dropTable("user", "User");
@@ -86,7 +89,6 @@ public class GlobalTool {
 
 
         DatabaseTool.dosql("user",CreateUser );
-        DatabaseTool.dosql("user","truncate table `User`");
         UserManager.insertUser("yanjue", "yanjue123");
 
         DatabaseTool.dosql("default",CreateBuyer);
@@ -97,20 +99,16 @@ public class GlobalTool {
         DatabaseTool.dosql("default",CreateCombineShopBuyer);
     }
 
+
     public static void initBuyer(){
         DatabaseTool.dosql("default","truncate table `Buyer`");
     }
+
 
     public static void initTask(){
         DatabaseTool.dosql("default","truncate table `TaskTables`");
         FileTool.deleteDirectory("data/image/");
         FileTool.createDestDirectoryIfNotExists("data/image/");
-    }
-
-    public static void initLockverybegin(){
-        DatabaseTool.dropTable("default","LockTable");
-        DatabaseTool.dosql("default", CreateLockTable);
-        LockTableManager.insert("TaskTables", 0);
     }
 
 

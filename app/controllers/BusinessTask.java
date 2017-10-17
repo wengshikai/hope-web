@@ -320,14 +320,6 @@ public class BusinessTask  extends Controller {
         );
     }
 
-    @Security.Authenticated(Secured.class)
-    public Result initLockverybegin() {
-        GlobalTool.initLockverybegin();
-        return redirect(
-                routes.BusinessTask.allnowtask()
-        );
-    }
-
 
     /** 下载所有分配后的表格压缩包 */
     @Security.Authenticated(Secured.class)
