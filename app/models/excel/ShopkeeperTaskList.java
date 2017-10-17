@@ -99,7 +99,7 @@ public class ShopkeeperTaskList {
         return ret;
     }
 
-    public int parse(HSSFSheet sheet,int start,int end,String taskbookUuid,String taskbookName,
+    public int parse(HSSFSheet sheet,int start,int end,String taskBookUuid,String taskBookName,
                      Map<String,String> picMap,Integer idIndex,int subtaskbookid) throws Exception {
 
         shopkeeperName = ExcelUtil.getCellString(sheet,start,1);
@@ -183,8 +183,8 @@ public class ShopkeeperTaskList {
             }
 
 
-            st.setTaskbookUuid(taskbookUuid);
-            st.setTaskbookName(taskbookName);
+            st.setTaskBookUuid(taskBookUuid);
+            st.setTaskBookName(taskBookName);
             st.setShopkeeperName(shopkeeperName);
             st.setShopName(shopName);
             st.setShopWangwang(shopWangwang);

@@ -146,7 +146,7 @@ public class BusinessTask  extends Controller {
             flash("batch_succ", "成功添加!");
             return redirect(routes.BusinessTask.addShopkeeperTask());
         } else {
-            GlobalTool.loger.error(exceptionMessage);
+            GlobalTool.logger.error(exceptionMessage);
             if (exceptionMessage.length() < 1024) { //flash储存的字符串有长度限制,先临时这么做
                 flash("batch_error", "添加失败!" + exceptionMessage);
             } else {
@@ -166,7 +166,7 @@ public class BusinessTask  extends Controller {
         try {
             shopId = Integer.parseInt(dirPath.split("\\s+")[1]);
         } catch (Exception e) {
-            GlobalTool.loger.error("获取商家编号失败", e);
+            GlobalTool.logger.error("获取商家编号失败", e);
         }
 
         //解析商家任务书
@@ -177,7 +177,7 @@ public class BusinessTask  extends Controller {
         }
 
         //判断是否重复插入
-        List<TaskTables> test= TaskTablesManager.getShopkeeperBookByTaskbookName(shopkeeperTaskBook.getTaskbookName());
+        List<TaskTables> test= TaskTablesManager.getShopkeeperBookByTaskBookName(shopkeeperTaskBook.getTaskBookName());
         if(test != null && test.size() != 0){
             return 1;
         }
@@ -185,7 +185,7 @@ public class BusinessTask  extends Controller {
         //保存图片
         Map<String,byte[]> imgContentMap = shopkeeperTaskBook.getPicContentMap();
         for(Map.Entry<String,byte[]> entry:imgContentMap.entrySet()){
-            LocalStoreTool.putImage(shopkeeperTaskBook.getTaskbookUuid()+entry.getKey(),entry.getValue());
+            LocalStoreTool.putImage(shopkeeperTaskBook.getTaskBookUuid()+entry.getKey(),entry.getValue());
         }
 
         //插入数据
@@ -193,11 +193,11 @@ public class BusinessTask  extends Controller {
         for(ShopkeeperTaskList taskList:taskLists){
             List<ShopkeeperTask> tasks = taskList.getTasklist();
             for(ShopkeeperTask task:tasks){
-                if(!TaskTablesManager.insert(shopId, task.getTaskbookUuid(),task.getTaskbookName(),task.getId(),
+                if(!TaskTablesManager.insert(shopId, task.getTaskBookUuid(),task.getTaskBookName(),task.getId(),
                         task.getKeyword(),task.getTaskRequirement(),task.getUnitPrice(),task.getGoodsNumber(),
                         task.getAllPrice(),task.getPic1(),task.getPic2(),task.getPic3(),task.getShopkeeperName(),
                         task.getShopName(),task.getShopWangwang(),task.getItemLink(),task.getPcCost(),task.getPhoneCost(),task.getSubTaskBookId())){
-                    GlobalTool.loger.error("插入错误:" + taskList);
+                    GlobalTool.logger.error("插入错误:" + taskList);
                     return 2;
                 }
             }
@@ -341,12 +341,12 @@ public class BusinessTask  extends Controller {
         return ok(ret);
     }
 
-    public static class taskbookNameForm {
-        public String taskbookName;
+    public static class taskBookNameForm {
+        public String taskBookName;
     }
 
     @Security.Authenticated(Secured.class)
-    public Result deleteByTaskbookName() {
+    public Result deleteByTaskBookName() {
         //解锁上传功能
         models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, "TaskTables");
         if(entry == null) {
@@ -354,9 +354,9 @@ public class BusinessTask  extends Controller {
         } else {
             LockTableManager.update("TaskTables", 0);
         }
-        Form<taskbookNameForm> form = Form.form(taskbookNameForm.class).bindFromRequest();
-        String bookName = form.get().taskbookName;
-        TaskTablesManager.deleteByTaskbookName(bookName);
+        Form<taskBookNameForm> form = Form.form(taskBookNameForm.class).bindFromRequest();
+        String bookName = form.get().taskBookName;
+        TaskTablesManager.deleteByTaskBookName(bookName);
 
         return redirect(
                 routes.BusinessTask.allnowtask()
@@ -365,9 +365,9 @@ public class BusinessTask  extends Controller {
 
     @Security.Authenticated(Secured.class)
     public Result getshopkeeperbookbyshopkeeperbookname() {
-        Form<taskbookNameForm> form = Form.form(taskbookNameForm.class).bindFromRequest();
-        String bookName = form.get().taskbookName;
-        List<TaskTables> entrys = TaskTablesManager.getShopkeeperBookByTaskbookName(bookName);
+        Form<taskBookNameForm> form = Form.form(taskBookNameForm.class).bindFromRequest();
+        String bookName = form.get().taskBookName;
+        List<TaskTables> entrys = TaskTablesManager.getShopkeeperBookByTaskBookName(bookName);
         if(entrys == null){
             return notFound();
         }

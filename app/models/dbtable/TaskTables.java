@@ -17,12 +17,12 @@ import javax.persistence.Id;
 public class TaskTables {
     @Id @GeneratedValue(strategy= GenerationType.AUTO)
     /** 任务Id,主键 */
-    int taskid;
+    int taskId;
 
     /** 商家任务书Id */
-    String taskbookUuid;
+    String taskBookUuid;
     /** 商家任务书名称 */
-    String taskbookName;
+    String taskBookName;
 
     /** 商家编号 */
     int shopId;
@@ -66,5 +66,8 @@ public class TaskTables {
     /** 刷手任务书Id */
     int buyerTaskBookId;
     /** 刷手任务书子Id */
-    int subTaskbookId;
+    int subTaskBookId;
+
+    /** 分配刷手的批次号 */
+    int batchNo;
 }

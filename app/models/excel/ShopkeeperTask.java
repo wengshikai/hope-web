@@ -8,9 +8,9 @@ import models.dbtable.TaskTables;
  */
 @Data
 public class ShopkeeperTask {
-    int taskid;
-    String taskbookUuid;
-    String taskbookName;
+    int taskId;
+    String taskBookUuid;
+    String taskBookName;
     int id;
     String keyword;
     String taskRequirement;
@@ -36,16 +36,16 @@ public class ShopkeeperTask {
         return subTaskBookId;
     }
 
-    public int getTaskid() {
-        return taskid;
+    public int getTaskId() {
+        return taskId;
     }
 
-    public String getTaskbookUuid() {
-        return taskbookUuid;
+    public String getTaskBookUuid() {
+        return taskBookUuid;
     }
 
-    public String getTaskbookName() {
-        return taskbookName;
+    public String getTaskBookName() {
+        return taskBookName;
     }
 
     public int getId() {
@@ -129,9 +129,9 @@ public class ShopkeeperTask {
     }
 
     public void initByTables(TaskTables task){
-        taskid = task.getTaskid();
-        taskbookUuid = task.getTaskbookUuid();
-        taskbookName = task.getTaskbookName();
+        taskId = task.getTaskId();
+        taskBookUuid = task.getTaskBookUuid();
+        taskBookName = task.getTaskBookName();
         id = task.getId();
         keyword = task.getKeyword();
         taskRequirement = task.getTaskRequirement();

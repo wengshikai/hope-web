@@ -27,8 +27,8 @@ import java.util.*;
  */
 @Data
 public class ShopkeeperTaskBook {
-    private String taskbookUuid;
-    private String taskbookName;
+    private String taskBookUuid;
+    private String taskBookName;
     private List<ShopkeeperTaskList> tasklist = new ArrayList<ShopkeeperTaskList>();
     private Map<String,String> picMap = new HashMap<String,String>();
     private Map<String,byte[]> picContentMap = new HashMap<String,byte[]>();
@@ -41,8 +41,8 @@ public class ShopkeeperTaskBook {
         return tasklist;
     }
 
-    public String getTaskbookUuid() {
-        return taskbookUuid;
+    public String getTaskBookUuid() {
+        return taskBookUuid;
     }
 
 
@@ -79,12 +79,12 @@ public class ShopkeeperTaskBook {
         }
 
         //随机生成一个uuid
-        taskbookUuid = UUID.randomUUID().toString();
+        taskBookUuid = UUID.randomUUID().toString();
 
         //获取文件名
         try {
             String[] excelTmpStrings = excelFile.split(File.separator);
-            taskbookName = excelTmpStrings[excelTmpStrings.length - 1];
+            taskBookName = excelTmpStrings[excelTmpStrings.length - 1];
         } catch(Exception e) {
             throw new Exception("读取文件名异常,文件夹:" + dirPath);
         }
@@ -138,7 +138,7 @@ public class ShopkeeperTaskBook {
                 ShopkeeperTaskList stl = new ShopkeeperTaskList();
                 try {
                     //解析任务
-                    idIndex += stl.parse(sheet, taskListStart.get(i), taskListEnd.get(i), taskbookUuid, taskbookName, picMap, idIndex, tmpSubTaskBookId);
+                    idIndex += stl.parse(sheet, taskListStart.get(i), taskListEnd.get(i), taskBookUuid, taskBookName, picMap, idIndex, tmpSubTaskBookId);
                     tasklist.add(stl);
                 } catch(Exception e) {
                     //e.printStackTrace();
@@ -212,19 +212,19 @@ public class ShopkeeperTaskBook {
     }
 
     public void initByTask(ShopkeeperTaskList task){
-        taskbookUuid = task.getTasklist().get(0).getTaskbookUuid();
-        taskbookName = task.getTasklist().get(0).getTaskbookName();
+        taskBookUuid = task.getTasklist().get(0).getTaskBookUuid();
+        taskBookName = task.getTasklist().get(0).getTaskBookName();
         String pic = task.getPic1();
         if(pic!=null &&!pic.equals("")){
-            picContentMap.put(pic, LocalStoreTool.getImage(taskbookUuid + pic));
+            picContentMap.put(pic, LocalStoreTool.getImage(taskBookUuid + pic));
         }
         pic = task.getPic2();
         if(pic!=null &&!pic.equals("")){
-            picContentMap.put(pic, LocalStoreTool.getImage(taskbookUuid + pic));
+            picContentMap.put(pic, LocalStoreTool.getImage(taskBookUuid + pic));
         }
         pic = task.getPic3();
         if(pic!=null &&!pic.equals("")){
-            picContentMap.put(pic, LocalStoreTool.getImage(taskbookUuid + pic));
+            picContentMap.put(pic, LocalStoreTool.getImage(taskBookUuid + pic));
         }
     }
 
@@ -232,15 +232,15 @@ public class ShopkeeperTaskBook {
         tasklist.add(stl);
         String pic = stl.getPic1();
         if(pic!=null &&!pic.equals("")){
-            picContentMap.put(pic, LocalStoreTool.getImage(taskbookUuid + pic));
+            picContentMap.put(pic, LocalStoreTool.getImage(taskBookUuid + pic));
         }
         pic = stl.getPic2();
         if(pic!=null &&!pic.equals("")){
-            picContentMap.put(pic, LocalStoreTool.getImage(taskbookUuid + pic));
+            picContentMap.put(pic, LocalStoreTool.getImage(taskBookUuid + pic));
         }
         pic = stl.getPic3();
         if(pic!=null &&!pic.equals("")){
-            picContentMap.put(pic, LocalStoreTool.getImage(taskbookUuid + pic));
+            picContentMap.put(pic, LocalStoreTool.getImage(taskBookUuid + pic));
         }
     }
 
@@ -248,7 +248,7 @@ public class ShopkeeperTaskBook {
         Map<String,ShopkeeperTaskList> stbmap = new HashMap<String,ShopkeeperTaskList>();
 
         for(TaskTables task:ttlist){
-            String uuid = task.getTaskbookUuid()+task.getSubTaskbookId();
+            String uuid = task.getTaskBookUuid()+task.getSubTaskBookId();
             ShopkeeperTask stk = new ShopkeeperTask();
             stk.initByTables(task);
             if(!stbmap.containsKey(uuid)){
@@ -280,7 +280,7 @@ public class ShopkeeperTaskBook {
 
         Map<String,ShopkeeperTaskBook> bookMap = new HashMap<String,ShopkeeperTaskBook>();
         for(Map.Entry<String,ShopkeeperTaskList> entry:stbmap.entrySet()){
-            String uuid = entry.getValue().getTasklist().get(0).getTaskbookUuid();
+            String uuid = entry.getValue().getTasklist().get(0).getTaskBookUuid();
             if(!bookMap.containsKey(uuid)){
                 ShopkeeperTaskBook stb = new ShopkeeperTaskBook();
                 stb.initByTask(entry.getValue());

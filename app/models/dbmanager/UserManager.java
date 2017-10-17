@@ -27,13 +27,13 @@ public class UserManager {
                 DatabaseTool.userEm.persist(user);
                 DatabaseTool.userEm.getTransaction().commit();
             } catch (Exception e) {
-                GlobalTool.loger.error("insert User error!",e);
+                GlobalTool.logger.error("insert User error!",e);
                 //插入失败,事务回滚
                 DatabaseTool.userEm.getTransaction().rollback();
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.loger.error("insert User error!",e);
+            GlobalTool.logger.error("insert User error!",e);
             return false;
         }
 
@@ -54,7 +54,7 @@ public class UserManager {
             //计算密文
             md5password = Security.getMD5(name+password+user.getSalt());
         } catch (NoSuchAlgorithmException e) {
-            GlobalTool.loger.error("calculate password error!",e);
+            GlobalTool.logger.error("calculate password error!",e);
             return false;
         }
 

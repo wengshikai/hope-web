@@ -10,21 +10,18 @@ import util.FileTool;
  * Created by shanmao on 15-9-29.
  */
 public class GlobalTool {
-    public static final Logger.ALogger loger =  Logger.of("GLOBAL");
-    public static String urlprefix =  "";
+    public static final Logger.ALogger logger =  Logger.of("GLOBAL");
+    public static String urlPrefix =  "";
 
-    public static final  String CreateBuyer = "CREATE TABLE `Buyer` (`id` bigint auto_increment ,`name`  varchar(64) ,"+
-            "`wangwang` varchar(64),`mobilephone` varchar(64),`level` int, PRIMARY KEY (`id`), UNIQUE (`wangwang`)); ";
+    public static final  String CreateUser = "CREATE TABLE `User` (`name` varchar(64) NOT NULL DEFAULT '', `salt` varchar(64) NOT NULL DEFAULT '', `password` varchar(64) NOT NULL DEFAULT '', PRIMARY KEY (`name`));";
 
-    public static final  String CreateUser = "CREATE TABLE `User` (`name` varchar(64) NOT NULL DEFAULT '',`salt` varchar(64) NOT NULL DEFAULT '',`password` varchar(64) NOT NULL DEFAULT '',PRIMARY KEY (`name`)) ;";
+    public static final  String CreateBuyer = "CREATE TABLE `Buyer` (`id` bigint auto_increment, `name` varchar(64), `wangwang` varchar(64), `mobilephone` varchar(64), `level` int, PRIMARY KEY (`id`), UNIQUE (`wangwang`));";
 
-    public static final  String CreateTaskHistory = "CREATE TABLE `TaskHistory` (`id` varchar(64) NOT NULL DEFAULT '',`shuashou` varchar(64) NOT NULL DEFAULT ''," +
-            "`dianpu`  varchar(64) NOT NULL DEFAULT '', `timestamp` INT NOT NULL DEFAULT 0 ,PRIMARY KEY (`id`)) ; ";
-
-    public static final  String CreateTaskTables = "CREATE TABLE `TaskTables` (" +
-            "`taskid` bigint auto_increment ," +
-            "`taskbookUuid` varchar(64) ," +
-            "`taskbookName` varchar(64) ," +
+    public static final  String CreateTaskTables =
+            "CREATE TABLE `TaskTables` (" +
+            "`taskId` bigint auto_increment ," +
+            "`taskBookUuid` varchar(64) ," +
+            "`taskBookName` varchar(64) ," +
             "`id` int ," +
             "`keyword` varchar(64) ," +
             "`taskRequirement` varchar(64) ," +
@@ -44,15 +41,18 @@ public class GlobalTool {
             "`buyerWangwang` varchar(64)," +
             "`buyerTeam` int," +
             "`buyerTaskBookId` int ," +
-            "`subTaskbookId` int ," +
-            "PRIMARY KEY (`taskid`)); ";
+            "`subTaskBookId` int ," +
+            "`batchNo` int ," +
+            "PRIMARY KEY (`taskId`)); ";
 
-    public static final  String CreateLockTable = "CREATE TABLE `LockTable` (" +
+    public static final  String CreateLockTable =
+            "CREATE TABLE `LockTable` (" +
             "`key` varchar(64) ," +
             "`value` int," +
             "PRIMARY KEY (`key`)); ";
 
-    public static final  String CreateCombineShopBuyer = "CREATE TABLE `CombineShopBuyer` (" +
+    public static final  String CreateCombineShopBuyer =
+            "CREATE TABLE `CombineShopBuyer` (" +
             "`id` bigint auto_increment ," +
             "`shopName` varchar(64)," +
             "`buyerWangwang` varchar(64)," +
@@ -62,26 +62,22 @@ public class GlobalTool {
 
     static {
         Configuration config = Play.application().configuration();
-        urlprefix = config.getString("play.http.context", "");
+        urlPrefix = config.getString("play.http.context", "");
     }
 
     public static void initDB() {
         DatabaseTool.dropTable("user", "User");
         DatabaseTool.dropTable("default","Buyer");
-        DatabaseTool.dropTable("default","TaskHistory");
-        DatabaseTool.dropTable("default","NowTask");
-        DatabaseTool.dropTable("default","TaskTables");
         DatabaseTool.dropTable("default","LockTable");
+        DatabaseTool.dropTable("default","TaskTables");
         DatabaseTool.dropTable("default","CombineShopBuyer");
 
 
         DatabaseTool.dosql("user",CreateUser );
         DatabaseTool.dosql("user","truncate table `User`");
-        UserManager.insertUser("weng", "123456");
         UserManager.insertUser("yanjue", "yanjue123");
 
         DatabaseTool.dosql("default",CreateBuyer);
-        DatabaseTool.dosql("default",CreateTaskHistory);
         DatabaseTool.dosql("default",CreateTaskTables);
         DatabaseTool.dosql("default",CreateLockTable);
         DatabaseTool.dosql("default","truncate table `LockTable`");

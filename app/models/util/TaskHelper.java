@@ -28,7 +28,7 @@ public class TaskHelper {
     public static Map<String,ShopkeeperTaskBook>  getShopkeeperTaskBook(List<TaskTables> all){
         Map<String,ShopkeeperTaskList> stbmap = new HashMap<String,ShopkeeperTaskList>();
         for(TaskTables task:all){
-            String uuid = task.getTaskbookUuid()+task.getSubTaskbookId();
+            String uuid = task.getTaskBookUuid()+task.getSubTaskBookId();
             ShopkeeperTask stk = new ShopkeeperTask();
             stk.initByTables(task);
             if(!stbmap.containsKey(uuid)){
@@ -42,7 +42,7 @@ public class TaskHelper {
 
         Map<String,ShopkeeperTaskBook> bookMap = new HashMap<String,ShopkeeperTaskBook>();
         for(Map.Entry<String,ShopkeeperTaskList> entry:stbmap.entrySet()){
-            String uuid = entry.getValue().getTasklist().get(0).getTaskbookName();
+            String uuid = entry.getValue().getTasklist().get(0).getTaskBookName();
             if(!bookMap.containsKey(uuid)){
                 ShopkeeperTaskBook stb = new ShopkeeperTaskBook();
                 stb.initByTask(entry.getValue());

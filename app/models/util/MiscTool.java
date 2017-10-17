@@ -92,13 +92,13 @@ public class MiscTool {
             String pic2 = task.getPic2();
             String pic3 = task.getPic3();
             if(pic1!=null&&!pic1.equals("")){
-                sst.addPic(LocalStoreTool.getImage(task.getTaskbookUuid()+pic1),pic1.split("\\.")[1]);
+                sst.addPic(LocalStoreTool.getImage(task.getTaskBookUuid()+pic1),pic1.split("\\.")[1]);
             }
             if(pic2!=null&&!pic2.equals("")){
-                sst.addPic(LocalStoreTool.getImage(task.getTaskbookUuid()+pic2),pic2.split("\\.")[1]);
+                sst.addPic(LocalStoreTool.getImage(task.getTaskBookUuid()+pic2),pic2.split("\\.")[1]);
             }
             if(pic3!=null&&!pic3.equals("")){
-                sst.addPic(LocalStoreTool.getImage(task.getTaskbookUuid()+pic3),pic3.split("\\.")[1]);
+                sst.addPic(LocalStoreTool.getImage(task.getTaskBookUuid()+pic3),pic3.split("\\.")[1]);
             }
             sst.setRequirement(task.getTaskRequirement());
             sst.setPhoneCost(task.getPhoneCost());
@@ -336,7 +336,7 @@ public class MiscTool {
     public static void buildDownloadShopkeeperZip(List<TaskTables> all,String zipname){
         Map<String,ShopkeeperTaskList> stbmap = new HashMap<String,ShopkeeperTaskList>();
         for(TaskTables task:all){
-            String uuid = task.getTaskbookUuid()+task.getSubTaskbookId();
+            String uuid = task.getTaskBookUuid()+task.getSubTaskBookId();
             ShopkeeperTask stk = new ShopkeeperTask();
             stk.initByTables(task);
             if(!stbmap.containsKey(uuid)){
@@ -368,7 +368,7 @@ public class MiscTool {
 
         Map<String,ShopkeeperTaskBook> bookMap = new HashMap<String,ShopkeeperTaskBook>();
         for(Map.Entry<String,ShopkeeperTaskList> entry:stbmap.entrySet()){
-            String uuid = entry.getValue().getTasklist().get(0).getTaskbookUuid();
+            String uuid = entry.getValue().getTasklist().get(0).getTaskBookUuid();
             if(!bookMap.containsKey(uuid)){
                 ShopkeeperTaskBook stb = new ShopkeeperTaskBook();
                 stb.initByTask(entry.getValue());
@@ -382,8 +382,8 @@ public class MiscTool {
         for(Map.Entry<String,ShopkeeperTaskBook> entry:bookMap.entrySet()){
             ShopkeeperTaskBook stb = entry.getValue();
             //生成刷手任务书(商家维度)
-            stb.generateExcel("exceltmp/"+stb.getTaskbookName());
-            names.add("exceltmp/"+stb.getTaskbookName());
+            stb.generateExcel("exceltmp/"+stb.getTaskBookName());
+            names.add("exceltmp/"+stb.getTaskBookName());
         }
 
         ZIPTool.compressFiles2Zip(names.toArray(new String[names.size()]), zipname);

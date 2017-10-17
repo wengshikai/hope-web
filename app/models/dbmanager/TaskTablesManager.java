@@ -24,17 +24,17 @@ import java.util.Map;
 public class TaskTablesManager {
 
     /** 添加任务 */
-    public static boolean insert(int ShopId, String taskbookUuid,String taskbookName,int id,String keyword,String taskRequirement,
+    public static boolean insert(int ShopId, String taskBookUuid,String taskBookName,int id,String keyword,String taskRequirement,
                                  double unitPrice,int goodsNumber,double allPrice,String pic1,String pic2,String pic3,
                                  String shopkeeperName,String shopName,String shopWangwang,
-                                 String itemLink,double pcCost,double phoneCost,int subTaskbookId){
+                                 String itemLink,double pcCost,double phoneCost,int subTaskBookId){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
             try {
                 TaskTables entry = new TaskTables();
                 entry.setShopId(ShopId);
-                entry.setTaskbookUuid(taskbookUuid);
-                entry.setTaskbookName(taskbookName);
+                entry.setTaskBookUuid(taskBookUuid);
+                entry.setTaskBookName(taskBookName);
                 entry.setId(id);
                 entry.setKeyword(keyword);
                 entry.setTaskRequirement(taskRequirement);
@@ -50,17 +50,17 @@ public class TaskTablesManager {
                 entry.setItemLink(itemLink);
                 entry.setPcCost(pcCost);
                 entry.setPhoneCost(phoneCost);
-                entry.setSubTaskbookId(subTaskbookId);
+                entry.setSubTaskBookId(subTaskBookId);
                 DatabaseTool.defaultEm.persist(entry);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
-                GlobalTool.loger.error("insert TableTask error!",e);
+                GlobalTool.logger.error("insert TableTask error!",e);
                 //插入失败,回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.loger.error("insert TableTask error!",e);
+            GlobalTool.logger.error("insert TableTask error!",e);
             return false;
         }
 
@@ -68,24 +68,24 @@ public class TaskTablesManager {
     }
 
     /** 分配刷手 */
-    public static boolean setBuyerAndTaskBookId(int taskid,String buyerWangwang,int buyerTeam, int buyerTaskBookId){
+    public static boolean setBuyerAndTaskBookId(int taskId,String buyerWangwang,int buyerTeam, int buyerTaskBookId){
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
             try {
-                models.dbtable.TaskTables task = DatabaseTool.defaultEm.find(models.dbtable.TaskTables.class, taskid);
+                models.dbtable.TaskTables task = DatabaseTool.defaultEm.find(models.dbtable.TaskTables.class, taskId);
                 task.setBuyerWangwang(buyerWangwang);
                 task.setBuyerTeam(buyerTeam);
                 task.setBuyerTaskBookId(buyerTaskBookId);
                 DatabaseTool.defaultEm.merge(task);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
-                GlobalTool.loger.error("update TableTask error!",e);
+                GlobalTool.logger.error("update TableTask error!",e);
                 //更新失败,回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.loger.error("update TableTask error!",e);
+            GlobalTool.logger.error("update TableTask error!",e);
             return false;
         }
 
@@ -95,11 +95,11 @@ public class TaskTablesManager {
 
     public static List<String> getALlTaskBookName(){
         try {
-            Query query = DatabaseTool.defaultEm.createQuery("select distinct u.taskbookName from TaskTables u");
+            Query query = DatabaseTool.defaultEm.createQuery("select distinct u.taskBookName from TaskTables u");
             List<String> entry =(List<String>)query.getResultList();
             return entry;
         } catch (Exception e) {
-            GlobalTool.loger.error("get TableTask error!",e);
+            GlobalTool.logger.error("get TableTask error!",e);
             return null;
         }
     }
@@ -118,7 +118,7 @@ public class TaskTablesManager {
                 return entry;
             }
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.logger.error("something error!",e);
             return 0;
         }finally {
             if(defaultEm!=null){
@@ -128,23 +128,23 @@ public class TaskTablesManager {
         }
     }
 
-    public static boolean deleteByTaskbookName(String taskbookName){
+    public static boolean deleteByTaskBookName(String taskBookName){
         EntityManager em = DatabaseTool.defaultFactory.createEntityManager();
         try {
-            Query query = em.createQuery("delete from TaskTables u where u.taskbookName=?1");
-            query.setParameter(1,taskbookName);
+            Query query = em.createQuery("delete from TaskTables u where u.taskBookName=?1");
+            query.setParameter(1,taskBookName);
             em.getTransaction().begin();
             try {
                 query.executeUpdate();
                 em.getTransaction().commit();
             } catch (Exception e) {
-                GlobalTool.loger.error("something error!",e);
+                GlobalTool.logger.error("something error!",e);
                 //更新失败,事务回滚
                 em.getTransaction().rollback();
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.logger.error("something error!",e);
             return false;
         }finally {
             em.close();
@@ -153,15 +153,15 @@ public class TaskTablesManager {
         return true;
     }
 
-    public static List<TaskTables> getShopkeeperBookByTaskbookName(String taskbookName){
+    public static List<TaskTables> getShopkeeperBookByTaskBookName(String taskBookName){
         EntityManager em = DatabaseTool.defaultFactory.createEntityManager();
         try {
-            Query query = em.createQuery("select u from TaskTables u where u.taskbookName=?1");
-            query.setParameter(1,taskbookName);
+            Query query = em.createQuery("select u from TaskTables u where u.taskBookName=?1");
+            query.setParameter(1,taskBookName);
             List<TaskTables> taskTablesList = (List<TaskTables>)query.getResultList();
             return taskTablesList;
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.logger.error("something error!",e);
             return null;
         }finally {
             em.close();
@@ -180,7 +180,7 @@ public class TaskTablesManager {
             conn = ds.getConnection();
             ResultSet result = null;
             st = conn.createStatement();
-            String sql  = "select max(c) from (select count(*) as c from TaskTables group by taskbookUuid)";
+            String sql  = "select max(c) from (select count(*) as c from TaskTables group by taskBookUuid)";
             result = st.executeQuery(sql);
             int columnCount = result.getMetaData().getColumnCount();
             while (result.next()) {
@@ -195,14 +195,14 @@ public class TaskTablesManager {
                 try {
                     st.close();
                 } catch (SQLException e1) {
-                    GlobalTool.loger.error("something error", e1);
+                    GlobalTool.logger.error("something error", e1);
                 }
             }
             if (conn != null) {
                 try {
                     conn.close();
                 } catch (SQLException e1) {
-                    GlobalTool.loger.error("something error", e1);
+                    GlobalTool.logger.error("something error", e1);
                 }
             }
         }
@@ -217,7 +217,7 @@ public class TaskTablesManager {
             List<TaskTables> entry =(List<TaskTables>)query.getResultList();
             return entry;
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.logger.error("something error!",e);
             return null;
         }
     }
@@ -228,12 +228,12 @@ public class TaskTablesManager {
         Map<String,ArrayList<TaskTables>> ret = new HashMap<String,ArrayList<TaskTables>>();
         List<TaskTables>  ntlist = getALl();
         for(TaskTables nt:ntlist){
-            if(!ret.containsKey(nt.getTaskbookUuid())){
+            if(!ret.containsKey(nt.getTaskBookUuid())){
                 ArrayList<TaskTables> ant = new ArrayList<TaskTables>();
                 ant.add(nt);
-                ret.put(nt.getTaskbookUuid(),ant);
+                ret.put(nt.getTaskBookUuid(),ant);
             }else{
-                ret.get(nt.getTaskbookUuid()).add(nt);
+                ret.get(nt.getTaskBookUuid()).add(nt);
             }
         }
         return ret;
@@ -250,7 +250,7 @@ public class TaskTablesManager {
                 String ww = ssu.get(index).getWangwang();
                 int buyerTeam = ssu.get(index).getLevel();
                 //分配刷手
-                setBuyerAndTaskBookId(nt.getTaskid(),ww,buyerTeam,index+1);
+                setBuyerAndTaskBookId(nt.getTaskId(),ww,buyerTeam,index+1);
                 index = (index+1)%num;
             }
         }

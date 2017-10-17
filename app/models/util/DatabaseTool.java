@@ -44,20 +44,20 @@ public class DatabaseTool {
             stmt = conn.prepareStatement(ddl.toString());
             stmt.execute();
         } catch (SQLException e) {
-            GlobalTool.loger.error("something error", e);
+            GlobalTool.logger.error("something error", e);
         }finally {
             if (stmt != null) {
                 try {
                     stmt.close();
                 } catch (SQLException e1) {
-                    GlobalTool.loger.error("something error",e1);
+                    GlobalTool.logger.error("something error",e1);
                 }
             }
             if (conn != null) {
                 try {
                     conn.close();
                 } catch (SQLException e) {
-                    GlobalTool.loger.error("something error",e);
+                    GlobalTool.logger.error("something error",e);
                 }
             }
         }
@@ -93,14 +93,14 @@ public class DatabaseTool {
                 try {
                     stmt.close();
                 } catch (SQLException e1) {
-                    GlobalTool.loger.error("something error", e1);
+                    GlobalTool.logger.error("something error", e1);
                 }
             }
             if (conn != null) {
                 try {
                     conn.close();
                 } catch (SQLException e1) {
-                    GlobalTool.loger.error("something error", e1);
+                    GlobalTool.logger.error("something error", e1);
                 }
             }
         }
@@ -132,14 +132,14 @@ public class DatabaseTool {
                 try {
                     st.close();
                 } catch (SQLException e1) {
-                    GlobalTool.loger.error("something error", e1);
+                    GlobalTool.logger.error("something error", e1);
                 }
             }
             if (conn != null) {
                 try {
                     conn.close();
                 } catch (SQLException e1) {
-                    GlobalTool.loger.error("something error", e1);
+                    GlobalTool.logger.error("something error", e1);
                 }
             }
         }

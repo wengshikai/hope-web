@@ -22,7 +22,7 @@ public class BuyerManager {
                 DatabaseTool.defaultEm.persist(entry);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
-                GlobalTool.loger.error("insert Buyer error: " + entry.getName() + " " + entry.getWangwang()
+                GlobalTool.logger.error("insert Buyer error: " + entry.getName() + " " + entry.getWangwang()
                         + " " + entry.getMobilephone()  + " " + entry.getLevel(),e);
                 //插入失败,回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
@@ -30,7 +30,7 @@ public class BuyerManager {
             }
         } catch (Exception e) {
             DatabaseTool.defaultEm.getTransaction().rollback();
-            GlobalTool.loger.error("insert Buyer error!",e);
+            GlobalTool.logger.error("insert Buyer error!",e);
             return false;
         }
 
@@ -44,7 +44,7 @@ public class BuyerManager {
             List<Buyer> entry =(List<Buyer>)query.getResultList();
             return entry;
         } catch (Exception e) {
-            GlobalTool.loger.error("insert Buyer error!",e);
+            GlobalTool.logger.error("insert Buyer error!",e);
             return null;
         }
     }
@@ -57,7 +57,7 @@ public class BuyerManager {
             List<Integer> teams =(List<Integer>)query.getResultList();
             return teams;
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.logger.error("something error!",e);
             return null;
         }
     }
@@ -70,7 +70,7 @@ public class BuyerManager {
             List<Buyer> entry =(List<Buyer>)query.getResultList();
             return entry;
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.logger.error("something error!",e);
             return null;
         }
     }
@@ -82,7 +82,7 @@ public class BuyerManager {
             Long entry =(Long)query.getSingleResult();
             return entry;
         } catch (Exception e) {
-            GlobalTool.loger.error("something error!",e);
+            GlobalTool.logger.error("something error!",e);
             return 0L;
         }
     }

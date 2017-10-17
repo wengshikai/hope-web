@@ -35,12 +35,12 @@
                     <td>@taskbookMap.get(nowtasklist.get(i)).getTaskNum</td>
                     <td>@taskbookMap.get(nowtasklist.get(i)).getTaskAllPriceSum</td>
                     <td>
-                    @helper.form(routes.BusinessTask.deleteByTaskbookName()) {<button type="submit" class="btn btn-info">删除</button>
-                    <input type="hidden" name="taskbookName" value="@nowtasklist.get(i)">}
+                    @helper.form(routes.BusinessTask.deleteByTaskBookName()) {<button type="submit" class="btn btn-info">删除</button>
+                    <input type="hidden" name="taskBookName" value="@nowtasklist.get(i)">}
                     </td>
                     <td>
                         @helper.form(routes.BusinessTask.getshopkeeperbookbyshopkeeperbookname()) {<button type="submit" class="btn btn-info">查看</button>
-                            <input type="hidden" name="taskbookName" value="@nowtasklist.get(i)">}
+                            <input type="hidden" name="taskBookName" value="@nowtasklist.get(i)">}
                     </td>
                     <td><a href="">下载</a></td>
                 </tr>
