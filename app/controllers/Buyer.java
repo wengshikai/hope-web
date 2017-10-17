@@ -5,7 +5,7 @@ import models.dbmanager.GlobalTool;
 import util.ExcelUtil;
 import play.data.Form;
 import play.mvc.*;
-import views.html.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Buyer   extends Controller{
 
-    public static class BuyerForm extends models.dbtable.Buyer{
+    public static class BuyerForm extends models.entity.Buyer{
         public String validate() {
             if (wangwang==null || wangwang.equals("")) {
                 return "无效刷手";
@@ -123,7 +123,7 @@ public class Buyer   extends Controller{
 
     @Security.Authenticated(Secured.class)
     public Result all() {
-        List<models.dbtable.Buyer> ssl = BuyerManager.getALl();
+        List<models.entity.Buyer> ssl = BuyerManager.getALl();
         return ok(allbuyer.render(ssl));
     }
 

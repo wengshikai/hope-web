@@ -12,7 +12,7 @@ public class LockTableManager {
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
             try {
-                models.dbtable.LockTable entry = new models.dbtable.LockTable();
+                models.entity.LockTable entry = new models.entity.LockTable();
                 entry.setKey(key);
                 entry.setValue(value);
                 DatabaseTool.defaultEm.persist(entry);
@@ -35,7 +35,7 @@ public class LockTableManager {
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
             try {
-                models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, key);
+                models.entity.LockTable entry = DatabaseTool.defaultEm.find(models.entity.LockTable.class, key);
                 entry.setValue(value);
                 DatabaseTool.defaultEm.merge(entry);
                 DatabaseTool.defaultEm.getTransaction().commit();
@@ -55,7 +55,7 @@ public class LockTableManager {
 
     public static boolean isLock(String key){
         try {
-            models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, key);
+            models.entity.LockTable entry = DatabaseTool.defaultEm.find(models.entity.LockTable.class, key);
             if(entry != null && entry.getValue() == 1){
                 return true;
             }else{

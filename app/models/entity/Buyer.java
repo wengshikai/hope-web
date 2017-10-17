@@ -1,4 +1,4 @@
-package models.dbtable;
+package models.entity;
 import lombok.Data;
 
 import javax.persistence.Entity;

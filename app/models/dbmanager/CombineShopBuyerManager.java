@@ -1,6 +1,6 @@
 package models.dbmanager;
 
-import models.dbtable.CombineShopBuyer;
+import models.entity.CombineShopBuyer;
 import models.util.DatabaseTool;
 
 import javax.persistence.Query;

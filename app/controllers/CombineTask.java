@@ -3,7 +3,7 @@ package controllers;
 import com.google.common.collect.Lists;
 import models.dbmanager.CombineShopBuyerManager;
 import models.dbmanager.GlobalTool;
-import models.dbtable.CombineShopBuyer;
+import models.entity.CombineShopBuyer;
 import models.excel.ShopCollectionExcel;
 import models.util.MiscTool;
 import play.mvc.Controller;
@@ -13,7 +13,6 @@ import util.AmountUtil;
 import util.ExcelUtil;
 import util.FileTool;
 import util.ZIPTool;
-import views.html.*;
 
 import java.util.ArrayList;
 import java.util.List;

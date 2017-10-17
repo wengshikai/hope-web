@@ -1,6 +1,6 @@
 package models.dbmanager;
 
-import models.dbtable.TaskTables;
+import models.entity.TaskTables;
 import models.util.DatabaseTool;
 import play.db.DB;
 
@@ -72,7 +72,7 @@ public class TaskTablesManager {
         try {
             DatabaseTool.defaultEm.getTransaction().begin();
             try {
-                models.dbtable.TaskTables task = DatabaseTool.defaultEm.find(models.dbtable.TaskTables.class, taskId);
+                models.entity.TaskTables task = DatabaseTool.defaultEm.find(models.entity.TaskTables.class, taskId);
                 task.setBuyerWangwang(buyerWangwang);
                 task.setBuyerTeam(buyerTeam);
                 task.setBuyerTaskBookId(buyerTaskBookId);
@@ -241,7 +241,7 @@ public class TaskTablesManager {
 
 
     /** 分配任务 */
-    public static boolean updateNew(int num,List<models.dbtable.Buyer> ssu){
+    public static boolean updateNew(int num,List<models.entity.Buyer> ssu){
         Map<String,ArrayList<TaskTables>> alltask = getALlByShopkeeperTaskList();
         int index=0;
         for(Map.Entry<String,ArrayList<TaskTables>> entry:alltask.entrySet()){

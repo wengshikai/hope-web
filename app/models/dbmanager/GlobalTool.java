@@ -1,5 +1,6 @@
 package models.dbmanager;
 
+import models.entity.LockTable;
 import models.util.DatabaseTool;
 import play.Configuration;
 import play.Logger;
@@ -103,7 +104,7 @@ public class GlobalTool {
 
 
     public static void initLock(String key){
-        models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, key);
+        LockTable entry = DatabaseTool.defaultEm.find(models.entity.LockTable.class, key);
         if(entry == null) {
             LockTableManager.insert("TaskTables", 0);
         } else {

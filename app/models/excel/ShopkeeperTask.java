@@ -1,7 +1,7 @@
 package models.excel;
 
 import lombok.Data;
-import models.dbtable.TaskTables;
+import models.entity.TaskTables;
 
 /**
  * Created by shanmao on 15-12-10.

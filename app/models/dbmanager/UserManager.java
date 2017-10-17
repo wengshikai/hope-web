@@ -1,6 +1,6 @@
 package models.dbmanager;
 
-import models.dbtable.User;
+import models.entity.User;
 import models.util.DatabaseTool;
 import util.Security;
 

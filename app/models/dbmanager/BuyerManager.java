@@ -1,6 +1,6 @@
 package models.dbmanager;
 
-import models.dbtable.Buyer;
+import models.entity.Buyer;
 import models.util.DatabaseTool;
 
 import javax.persistence.Query;

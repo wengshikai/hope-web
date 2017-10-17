@@ -1,7 +1,7 @@
 package models.excel;
 
 import lombok.Data;
-import models.dbtable.TaskTables;
+import models.entity.TaskTables;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;

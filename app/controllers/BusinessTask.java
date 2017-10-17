@@ -7,7 +7,7 @@ import models.dbmanager.BuyerManager;
 import models.dbmanager.GlobalTool;
 import models.dbmanager.LockTableManager;
 import models.dbmanager.TaskTablesManager;
-import models.dbtable.TaskTables;
+import models.entity.TaskTables;
 import models.excel.BuyerTaskList;
 import models.excel.ShopkeeperTask;
 import models.excel.ShopkeeperTaskBook;
@@ -282,7 +282,7 @@ public class BusinessTask  extends Controller {
         TaskTablesManager.updateNew(i, BuyerManager.getALl());
 
         //锁定上传功能
-        models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, "TaskTables");
+        models.entity.LockTable entry = DatabaseTool.defaultEm.find(models.entity.LockTable.class, "TaskTables");
         if(entry == null) {
             LockTableManager.insert("TaskTables", 1);
         } else {
@@ -298,7 +298,7 @@ public class BusinessTask  extends Controller {
     @Security.Authenticated(Secured.class)
     public Result clear() {
         //解锁上传功能
-        models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, "TaskTables");
+        models.entity.LockTable entry = DatabaseTool.defaultEm.find(models.entity.LockTable.class, "TaskTables");
         if(entry == null) {
             LockTableManager.insert("TaskTables", 0);
         } else {
@@ -348,7 +348,7 @@ public class BusinessTask  extends Controller {
     @Security.Authenticated(Secured.class)
     public Result deleteByTaskBookName() {
         //解锁上传功能
-        models.dbtable.LockTable entry = DatabaseTool.defaultEm.find(models.dbtable.LockTable.class, "TaskTables");
+        models.entity.LockTable entry = DatabaseTool.defaultEm.find(models.entity.LockTable.class, "TaskTables");
         if(entry == null) {
             LockTableManager.insert("TaskTables", 0);
         } else {

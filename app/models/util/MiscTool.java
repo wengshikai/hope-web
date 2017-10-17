@@ -2,9 +2,9 @@ package models.util;
 
 import com.google.common.collect.Lists;
 import models.dbmanager.BuyerManager;
-import models.dbtable.Buyer;
-import models.dbtable.CombineShopBuyer;
-import models.dbtable.TaskTables;
+import models.entity.Buyer;
+import models.entity.CombineShopBuyer;
+import models.entity.TaskTables;
 import models.excel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -57,7 +57,7 @@ public class MiscTool {
 
     /** 生成所有刷手任务书(按刷手维度分表) */
     public static void buildDownloadShuashouZip(List<TaskTables> all,String zipname){
-        List<models.dbtable.Buyer> ssl = BuyerManager.getALl();
+        List<models.entity.Buyer> ssl = BuyerManager.getALl();
         Map<String,Integer> levelMap = new HashMap();
         Map<String,String> wangwang2shopName = new HashMap<String,String>();
         Map<String,Integer> wangwang2shopId = new HashMap<String,Integer>();
@@ -65,7 +65,7 @@ public class MiscTool {
             wangwang2shopName.put(taskTables.getShopWangwang(),taskTables.getShopName());
             wangwang2shopId.put(taskTables.getShopWangwang(),taskTables.getShopId());
         }
-        for(models.dbtable.Buyer buyer:ssl){
+        for(models.entity.Buyer buyer:ssl){
             levelMap.put(buyer.getWangwang(),buyer.getLevel());
         }
         Map<String,String> levelArrayMap = new HashMap();
