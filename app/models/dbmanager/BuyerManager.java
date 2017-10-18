@@ -10,9 +10,12 @@ import java.util.List;
  * Created by shanmao on 15-12-16.
  */
 public class BuyerManager {
+
+
+    /** 插入一个刷手 */
     public static boolean insert(String name,String wangwang,String mobilephone,int team){
         try {
-            DatabaseTool.defaultEm.getTransaction().begin();
+            DatabaseTool.defaultEm.getTransaction().begin(); //启动事务
             Buyer entry = new Buyer();
             try {
                 entry.setName(name);
@@ -20,21 +23,21 @@ public class BuyerManager {
                 entry.setMobilephone(mobilephone);
                 entry.setTeam(team);
                 DatabaseTool.defaultEm.persist(entry);
-                DatabaseTool.defaultEm.getTransaction().commit();
+                DatabaseTool.defaultEm.getTransaction().commit(); //提交事务
             } catch (Exception e) {
                 e.printStackTrace();
-                //插入失败,回滚
-                DatabaseTool.defaultEm.getTransaction().rollback();
+                DatabaseTool.defaultEm.getTransaction().rollback(); //插入失败,回滚
                 return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            DatabaseTool.defaultEm.getTransaction().rollback();
+            DatabaseTool.defaultEm.getTransaction().rollback(); //如果启动事务失败,那么可能是其他的事务未正确提交,也进行回滚
             return false;
         }
 
         return true;
     }
+
 
     /** 获取所有刷手 */
     public static List<Buyer> getALl(){
@@ -43,18 +46,18 @@ public class BuyerManager {
             List<Buyer> entry =(List<Buyer>)query.getResultList();
             return entry;
         } catch (Exception e) {
-            e.printStackTrace();;
+            e.printStackTrace();
             return null;
         }
     }
 
 
-    /** 获取所有刷手分组 */
+    /** 获取所有分组 */
     public static List<Integer> getALlTeams(){
         try {
             Query query = DatabaseTool.defaultEm.createQuery("select distinct team from Buyer");
-            List<Integer> teams =(List<Integer>)query.getResultList();
-            return teams;
+            List<Integer> entry =(List<Integer>)query.getResultList();
+            return entry;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -75,6 +78,7 @@ public class BuyerManager {
     }
 
 
+    /** 获取刷手的总数量 */
     public static Long getBuyerCount(){
         try {
             Query query = DatabaseTool.defaultEm.createQuery("select count(u) from Buyer u");

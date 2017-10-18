@@ -29,7 +29,7 @@ public class TaskTablesManager {
                                  String shopkeeperName,String shopName,String shopWangwang,
                                  String itemLink,double pcCost,double phoneCost,int subTaskBookId){
         try {
-            DatabaseTool.defaultEm.getTransaction().begin();
+            DatabaseTool.defaultEm.getTransaction().begin(); //启动事务
             try {
                 TaskTables entry = new TaskTables();
                 entry.setShopId(ShopId);
@@ -52,37 +52,36 @@ public class TaskTablesManager {
                 entry.setPhoneCost(phoneCost);
                 entry.setSubTaskBookId(subTaskBookId);
                 DatabaseTool.defaultEm.persist(entry);
-                DatabaseTool.defaultEm.getTransaction().commit();
+                DatabaseTool.defaultEm.getTransaction().commit(); //提交事务
+                return false;
             } catch (Exception e) {
                 e.printStackTrace();
-                //插入失败,回滚
-                DatabaseTool.defaultEm.getTransaction().rollback();
-                return false;
+                DatabaseTool.defaultEm.getTransaction().rollback(); //插入失败,回滚
             }
         } catch (Exception e) {
             e.printStackTrace();
-            DatabaseTool.defaultEm.getTransaction().rollback();
+            DatabaseTool.defaultEm.getTransaction().rollback(); //如果启动事务失败,那么可能是其他的事务未正确提交,也进行回滚
             return false;
         }
 
         return true;
     }
 
+
     /** 分配刷手 */
     public static boolean setBuyerAndTaskBookId(int taskId,String buyerWangwang,int buyerTeam, int buyerTaskBookId){
         try {
-            DatabaseTool.defaultEm.getTransaction().begin();
+            DatabaseTool.defaultEm.getTransaction().begin(); //启动事务
             try {
                 models.entity.TaskTables task = DatabaseTool.defaultEm.find(models.entity.TaskTables.class, taskId);
                 task.setBuyerWangwang(buyerWangwang);
                 task.setBuyerTeam(buyerTeam);
                 task.setBuyerTaskBookId(buyerTaskBookId);
                 DatabaseTool.defaultEm.merge(task);
-                DatabaseTool.defaultEm.getTransaction().commit();
+                DatabaseTool.defaultEm.getTransaction().commit(); //提交事务
             } catch (Exception e) {
                 e.printStackTrace();
-                //更新失败,回滚
-                DatabaseTool.defaultEm.getTransaction().rollback();
+                DatabaseTool.defaultEm.getTransaction().rollback(); //更新失败,回滚
                 return false;
             }
         } catch (Exception e) {
@@ -104,6 +103,7 @@ public class TaskTablesManager {
             return null;
         }
     }
+
 
     public static int getMaxBuyerTaskBookId(){
         EntityManager defaultEm = null;
@@ -128,6 +128,7 @@ public class TaskTablesManager {
 
         }
     }
+
 
     public static boolean deleteByTaskBookName(String taskBookName){
         EntityManager em = DatabaseTool.defaultFactory.createEntityManager();

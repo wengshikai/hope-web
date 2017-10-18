@@ -13,27 +13,28 @@ import java.util.Random;
 public class UserManager {
     private static Random random = new Random();
 
-    /** 新增用户 */
+    /** 创建用户 */
     public static boolean insertUser(String name,String password){
         int salt = random.nextInt();
+        String md5password;
         try {
-            String md5password = Security.getMD5(name+password+salt);
-            DatabaseTool.userEm.getTransaction().begin();
-            try {
-                User user = new User();
-                user.setName(name);
-                user.setSalt("" + salt);
-                user.setPassword(md5password);
-                DatabaseTool.userEm.persist(user);
-                DatabaseTool.userEm.getTransaction().commit();
-            } catch (Exception e) {
-                GlobalTool.logger.error("insert User error!",e);
-                //插入失败,事务回滚
-                DatabaseTool.userEm.getTransaction().rollback();
-                return false;
-            }
+            md5password = Security.getMD5(name+password+salt);
+        } catch (NoSuchAlgorithmException e) {
+            GlobalTool.logger.error("生成密码失败!",e);
+            return false;
+        }
+
+        DatabaseTool.userEm.getTransaction().begin(); //启动事务
+        try {
+            User user = new User();
+            user.setName(name);
+            user.setSalt("" + salt);
+            user.setPassword(md5password);
+            DatabaseTool.userEm.persist(user);
+            DatabaseTool.userEm.getTransaction().commit(); //提交事务
         } catch (Exception e) {
-            GlobalTool.logger.error("insert User error!",e);
+            GlobalTool.logger.error("创建用户失败!",e);
+            DatabaseTool.userEm.getTransaction().rollback(); //插入失败,事务回滚
             return false;
         }
 
@@ -48,17 +49,16 @@ public class UserManager {
             return false;
         }
 
+        //查询用户
         User user = DatabaseTool.userEm.find(User.class, name);
-        String md5password;
         try {
             //计算密文
-            md5password = Security.getMD5(name+password+user.getSalt());
+            String  md5password = Security.getMD5(name+password+user.getSalt());
+            //返回密码校验结果
+            return md5password.equals(user.getPassword());
         } catch (NoSuchAlgorithmException e) {
-            GlobalTool.logger.error("calculate password error!",e);
+            GlobalTool.logger.error("计算密文失败!",e);
             return false;
         }
-
-        //返回密码校验结果
-        return md5password.equals(user.getPassword());
     }
 }

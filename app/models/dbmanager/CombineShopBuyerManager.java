@@ -13,18 +13,17 @@ public class CombineShopBuyerManager {
 
     public static boolean insert(String shopName,String buyerWangwang,int price){
         try {
-            DatabaseTool.defaultEm.getTransaction().begin();
+            DatabaseTool.defaultEm.getTransaction().begin(); //启动事务
             try {
                 CombineShopBuyer entry = new CombineShopBuyer();
                 entry.setShopName(shopName);
                 entry.setBuyerWangwang(buyerWangwang);
                 entry.setPrice(price);
                 DatabaseTool.defaultEm.persist(entry);
-                DatabaseTool.defaultEm.getTransaction().commit();
+                DatabaseTool.defaultEm.getTransaction().commit(); //提交事务
             } catch (Exception e) {
                 e.printStackTrace();
-                //如果插入失败,需要回滚
-                DatabaseTool.defaultEm.getTransaction().rollback();
+                DatabaseTool.defaultEm.getTransaction().rollback(); //插入失败,回滚
                 return false;
             }
         } catch (Exception e) {

@@ -91,9 +91,16 @@ public class GlobalTool {
         DatabaseTool.dropTable("default","TaskTables");
         DatabaseTool.dropTable("default","CombineShopBuyer");
 
-        //清除所有的持久化对象
+        //清除所有的持久化对象,并回滚所有未提交的事务
         DatabaseTool.userEm.clear();
+        if (DatabaseTool.userEm.getTransaction().isActive()) {
+            DatabaseTool.userEm.getTransaction().rollback();
+        }
+
         DatabaseTool.defaultEm.clear();
+        if (DatabaseTool.defaultEm.getTransaction().isActive()) {
+            DatabaseTool.defaultEm.getTransaction().rollback();
+        }
 
         //创建所有的表
         DatabaseTool.doSql("user",CreateUser );
