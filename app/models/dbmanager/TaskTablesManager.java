@@ -93,13 +93,53 @@ public class TaskTablesManager {
     }
 
 
+    /** 获取所有商家的店铺名称列表 */
+    public static List<String> getALlShopNames(){
+        try {
+            Query query = DatabaseTool.defaultEm.createQuery("select distinct u.shopName from TaskTables u");
+            List<String> entry =(List<String>)query.getResultList();
+            return entry;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /** 获取某个店铺的任务数量 */
+    public static Long getTaskCountByShopName(String ShopName){
+        try {
+            Query query = DatabaseTool.defaultEm.createQuery("select count(u) from TaskTables u where u.shopName = ?1");
+            Long entry =(Long)query.getSingleResult();
+            return entry;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+
+    /** 获取某个店铺的所有任务 */
+    public static List<TaskTables> getTasksByShopName(String ShopName){
+        try {
+            Query query = DatabaseTool.defaultEm.createQuery("select u from TaskTables u where u.shopName = ?1");
+            List<TaskTables> entry =(List<TaskTables>)query.getResultList();
+            return entry;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /** 获取所有商家任务书名称列表 */
     public static List<String> getALlTaskBookName(){
         try {
             Query query = DatabaseTool.defaultEm.createQuery("select distinct u.taskBookName from TaskTables u");
             List<String> entry =(List<String>)query.getResultList();
             return entry;
         } catch (Exception e) {
-            GlobalTool.logger.error("get TableTask error!",e);
+            GlobalTool.logger.error("获取商家任务书名称列表出错!",e);
             return null;
         }
     }
