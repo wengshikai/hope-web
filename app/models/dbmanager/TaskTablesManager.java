@@ -54,13 +54,14 @@ public class TaskTablesManager {
                 DatabaseTool.defaultEm.persist(entry);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
-                GlobalTool.logger.error("insert TableTask error!",e);
+                e.printStackTrace();
                 //插入失败,回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.logger.error("insert TableTask error!",e);
+            e.printStackTrace();
+            DatabaseTool.defaultEm.getTransaction().rollback();
             return false;
         }
 
@@ -79,13 +80,13 @@ public class TaskTablesManager {
                 DatabaseTool.defaultEm.merge(task);
                 DatabaseTool.defaultEm.getTransaction().commit();
             } catch (Exception e) {
-                GlobalTool.logger.error("update TableTask error!",e);
+                e.printStackTrace();
                 //更新失败,回滚
                 DatabaseTool.defaultEm.getTransaction().rollback();
                 return false;
             }
         } catch (Exception e) {
-            GlobalTool.logger.error("update TableTask error!",e);
+            e.printStackTrace();
             return false;
         }
 

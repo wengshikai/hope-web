@@ -91,25 +91,25 @@ public class GlobalTool {
         DatabaseTool.dropTable("default","CombineShopBuyer");
 
 
-        DatabaseTool.dosql("user",CreateUser );
+        DatabaseTool.doSql("user",CreateUser );
         UserManager.insertUser("yanjue", "yanjue123");
 
-        DatabaseTool.dosql("default",CreateBuyer);
-        DatabaseTool.dosql("default",CreateTaskTables);
-        DatabaseTool.dosql("default",CreateLockTable);
-        DatabaseTool.dosql("default","truncate table `LockTable`");
+        DatabaseTool.doSql("default",CreateBuyer);
+        DatabaseTool.doSql("default",CreateTaskTables);
+        DatabaseTool.doSql("default",CreateLockTable);
+        DatabaseTool.doSql("default","truncate table `LockTable`");
         LockTableManager.insert("TaskTables", 0);
-        DatabaseTool.dosql("default",CreateCombineShopBuyer);
+        DatabaseTool.doSql("default",CreateCombineShopBuyer);
     }
 
 
     public static void initBuyer(){
-        DatabaseTool.dosql("default","truncate table `Buyer`");
+        DatabaseTool.doSql("default","truncate table `Buyer`");
     }
 
 
     public static void initTask(){
-        DatabaseTool.dosql("default","truncate table `TaskTables`");
+        DatabaseTool.doSql("default","truncate table `TaskTables`");
         FileTool.deleteDirectory("data/image/");
         FileTool.createDestDirectoryIfNotExists("data/image/");
     }
@@ -126,7 +126,7 @@ public class GlobalTool {
 
 
     public static void initCombineShopBuyer() {
-        DatabaseTool.dosql("default","truncate table `CombineShopBuyer`");
+        DatabaseTool.doSql("default","truncate table `CombineShopBuyer`");
     }
 
 }
