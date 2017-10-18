@@ -84,20 +84,24 @@ public class GlobalTool {
 
 
     public static void initDB() {
+        //删除所有的表
         DatabaseTool.dropTable("user", "User");
         DatabaseTool.dropTable("default","Buyer");
         DatabaseTool.dropTable("default","LockTable");
         DatabaseTool.dropTable("default","TaskTables");
         DatabaseTool.dropTable("default","CombineShopBuyer");
 
+        //清除所有的持久化对象
+        DatabaseTool.userEm.clear();
+        DatabaseTool.defaultEm.clear();
 
+        //创建所有的表
         DatabaseTool.doSql("user",CreateUser );
         UserManager.insertUser("yanjue", "yanjue123");
 
         DatabaseTool.doSql("default",CreateBuyer);
         DatabaseTool.doSql("default",CreateTaskTables);
         DatabaseTool.doSql("default",CreateLockTable);
-        DatabaseTool.doSql("default","truncate table `LockTable`");
         LockTableManager.insert("TaskTables", 0);
         DatabaseTool.doSql("default",CreateCombineShopBuyer);
     }
