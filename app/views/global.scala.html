@@ -64,6 +64,13 @@
                                 <li><a href="@{urlPrefix}combine/combineShopBuyer">刷手合并</a></li>
                             </ul>
                         </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">其他<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="@{urlPrefix}init">清空所有数据</a></li>
+                            </ul>
+                        </li>
                     </ul>
 
                     @if(ctx.session().get("name")) {

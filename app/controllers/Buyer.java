@@ -5,7 +5,7 @@ import models.dbmanager.GlobalTool;
 import util.ExcelUtil;
 import play.data.Form;
 import play.mvc.*;
-import views.html.*;
+import views.html.buyer.*;
 
 import java.util.ArrayList;
 import java.util.List;

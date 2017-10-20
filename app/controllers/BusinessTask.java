@@ -1,8 +1,5 @@
 package controllers;
 
-import hopeviews.task.html.addshopkeepertask;
-import hopeviews.task.html.allnowbuyertask;
-import hopeviews.task.html.allnowtask;
 import models.dbmanager.BuyerManager;
 import models.dbmanager.GlobalTool;
 import models.dbmanager.LockTableManager;
@@ -22,7 +19,7 @@ import play.mvc.Security;
 import util.FileTool;
 import util.LocalStoreTool;
 import util.ZIPTool;
-import views.html.showoneshopkeeperbook;
+import views.html.task.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
