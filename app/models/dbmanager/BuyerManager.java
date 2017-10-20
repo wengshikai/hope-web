@@ -31,7 +31,6 @@ public class BuyerManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            DatabaseTool.defaultEm.getTransaction().rollback(); //如果启动事务失败,那么可能是其他的事务未正确提交,也进行回滚
             return false;
         }
 

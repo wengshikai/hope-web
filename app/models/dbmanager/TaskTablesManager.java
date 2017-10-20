@@ -53,14 +53,13 @@ public class TaskTablesManager {
                 entry.setSubTaskBookId(subTaskBookId);
                 DatabaseTool.defaultEm.persist(entry);
                 DatabaseTool.defaultEm.getTransaction().commit(); //提交事务
-                return false;
             } catch (Exception e) {
                 e.printStackTrace();
                 DatabaseTool.defaultEm.getTransaction().rollback(); //插入失败,回滚
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            DatabaseTool.defaultEm.getTransaction().rollback(); //如果启动事务失败,那么可能是其他的事务未正确提交,也进行回滚
             return false;
         }
 
