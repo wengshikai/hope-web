@@ -1,5 +1,7 @@
 package controllers;
 
+import com.google.common.collect.Lists;
+import lombok.Data;
 import models.dbmanager.BuyerManager;
 import models.dbmanager.GlobalTool;
 import models.dbmanager.LockTableManager;
@@ -19,7 +21,10 @@ import play.mvc.Security;
 import util.FileTool;
 import util.LocalStoreTool;
 import util.ZIPTool;
-import views.html.task.*;
+import views.html.task.addshopkeepertask;
+import views.html.task.allnowbuyertask;
+import views.html.task.allnowtask;
+import views.html.task.showoneshopkeeperbook;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -292,6 +297,146 @@ public class BusinessTask  extends Controller {
     }
 
 
+    /** 分配任务(新版) */
+    @Security.Authenticated(Secured.class)
+    public Result dispatchTasks() {
+
+        Form<List> form = Form.form(List.class).bindFromRequest();
+
+        List<TeamDispatchRule> teamDispatchRuleList =  (List<TeamDispatchRule>)form;
+
+        //获取所有小组
+//        List<Integer> teamList = BuyerManager.getALlTeams();
+//        if(teamList == null || teamList.size() != teamDispatchRuleList.size()) {
+//            flash("error", "查询小组信息失败！");
+//            return redirect(routes.BusinessTask.allnowtask());
+//        }
+
+        //获取每个小组的刷手人数
+        for (TeamDispatchRule teamDispatchRule: teamDispatchRuleList) {
+            int buyerCount = BuyerManager.getBuyerCountByTeam(teamDispatchRule.getTeam());
+            teamDispatchRule.setBuyerCount(buyerCount);
+        }
+
+        //计算每个组的刷手平均任务数，按照从大到小进行排序
+
+
+        //将刷手按照任务数从大到小进行排序,同一个组内的刷手按照序号从小到大进行排序
+        List<models.entity.Buyer> allBuyerList = Lists.newArrayList();
+        for (TeamDispatchRule teamDispatchRule: teamDispatchRuleList) {
+            List<models.entity.Buyer> teamBuyerLists= BuyerManager.getALlByTeam(teamDispatchRule.getTeam());
+            if (teamBuyerLists == null) {
+                flash("error", "查询刷手列表出错！");
+                return redirect(routes.BusinessTask.allnowtask());
+            }
+            allBuyerList.addAll(teamBuyerLists);
+        }
+
+        //获取所有的店铺名称列表
+        List<String> shopNameList = TaskTablesManager.getALlShopNames();
+        if (shopNameList == null) {
+            flash("error", "查询店铺列表出错！");
+            return redirect(routes.BusinessTask.allnowtask());
+        }
+
+        //获取每个店铺的任务数量
+        List<ShopTaskCount> shopTaskCountList = Lists.newArrayList();
+        for (String shopName : shopNameList) {
+            ShopTaskCount shopTaskCount = new ShopTaskCount();
+            Long taskCount = TaskTablesManager.getTaskCountByShopName(shopName);
+            shopTaskCount.setShopName(shopName);
+            shopTaskCount.setTaskCount(taskCount);
+            shopTaskCountList.add(shopTaskCount);
+        }
+
+        //把店铺按照任务数量从大到小排序
+
+
+
+        //获取所有刷手的数量
+        long buyerCount = BuyerManager.getBuyerCount();
+        //先把任务总量计数器置为0
+        long taskCount = 0;
+        //按照任务数量从大到小的顺序获取店铺名称
+        for (ShopTaskCount shopTaskCount: shopTaskCountList) {
+            //获取店铺的所有任务
+            List<TaskTables>  taskTablesList = TaskTablesManager.getTasksByShopName(shopTaskCount.getShopName());
+            for (TaskTables taskTables: taskTablesList) {
+                //计算应该分配的刷手
+                int dispatchBuyerIndex = calculateBuyer(taskCount, buyerCount, teamDispatchRuleList, allBuyerList);
+                models.entity.Buyer dispatchBuyer = allBuyerList.get(dispatchBuyerIndex);
+
+                //给这个任务分配刷手
+                TaskTablesManager.setBuyerAndTaskBookId(taskTables.getTaskId(), dispatchBuyer.getWangwang(), dispatchBuyer.getTeam(), dispatchBuyerIndex + 1);
+
+                //任务总量计数器+1
+                taskCount ++;
+            }
+        }
+
+        return null;
+    }
+
+
+    /** 计算分配的刷手序号 */
+    public int calculateBuyer(long taskCount, long buyerCount, List<TeamDispatchRule> teamDispatchRuleList, List<models.entity.Buyer> allBuyerList) {
+        int tmpCount = 0;
+        for (int maxLength = 0; maxLength  < 20; maxLength++ ) {
+            for (int buyerIndex = 0; buyerIndex < buyerCount; buyerIndex++) {
+                models.entity.Buyer nowBuyer = allBuyerList.get(buyerIndex);
+                int nowTeam = nowBuyer.getTeam();
+                TeamDispatchRule nowTeamDispatchRule = null;
+
+                //找到当前店铺对应的小组配置信息
+                for (TeamDispatchRule teamDispatchRule: teamDispatchRuleList) {
+                    if(teamDispatchRule.team == nowTeam) {
+                        nowTeamDispatchRule = teamDispatchRule;
+                    }
+                }
+
+                if (nowTeamDispatchRule.getTaskCountNow() >= nowTeamDispatchRule.getTaskCount()) {
+                    //如果这个小组的任务分配额度已经用完,那么直接跳到下一个批次
+                    continue;
+                }
+
+                if (tmpCount == taskCount) {
+                    //找到任务书对应的刷手,小组的已分配任务数+1
+                    nowTeamDispatchRule.setTaskCountNow(nowTeamDispatchRule.getTaskCountNow() + 1);
+                    return buyerIndex;
+                }
+
+                //如果没有命中,继续匹配下一个刷手
+                tmpCount ++;
+            }
+        }
+
+        //如果循环结束也没有分配任务,那么肯定哪里出错了,返回-1
+        return -1;
+    }
+
+    @Data
+    public class TeamDispatchRule {
+        //小组编号
+        public int team;
+        //需要分配的总任务数
+        public int taskCount;
+        //已分配任务数
+        public int taskCountNow;
+        //小组中的刷手数量
+        public int buyerCount;
+    }
+
+
+    @Data
+    public class ShopTaskCount {
+        //店铺名
+        public String shopName;
+        //任务数
+        public long taskCount;
+    }
+
+
+    /** 清除任务 */
     @Security.Authenticated(Secured.class)
     public Result clear() {
         //解锁上传功能
@@ -371,9 +516,4 @@ public class BusinessTask  extends Controller {
         b.dodoer();
         return ok(showoneshopkeeperbook.render(b));
     }
-
-
-
-
-
 }
