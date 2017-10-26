@@ -1,8 +1,8 @@
-@(tasknum:Int,allprice:Double,taskbookMap: java.util.Map[String,models.excel.ShopkeeperTaskBook] , nowtasklist: java.util.List[String],min_num:Int,now_num:Int)
+@(taskNum:Int, allPrice:Double, taskBookMap: java.util.Map[String,models.excel.ShopkeeperTaskBook], taskList: java.util.List[String], min_num:Int, now_num:Int, buyerCountByTeamMap: java.util.Map[Integer,Integer])
+@import models.dbmanager.GlobalTool.urlPrefix
 @import models.dbmanager.LockTableManager.isLock
 
 @global{
-
     <div class="container">
         <br/><br/><br/><br/>
         <h1>已经上传的任务书</h1>
@@ -22,25 +22,25 @@
                 <tr>
                     <td></td>
                     <td>总计</td>
-                    <td>@tasknum</td>
-                    <td>@allprice</td>
+                    <td>@taskNum</td>
+                    <td>@allPrice</td>
                     <td></td>
                     <td></td>
                 </tr>
-            @for(i <- 0 until nowtasklist.size()){
+            @for(i <- 0 until taskList.size()){
 
                 <tr>
                     <td>@(i+1)</td>
-                    <td>@nowtasklist.get(i)</td>
-                    <td>@taskbookMap.get(nowtasklist.get(i)).getTaskNum</td>
-                    <td>@taskbookMap.get(nowtasklist.get(i)).getTaskAllPriceSum</td>
+                    <td>@taskList.get(i)</td>
+                    <td>@taskBookMap.get(taskList.get(i)).getTaskNum</td>
+                    <td>@taskBookMap.get(taskList.get(i)).getTaskAllPriceSum</td>
                     <td>
                     @helper.form(routes.BusinessTask.deleteByTaskBookName()) {<button type="submit" class="btn btn-info">删除</button>
-                    <input type="hidden" name="taskBookName" value="@nowtasklist.get(i)">}
+                    <input type="hidden" name="taskBookName" value="@taskList.get(i)">}
                     </td>
                     <td>
                         @helper.form(routes.BusinessTask.getshopkeeperbookbyshopkeeperbookname()) {<button type="submit" class="btn btn-info">查看</button>
-                            <input type="hidden" name="taskBookName" value="@nowtasklist.get(i)">}
+                            <input type="hidden" name="taskBookName" value="@taskList.get(i)">}
                     </td>
                     <td><a href="">下载</a></td>
                 </tr>
@@ -49,6 +49,7 @@
         </table>
 
     </div>
+
 
     <div class="container">
         <br/><br/><br/><br/>
@@ -59,13 +60,51 @@
         }
         @helper.form(routes.BusinessTask.caculateTaskList()) {
             <h1>分配任务</h1>
-            <label>任务书数量:</label><input type="text" name="buyernum" placeholder="buyernum" value="@min_num"/> ,本次至少需要 <span class="text-danger"> @min_num  </span>个刷手,上一次数据库中已经分配<span class="text-danger"> @now_num  </span>个刷手
+            <input type="radio" name="dispatchModeType" value="0" checked="checked"><label>&nbsp普通模式</label>
+            <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+            <input type="radio" name="dispatchModeType" value="1"><label>&nbsp自由分配</label>
+            <br/>
+
+            <div class="simpleMode">
+                <label>任务书数量:</label><input type="text" name="buyerNum" placeholder="buyerNum" value="@min_num"/> ,本次至少需要 <span class="text-danger"> @min_num  </span>个刷手,上一次数据库中已经分配<span class="text-danger"> @now_num  </span>个刷手
+            </div>
+
+            <div class="freeMode">
+                <table>
+                    <caption>请输入每个小组分配的任务数</caption>
+                    <tr>
+                        <th>小组编号&nbsp&nbsp</th>
+                        <th>刷手数量&nbsp&nbsp</th>
+                        <th>分配任务数&nbsp&nbsp</th>
+                        <th>每个刷手的任务数</th>
+                    </tr>
+                    <tbody>
+                    @for(team <- buyerCountByTeamMap.keys) {
+                        <tr>
+                            <td>
+                                @team
+                            </td>
+                            <td>
+                                @buyerCountByTeamMap(team)
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+
+            <br/>
             <p>
                 <button type="submit" class="btn btn-info">分配</button>
             </p>
         }
 
     </div>
+
 
     <div class="container">
         <br/><br/><br/><br/>
@@ -87,5 +126,5 @@
             </p>
     </div>
 
-}
+}<script src="@{urlPrefix}static/javascripts/taskDispatchRule.js"></script>
 

@@ -28,6 +28,7 @@ import views.html.task.showoneshopkeeperbook;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -211,46 +212,62 @@ public class BusinessTask  extends Controller {
 
     @Security.Authenticated(Secured.class)
     public Result allnowtask() {
-        int tasknum  = 0;
-        double allprice  = 0;
+        int taskNum  = 0;
+        double allPrice  = 0;
+        //获取所有的任务
         List<TaskTables> all = TaskTablesManager.getALl();
-        Map<String,ShopkeeperTaskBook> taskbookMap =  TaskHelper.getShopkeeperTaskBook(all);
-        for(Map.Entry<String,ShopkeeperTaskBook> iter:taskbookMap.entrySet()){
-            tasknum += iter.getValue().getTaskNum();
-            allprice += iter.getValue().getTaskAllPriceSum();
+        //将任务按照商家任务书归类
+        Map<String,ShopkeeperTaskBook> taskBookMap =  TaskHelper.getShopkeeperTaskBook(all);
+        for(Map.Entry<String,ShopkeeperTaskBook> task:taskBookMap.entrySet()){
+            taskNum += task.getValue().getTaskNum(); //计算任务总数
+            allPrice += task.getValue().getTaskAllPriceSum(); //计算任务总价
         }
-        BigDecimal b2   =   new BigDecimal(allprice);
-        allprice   =   b2.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+        BigDecimal b2   =   new BigDecimal(allPrice);
+        allPrice   =   b2.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
 
+        //获取所有商家任务书名称列表
         List<String> ssl = TaskTablesManager.getALlTaskBookName();
         int min_num = TaskTablesManager.getNeedBuyerNum();
         int now_num = TaskTablesManager.getMaxBuyerTaskBookId();
-        return ok(allnowtask.render(tasknum,allprice,taskbookMap,ssl, min_num, now_num));
+
+
+        Map<Integer, Integer> buyerCountByTeam = new HashMap<>();
+        //查询所有的小组名称
+        List<Integer> teamList = BuyerManager.getALlTeams();
+        if (teamList != null) {
+            //查询每个小组的人数
+            for (int team : teamList) {
+                int buyerCount = BuyerManager.getBuyerCountByTeam(team);
+                buyerCountByTeam.put(team, buyerCount);
+            }
+        }
+
+        return ok(allnowtask.render(taskNum,allPrice,taskBookMap,ssl, min_num, now_num, buyerCountByTeam));
     }
 
 
     /** 获取所有刷手任务书 */
     @Security.Authenticated(Secured.class)
     public Result allnowbuyertask() {
-        int tasknum  = 0;
-        double allprice  = 0;
+        int taskNum  = 0;
+        double allPrice  = 0;
         List<TaskTables> all = TaskTablesManager.getALl();
         List<String> ssl = new ArrayList<String>();
         Map<String,BuyerTaskList> taskbookMap =  TaskHelper.getBuyerTaskBook(all);
         for(TaskTables tt:all){
             if(tt.getBuyerTaskBookId() == 0){
-                return ok(allnowbuyertask.render(0,allprice,taskbookMap,ssl));
+                return ok(allnowbuyertask.render(0,allPrice,taskbookMap,ssl));
             }
         }
         for(Map.Entry<String,BuyerTaskList> iter:taskbookMap.entrySet()){
-            tasknum += iter.getValue().getStlist().size();
-            allprice += iter.getValue().getZongBenJinNum();
+            taskNum += iter.getValue().getStlist().size();
+            allPrice += iter.getValue().getZongBenJinNum();
             ssl.add(iter.getKey());
         }
-        BigDecimal b2   =   new BigDecimal(allprice);
-        allprice   =   b2.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+        BigDecimal b2   =   new BigDecimal(allPrice);
+        allPrice   =   b2.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
 
-        return ok(allnowbuyertask.render(tasknum,allprice,taskbookMap,ssl));
+        return ok(allnowbuyertask.render(taskNum,allPrice,taskbookMap,ssl));
     }
 
 
@@ -413,7 +430,10 @@ public class BusinessTask  extends Controller {
             }
         }
 
-        return null;
+        //锁定上传功能
+        LockTableManager.update("TaskTables", 1);
+
+        return redirect(routes.BusinessTask.allnowtask());
     }
 
 
