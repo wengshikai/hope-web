@@ -357,17 +357,56 @@ public class BusinessTask  extends Controller {
         long buyerCount = BuyerManager.getBuyerCount();
         //先把任务总量计数器置为0
         long taskCount = 0;
-        //按照任务数量从大到小的顺序获取店铺名称
+        int lengthIndex = 0;
+        int buyerIndex = 0;
+
+        //依次获取店铺名称(按照任务数量从大到小)
         for (ShopTaskCount shopTaskCount: shopTaskCountList) {
             //获取店铺的所有任务
             List<TaskTables>  taskTablesList = TaskTablesManager.getTasksByShopName(shopTaskCount.getShopName());
-            for (TaskTables taskTables: taskTablesList) {
-                //计算应该分配的刷手
-                int dispatchBuyerIndex = calculateBuyer(taskCount, buyerCount, teamDispatchRuleList, allBuyerList);
-                models.entity.Buyer dispatchBuyer = allBuyerList.get(dispatchBuyerIndex);
+            if(taskTablesList == null) {
+                flash("error", "查询任务列表出错！");
+                return redirect(routes.BusinessTask.allnowtask());
+            }
 
-                //给这个任务分配刷手
-                TaskTablesManager.setBuyerAndTaskBookId(taskTables.getTaskId(), dispatchBuyer.getWangwang(), dispatchBuyer.getTeam(), dispatchBuyerIndex + 1);
+            //每个任务分配刷手
+            for (TaskTables taskTables: taskTablesList) {
+                //按顺序找到有分配余量的刷手
+                foundBuyer: for (; lengthIndex  < 20; lengthIndex++ ) {
+                    for (buyerIndex %= buyerCount; buyerIndex < buyerCount; buyerIndex++) {
+                        models.entity.Buyer nowBuyer = allBuyerList.get(buyerIndex);
+                        int nowTeam = nowBuyer.getTeam();
+                        TeamDispatchRule nowTeamDispatchRule = null;
+
+                        //找到当前店铺对应的小组配置信息
+                        for (TeamDispatchRule teamDispatchRule: teamDispatchRuleList) {
+                            if(teamDispatchRule.team == nowTeam) {
+                                nowTeamDispatchRule = teamDispatchRule;
+                            }
+                        }
+
+                        //如果这个小组的任务分配额度还有余量,那么选中这个刷手
+                        if (nowTeamDispatchRule.getTaskCountNow() <= nowTeamDispatchRule.getTaskCount()) {
+                            //小组的已分配任务数+1
+                            nowTeamDispatchRule.setTaskCountNow(nowTeamDispatchRule.getTaskCountNow() + 1);
+                            //直接跳出寻找刷手的循环
+                            buyerIndex++;
+                            break foundBuyer;
+                        }
+                    }
+                }
+
+                if(lengthIndex > 20) {
+                    //如果lengthIndex循环到超过20,那一定是哪里出问题了
+                    flash("error", "分配任务出错！");
+                    return redirect(routes.BusinessTask.allnowtask());
+                }
+
+                //查找这个刷手的详细信息
+                models.entity.Buyer dispatchBuyer = allBuyerList.get(buyerIndex);
+
+                //更新任务对应的刷手信息
+                TaskTablesManager.setBuyerAndTaskBookId(taskTables.getTaskId(), dispatchBuyer.getWangwang(), dispatchBuyer.getTeam(), buyerIndex + 1);
 
                 //任务总量计数器+1
                 taskCount ++;
@@ -378,42 +417,6 @@ public class BusinessTask  extends Controller {
     }
 
 
-    /** 计算分配的刷手序号 */
-    public int calculateBuyer(long taskCount, long buyerCount, List<TeamDispatchRule> teamDispatchRuleList, List<models.entity.Buyer> allBuyerList) {
-        int tmpCount = 0;
-        for (int maxLength = 0; maxLength  < 20; maxLength++ ) {
-            for (int buyerIndex = 0; buyerIndex < buyerCount; buyerIndex++) {
-                models.entity.Buyer nowBuyer = allBuyerList.get(buyerIndex);
-                int nowTeam = nowBuyer.getTeam();
-                TeamDispatchRule nowTeamDispatchRule = null;
-
-                //找到当前店铺对应的小组配置信息
-                for (TeamDispatchRule teamDispatchRule: teamDispatchRuleList) {
-                    if(teamDispatchRule.team == nowTeam) {
-                        nowTeamDispatchRule = teamDispatchRule;
-                    }
-                }
-
-                if (nowTeamDispatchRule.getTaskCountNow() >= nowTeamDispatchRule.getTaskCount()) {
-                    //如果这个小组的任务分配额度已经用完,那么直接跳到下一个批次
-                    continue;
-                }
-
-                if (tmpCount == taskCount) {
-                    //找到任务书对应的刷手,小组的已分配任务数+1
-                    nowTeamDispatchRule.setTaskCountNow(nowTeamDispatchRule.getTaskCountNow() + 1);
-                    return buyerIndex;
-                }
-
-                //如果没有命中,继续匹配下一个刷手
-                tmpCount ++;
-            }
-        }
-
-        //如果循环结束也没有分配任务,那么肯定哪里出错了,返回-1
-        return -1;
-    }
-
     @Data
     public class TeamDispatchRule {
         //小组编号
@@ -421,7 +424,7 @@ public class BusinessTask  extends Controller {
         //需要分配的总任务数
         public int taskCount;
         //已分配任务数
-        public int taskCountNow;
+        public int taskCountNow = 0;
         //小组中的刷手数量
         public int buyerCount;
     }
