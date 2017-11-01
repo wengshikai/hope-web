@@ -1,4 +1,4 @@
-@(taskNum:Int, allPrice:Double, taskBookMap: java.util.Map[String,models.excel.ShopkeeperTaskBook], taskList: java.util.List[String], min_num:Int, now_num:Int, buyerCountByTeamMap: java.util.Map[Integer,Integer])
+@(taskNum:Int, allPrice:Double, taskBookMap: java.util.Map[String,models.excel.ShopkeeperTaskBook], taskList: java.util.List[String], min_num:Int, allBuyerCount:Int, buyerCountByTeamMap: java.util.Map[Integer,Integer])
 @import models.dbmanager.GlobalTool.urlPrefix
 @import models.dbmanager.LockTableManager.isLock
 
@@ -22,7 +22,7 @@
                 <tr>
                     <td></td>
                     <td>总计</td>
-                    <td>@taskNum</td>
+                    <td id="allTaskNum">@taskNum</td>
                     <td>@allPrice</td>
                     <td></td>
                     <td></td>
@@ -58,49 +58,63 @@
             @flash.get("error")
             </p>
         }
-        @helper.form(routes.BusinessTask.caculateTaskList()) {
-            <h1>分配任务</h1>
-            <input type="radio" name="dispatchModeType" value="0" checked="checked"><label>&nbsp普通模式</label>
+
+        <h1>分配任务</h1>
+        <div>
+            <input type="radio" name="dispatchModeType" id="simpleModeRadio" value="0" checked="checked"><label>&nbsp普通模式</label>
             <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
-            <input type="radio" name="dispatchModeType" value="1"><label>&nbsp自由分配</label>
-            <br/>
+            <input type="radio" name="dispatchModeType" id="freeModeRadio"  value="1"><label>&nbsp自由分配</label>
+        </div>
+        <br/>
 
-            <div class="simpleMode">
-                <label>任务书数量:</label><input type="text" name="buyerNum" placeholder="buyerNum" value="@min_num"/> ,本次至少需要 <span class="text-danger"> @min_num  </span>个刷手,上一次数据库中已经分配<span class="text-danger"> @now_num  </span>个刷手
+
+        @helper.form(routes.BusinessTask.caculateTaskList()) {
+            <div id="simpleMode">
+                <caption>每个刷手平均分配所有的任务</caption>
+                <br/>
+                <label>任务书数量:</label><input type="text" name="buyerNum" placeholder="buyerNum" value="@min_num"/> ,本次至少需要 <span class="text-danger"> @min_num  </span>个刷手, 已上传<span class="text-danger"> @allBuyerCount  </span>个刷手
+                <br/>
+                <p>
+                    <button type="submit" class="btn btn-info">分配</button>
+                </p>
             </div>
+        }
 
-            <div class="freeMode">
+
+        @helper.form(routes.BusinessTask.dispatchTasks()) {
+            <div id="freeMode">
                 <table>
                     <caption>请输入每个小组分配的任务数</caption>
                     <tr>
                         <th>小组编号&nbsp&nbsp</th>
                         <th>刷手数量&nbsp&nbsp</th>
-                        <th>分配任务数&nbsp&nbsp</th>
+                        <th>分配总任务数&nbsp&nbsp</th>
                         <th>每个刷手的任务数</th>
+                        <th></th>
                     </tr>
+
                     <tbody>
                     @for(team <- buyerCountByTeamMap.keys) {
                         <tr>
-                            <td>
-                                @team
-                            </td>
-                            <td>
-                                @buyerCountByTeamMap(team)
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
+                            <td >@team</td>
+                            <td class="tableBuyerCount">@buyerCountByTeamMap(team)</td>
+                            <td><input type="text" class="tableTaskNumByTeam" style="width: 60px"/></td>
+                            <td class="tableTaskNumByBuyer"></td>
+                            <td class="tableErrorMessage" style="color: #F00"></td>
                         </tr>
                     }
                     </tbody>
                 </table>
-            </div>
 
-            <br/>
-            <p>
-                <button type="submit" class="btn btn-info">分配</button>
-            </p>
+                <br/>
+                <p>共有 @(buyerCountByTeamMap.size()) 个小组，@allBuyerCount 个刷手</p>
+                <p style="display: inline;">所有任务数量: @taskNum , 剩余未分配任务数量: </p><div id="notDispatchedCount" style="display: inline;">@taskNum</div>
+
+                <br/>
+                <p>
+                    <button type="submit" id="freeModeButton" class="btn btn-disabled" disabled>分配</button>
+                </p>
+            </div>
         }
 
     </div>
@@ -125,6 +139,4 @@
                 }
             </p>
     </div>
-
-}<script src="@{urlPrefix}static/javascripts/taskDispatchRule.js"></script>
-
+}

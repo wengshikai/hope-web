@@ -78,14 +78,14 @@ public class BuyerManager {
 
 
     /** 获取指定小组的刷手数量 */
-    public static int getBuyerCountByTeam(int team){
+    public static Long getBuyerCountByTeam(int team){
         try {
             Query query = DatabaseTool.defaultEm.createQuery("select count(u) from Buyer u where u.team = " + team);
-            int entry =(int) query.getSingleResult();
+            Long entry =(Long) query.getSingleResult();
             return entry;
         } catch (Exception e) {
             e.printStackTrace();
-            return 0;
+            return 0L;
         }
     }
 

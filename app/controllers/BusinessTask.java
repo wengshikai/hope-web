@@ -228,7 +228,7 @@ public class BusinessTask  extends Controller {
         //获取所有商家任务书名称列表
         List<String> ssl = TaskTablesManager.getALlTaskBookName();
         int min_num = TaskTablesManager.getNeedBuyerNum();
-        int now_num = TaskTablesManager.getMaxBuyerTaskBookId();
+        int allBuyerCount = BuyerManager.getBuyerCount().intValue();
 
 
         Map<Integer, Integer> buyerCountByTeam = new HashMap<>();
@@ -237,12 +237,12 @@ public class BusinessTask  extends Controller {
         if (teamList != null) {
             //查询每个小组的人数
             for (int team : teamList) {
-                int buyerCount = BuyerManager.getBuyerCountByTeam(team);
+                int buyerCount = BuyerManager.getBuyerCountByTeam(team).intValue();
                 buyerCountByTeam.put(team, buyerCount);
             }
         }
 
-        return ok(allnowtask.render(taskNum,allPrice,taskBookMap,ssl, min_num, now_num, buyerCountByTeam));
+        return ok(allnowtask.render(taskNum,allPrice,taskBookMap,ssl, min_num, allBuyerCount, buyerCountByTeam));
     }
 
 
@@ -331,7 +331,7 @@ public class BusinessTask  extends Controller {
 
         //获取每个小组的刷手人数
         for (TeamDispatchRule teamDispatchRule: teamDispatchRuleList) {
-            int buyerCount = BuyerManager.getBuyerCountByTeam(teamDispatchRule.getTeam());
+            int buyerCount = BuyerManager.getBuyerCountByTeam(teamDispatchRule.getTeam()).intValue();
             teamDispatchRule.setBuyerCount(buyerCount);
         }
 
@@ -371,7 +371,7 @@ public class BusinessTask  extends Controller {
 
 
         //获取所有刷手的数量
-        long buyerCount = BuyerManager.getBuyerCount();
+        int buyerCount = BuyerManager.getBuyerCount().intValue();
         //先把任务总量计数器置为0
         long taskCount = 0;
         int lengthIndex = 0;

@@ -33,6 +33,7 @@ POST        /task/batchaddshopkeepertask                       controllers.Busin
 GET         /task/allnowtask                                   controllers.BusinessTask.allnowtask()
 GET         /task/allnowbuyertask                              controllers.BusinessTask.allnowbuyertask()
 POST        /task/caculatetaskList                             controllers.BusinessTask.caculateTaskList()
+POST        /task/dispatchTasks                                controllers.BusinessTask.dispatchTasks()
 POST        /task/getalltaskList                               controllers.BusinessTask.getAllTaskList()
 POST        /task/deletebytaskbookname                         controllers.BusinessTask.deleteByTaskBookName()
 POST        /task/getshopkeeperbookbyshopkeeperbookname        controllers.BusinessTask.getshopkeeperbookbyshopkeeperbookname()
