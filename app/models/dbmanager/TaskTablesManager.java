@@ -108,7 +108,8 @@ public class TaskTablesManager {
     /** 获取某个店铺的任务数量 */
     public static Long getTaskCountByShopName(String ShopName){
         try {
-            Query query = DatabaseTool.defaultEm.createQuery("select count(u) from TaskTables u where u.shopName = ?1");
+            Query query = DatabaseTool.defaultEm.createQuery("select count(u) from TaskTables u where u.shopName =?1");
+            query.setParameter(1,ShopName);
             Long entry =(Long)query.getSingleResult();
             return entry;
         } catch (Exception e) {
@@ -118,10 +119,25 @@ public class TaskTablesManager {
     }
 
 
+    /** 获取所有的任务数量 */
+    public static Long getAllTaskCount(){
+        try {
+            Query query = DatabaseTool.defaultEm.createQuery("select count(u) from TaskTables u");
+            Long entry =(Long)query.getSingleResult();
+            return entry;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+
+
     /** 获取某个店铺的所有任务 */
     public static List<TaskTables> getTasksByShopName(String ShopName){
         try {
-            Query query = DatabaseTool.defaultEm.createQuery("select u from TaskTables u where u.shopName = ?1");
+            Query query = DatabaseTool.defaultEm.createQuery("select u from TaskTables u where u.shopName =?1");
+            query.setParameter(1,ShopName);
             List<TaskTables> entry =(List<TaskTables>)query.getResultList();
             return entry;
         } catch (Exception e) {

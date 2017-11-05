@@ -317,43 +317,57 @@ public class BusinessTask  extends Controller {
     /** 分配任务(新版) */
     @Security.Authenticated(Secured.class)
     public Result dispatchTasks() {
+        //解析入参
+        Form<String> form = Form.form(String.class).bindFromRequest();
+        List<TeamDispatchRule> teamDispatchRuleList = Lists.newArrayList();
+        for (String key : form.data().keySet()) {
+            Integer team = Integer.parseInt(key);
+            Integer taskNum = Integer.parseInt(form.data().get(key));
+            TeamDispatchRule teamDispatchRule = new TeamDispatchRule();
+            teamDispatchRule.setTeam(team);
+            teamDispatchRule.setTaskCount(taskNum);
+            teamDispatchRuleList.add(teamDispatchRule);
+        }
 
-        Form<List> form = Form.form(List.class).bindFromRequest();
-
-        List<TeamDispatchRule> teamDispatchRuleList =  (List<TeamDispatchRule>)form;
-
-        //获取所有小组
-//        List<Integer> teamList = BuyerManager.getALlTeams();
-//        if(teamList == null || teamList.size() != teamDispatchRuleList.size()) {
-//            flash("error", "查询小组信息失败！");
-//            return redirect(routes.BusinessTask.allnowtask());
-//        }
-
-        //获取每个小组的刷手人数
+        //获取每个小组的刷手人数,计算平均每个刷手的任务数
         for (TeamDispatchRule teamDispatchRule: teamDispatchRuleList) {
             int buyerCount = BuyerManager.getBuyerCountByTeam(teamDispatchRule.getTeam()).intValue();
             teamDispatchRule.setBuyerCount(buyerCount);
+            double taskCountPerBuyer = teamDispatchRule.getTaskCount() * 1.0 / buyerCount;
+            teamDispatchRule.setTaskCountPerBuyer(taskCountPerBuyer);
         }
 
-        //计算每个组的刷手平均任务数，按照从大到小进行排序
-
+        //将每个组按刷手平均任务数，从大到小进行排序
+        int sizeTeam = teamDispatchRuleList.size();
+        for(int i = 0 ; i < sizeTeam-1; i ++)
+        {
+            for(int j = 0 ;j < sizeTeam-1-i ; j++)
+            {
+                //交换两个对象的位置
+                if(teamDispatchRuleList.get(j).getTaskCountPerBuyer() < teamDispatchRuleList.get(j+1).getTaskCountPerBuyer())
+                {
+                    TeamDispatchRule temp = teamDispatchRuleList.get(j);
+                    teamDispatchRuleList.set(j, teamDispatchRuleList.get(j+1));
+                    teamDispatchRuleList.set(j+1 , temp);
+                }
+            }
+        }
 
         //将刷手按照任务数从大到小进行排序,同一个组内的刷手按照序号从小到大进行排序
         List<models.entity.Buyer> allBuyerList = Lists.newArrayList();
         for (TeamDispatchRule teamDispatchRule: teamDispatchRuleList) {
             List<models.entity.Buyer> teamBuyerLists= BuyerManager.getALlByTeam(teamDispatchRule.getTeam());
             if (teamBuyerLists == null) {
-                flash("error", "查询刷手列表出错！");
-                return redirect(routes.BusinessTask.allnowtask());
+                return ok("查询刷手列表出错!");
             }
             allBuyerList.addAll(teamBuyerLists);
         }
 
+
         //获取所有的店铺名称列表
         List<String> shopNameList = TaskTablesManager.getALlShopNames();
         if (shopNameList == null) {
-            flash("error", "查询店铺列表出错！");
-            return redirect(routes.BusinessTask.allnowtask());
+            return ok("查询店铺列表出错!");
         }
 
         //获取每个店铺的任务数量
@@ -367,7 +381,20 @@ public class BusinessTask  extends Controller {
         }
 
         //把店铺按照任务数量从大到小排序
-
+        int sizeShop = shopTaskCountList.size();
+        for(int i = 0 ; i < sizeShop-1; i ++)
+        {
+            for(int j = 0 ;j < sizeShop-1-i ; j++)
+            {
+                //交换两个对象的位置
+                if(shopTaskCountList.get(j).getTaskCount() < shopTaskCountList.get(j+1).getTaskCount())
+                {
+                    ShopTaskCount temp = shopTaskCountList.get(j);
+                    shopTaskCountList.set(j, shopTaskCountList.get(j+1));
+                    shopTaskCountList.set(j+1 , temp);
+                }
+            }
+        }
 
 
         //获取所有刷手的数量
@@ -382,8 +409,7 @@ public class BusinessTask  extends Controller {
             //获取店铺的所有任务
             List<TaskTables>  taskTablesList = TaskTablesManager.getTasksByShopName(shopTaskCount.getShopName());
             if(taskTablesList == null) {
-                flash("error", "查询任务列表出错！");
-                return redirect(routes.BusinessTask.allnowtask());
+                return ok("查询任务列表出错!");
             }
 
             //每个任务分配刷手
@@ -407,7 +433,6 @@ public class BusinessTask  extends Controller {
                             //小组的已分配任务数+1
                             nowTeamDispatchRule.setTaskCountNow(nowTeamDispatchRule.getTaskCountNow() + 1);
                             //直接跳出寻找刷手的循环
-                            buyerIndex++;
                             break foundBuyer;
                         }
                     }
@@ -415,8 +440,7 @@ public class BusinessTask  extends Controller {
 
                 if(lengthIndex > 20) {
                     //如果lengthIndex循环到超过20,那一定是哪里出问题了
-                    flash("error", "分配任务出错！");
-                    return redirect(routes.BusinessTask.allnowtask());
+                    return ok("分配任务出错,请联系系统管理员!");
                 }
 
                 //查找这个刷手的详细信息
@@ -426,14 +450,21 @@ public class BusinessTask  extends Controller {
                 TaskTablesManager.setBuyerAndTaskBookId(taskTables.getTaskId(), dispatchBuyer.getWangwang(), dispatchBuyer.getTeam(), buyerIndex + 1);
 
                 //任务总量计数器+1
+                buyerIndex++;
                 taskCount ++;
             }
+        }
+
+        //循环完毕后，判断任务总量是否正确
+        if (taskCount != TaskTablesManager.getAllTaskCount()) {
+            return ok("分配任务出错,请联系系统管理员!");
         }
 
         //锁定上传功能
         LockTableManager.update("TaskTables", 1);
 
-        return redirect(routes.BusinessTask.allnowtask());
+        flash("dispatch_success", "分配完成！");
+        return ok("success");
     }
 
 
@@ -443,10 +474,12 @@ public class BusinessTask  extends Controller {
         public int team;
         //需要分配的总任务数
         public int taskCount;
-        //已分配任务数
-        public int taskCountNow = 0;
         //小组中的刷手数量
         public int buyerCount;
+        //平均每个刷手的订单数量
+        public double taskCountPerBuyer;
+        //已分配任务数
+        public int taskCountNow = 0;
     }
 
 

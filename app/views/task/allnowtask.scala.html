@@ -68,6 +68,7 @@
         <br/>
 
 
+        @*普通模式*@
         @helper.form(routes.BusinessTask.caculateTaskList()) {
             <div id="simpleMode">
                 <caption>每个刷手平均分配所有的任务</caption>
@@ -81,42 +82,41 @@
         }
 
 
-        @helper.form(routes.BusinessTask.dispatchTasks()) {
-            <div id="freeMode">
-                <table>
-                    <caption>请输入每个小组分配的任务数</caption>
-                    <tr>
-                        <th>小组编号&nbsp&nbsp</th>
-                        <th>刷手数量&nbsp&nbsp</th>
-                        <th>分配总任务数&nbsp&nbsp</th>
-                        <th>每个刷手的任务数</th>
-                        <th></th>
+        @*自由分配*@
+        <div id="freeMode">
+            <table>
+                <caption>请输入每个小组分配的任务数</caption>
+                <tr>
+                    <th>小组编号&nbsp&nbsp</th>
+                    <th>刷手数量&nbsp&nbsp</th>
+                    <th>分配总任务数&nbsp&nbsp</th>
+                    <th>每个刷手的任务数</th>
+                    <th></th>
+                </tr>
+
+                <tbody>
+                @for(team <- buyerCountByTeamMap.keys) {
+                    <tr class="tableRow">
+                        <td class="tableTeam">@team</td>
+                        <td class="tableBuyerCount">@buyerCountByTeamMap(team)</td>
+                        <td><input type="text" class="tableTaskNumByTeam" style="width: 60px"/></td>
+                        <td class="tableTaskNumByBuyer"></td>
+                        <td class="tableErrorMessage" style="color: #F00"></td>
                     </tr>
+                }
+                </tbody>
+            </table>
 
-                    <tbody>
-                    @for(team <- buyerCountByTeamMap.keys) {
-                        <tr>
-                            <td >@team</td>
-                            <td class="tableBuyerCount">@buyerCountByTeamMap(team)</td>
-                            <td><input type="text" class="tableTaskNumByTeam" style="width: 60px"/></td>
-                            <td class="tableTaskNumByBuyer"></td>
-                            <td class="tableErrorMessage" style="color: #F00"></td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
+            <br/>
+            <p>共有 @(buyerCountByTeamMap.size()) 个小组，@allBuyerCount 个刷手</p>
+            <p style="display: inline;">所有任务数量: @taskNum , 剩余未分配任务数量: </p><div id="notDispatchedCount" style="display: inline;">@taskNum</div>
 
-                <br/>
-                <p>共有 @(buyerCountByTeamMap.size()) 个小组，@allBuyerCount 个刷手</p>
-                <p style="display: inline;">所有任务数量: @taskNum , 剩余未分配任务数量: </p><div id="notDispatchedCount" style="display: inline;">@taskNum</div>
-
-                <br/>
-                <p>
-                    <button type="submit" id="freeModeButton" class="btn btn-disabled" disabled>分配</button>
-                </p>
-            </div>
-        }
-
+            <br/>
+            <p>
+                <div id = "dispatchResult"></div>
+                <button type="submit" id="freeModeButton" class="btn btn-disabled" disabled>分配</button>
+            </p>
+        </div>
     </div>
 
 

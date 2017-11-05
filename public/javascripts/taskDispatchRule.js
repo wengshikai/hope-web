@@ -94,4 +94,44 @@
         }
     });
 
+
+    //自由分配模式submit
+    $('#freeModeButton').on('click',function() {
+        //把按钮锁住
+        $('#freeModeButton').attr('disabled','');
+        //文字显示分配状态
+        $('#dispatchResult').text("分配中");
+        $('#dispatchResult').css('color','#00F');
+
+        let teamToTaskNumMap = {};
+        //拼装入参
+        $('.tableRow').each(function () {
+            let team = Number($(this).find('.tableTeam').text().trim());
+            teamToTaskNumMap[team] = Number($(this).find('.tableTaskNumByTeam').val().trim());
+        });
+
+        //调用后端ajax请求
+        let requestData = {
+            url: '/task/dispatchTasks',
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: JSON.stringify(teamToTaskNumMap)
+        };
+        $.ajax(requestData).done(function (data) {
+            console.log(data);
+
+            //把按钮解锁
+            $('#freeModeButton').removeAttr('disabled');
+            if (data === "success") {
+                $('#dispatchResult').text("分配成功");
+                $('#dispatchResult').css('color','#0F0');
+            } else {
+                $('#dispatchResult').text("分配失败:" + data);
+                $('#dispatchResult').css('color','#F00');
+            }
+        });
+
+    });
+
 })(jQuery);
