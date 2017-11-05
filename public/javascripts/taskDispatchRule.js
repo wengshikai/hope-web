@@ -80,11 +80,15 @@
         }
 
         //先判断有没有错误信息,如果有,那么不解锁按钮
+        let hasError = false;
         $('#freeMode').find('.tableErrorMessage').each(function () {
             if ($(this).text().trim() !=='') {
-                return;
+                hasError = true;
             }
         });
+        if (hasError) {
+            return;
+        }
 
         //如果总订单数不为0,且剩余订单数为0,那么解锁按钮
         if (allTaskNum !== 0 && notDisPatchedTaskNum === 0) {
