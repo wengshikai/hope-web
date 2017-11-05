@@ -364,23 +364,23 @@ public class BusinessTask  extends Controller {
         }
 
 
-        //获取所有的店铺名称列表
-        List<String> shopNameList = TaskTablesManager.getALlShopNames();
-        if (shopNameList == null) {
-            return ok("查询店铺列表出错!");
+        //获取所有的商家任务书列表
+        List<String> taskBookNameList = TaskTablesManager.getALlTaskBookName();
+        if (taskBookNameList == null) {
+            return ok("查询商家任务书出错!");
         }
 
-        //获取每个店铺的任务数量
-        List<ShopTaskCount> shopTaskCountList = Lists.newArrayList();
-        for (String shopName : shopNameList) {
-            ShopTaskCount shopTaskCount = new ShopTaskCount();
-            Long taskCount = TaskTablesManager.getTaskCountByShopName(shopName);
-            shopTaskCount.setShopName(shopName);
+        //获取每个商家任务书的任务数量
+        List<TaskBookCount> shopTaskCountList = Lists.newArrayList();
+        for (String taskBookName : taskBookNameList) {
+            TaskBookCount shopTaskCount = new TaskBookCount();
+            Long taskCount = TaskTablesManager.getTaskCountByTaskBookName(taskBookName);
+            shopTaskCount.setTaskBookName(taskBookName);
             shopTaskCount.setTaskCount(taskCount);
             shopTaskCountList.add(shopTaskCount);
         }
 
-        //把店铺按照任务数量从大到小排序
+        //把任务书按照任务数量从大到小排序
         int sizeShop = shopTaskCountList.size();
         for(int i = 0 ; i < sizeShop-1; i ++)
         {
@@ -389,13 +389,12 @@ public class BusinessTask  extends Controller {
                 //交换两个对象的位置
                 if(shopTaskCountList.get(j).getTaskCount() < shopTaskCountList.get(j+1).getTaskCount())
                 {
-                    ShopTaskCount temp = shopTaskCountList.get(j);
+                    TaskBookCount temp = shopTaskCountList.get(j);
                     shopTaskCountList.set(j, shopTaskCountList.get(j+1));
                     shopTaskCountList.set(j+1 , temp);
                 }
             }
         }
-
 
         //获取所有刷手的数量
         int buyerCount = BuyerManager.getBuyerCount().intValue();
@@ -404,10 +403,10 @@ public class BusinessTask  extends Controller {
         int lengthIndex = 0;
         int buyerIndex = 0;
 
-        //依次获取店铺名称(按照任务数量从大到小)
-        for (ShopTaskCount shopTaskCount: shopTaskCountList) {
+        //依次获取任务书名称(按照任务数量从大到小)
+        for (TaskBookCount taskBookCount: shopTaskCountList) {
             //获取店铺的所有任务
-            List<TaskTables>  taskTablesList = TaskTablesManager.getTasksByShopName(shopTaskCount.getShopName());
+            List<TaskTables>  taskTablesList = TaskTablesManager.getTasksByTaskBookName(taskBookCount.getTaskBookName());
             if(taskTablesList == null) {
                 return ok("查询任务列表出错!");
             }
@@ -484,9 +483,9 @@ public class BusinessTask  extends Controller {
 
 
     @Data
-    public class ShopTaskCount {
-        //店铺名
-        public String shopName;
+    public class TaskBookCount {
+        //商家任务书名称
+        public String taskBookName;
         //任务数
         public long taskCount;
     }

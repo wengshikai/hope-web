@@ -9,6 +9,7 @@ target
 .DS_Store
 *.jpg
 *.zip
+*.txt
 exceltmp/
 combineExcelTmp/
 data/
