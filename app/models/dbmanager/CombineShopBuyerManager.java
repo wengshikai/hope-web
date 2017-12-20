@@ -50,7 +50,8 @@ public class CombineShopBuyerManager {
     /** 根据店铺名获取刷手信息 */
     public static List<CombineShopBuyer> getBuyerByShopName(String shopName){
         try {
-            Query query = DatabaseTool.defaultEm.createQuery("select u from CombineShopBuyer u where u.shopName = \'" + shopName + "\' ");
+            Query query = DatabaseTool.defaultEm.createQuery("select u from CombineShopBuyer u where u.shopName =?1");
+            query.setParameter(1,shopName);
             List<CombineShopBuyer> combineShopBuyerList =(List<CombineShopBuyer>)query.getResultList();
             return combineShopBuyerList;
         } catch (Exception e) {
