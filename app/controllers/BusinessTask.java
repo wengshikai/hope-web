@@ -169,7 +169,8 @@ public class BusinessTask  extends Controller {
         try {
             shopId = Integer.parseInt(dirPath.split("\\s+")[1]);
         } catch (Exception e) {
-            GlobalTool.logger.error("获取商家编号失败", e);
+            //暂时不打印报错信息
+            //GlobalTool.logger.error("获取商家编号失败", e);
         }
 
         //解析商家任务书
