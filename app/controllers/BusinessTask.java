@@ -522,14 +522,10 @@ public class BusinessTask  extends Controller {
     /** 下载所有分配后的表格压缩包 */
     @Security.Authenticated(Secured.class)
     public Result getAllTaskList() {
-
-        List<TaskTables> all = TaskTablesManager.getALl();
-
-        byte[] ret = MiscTool.buildDownloadTaskZip(all);
-
         response().setHeader("Content-Disposition", "attachment;filename=task.zip");
-        return ok(ret);
+        return ok(MiscTool.buildDownloadTaskZip());
     }
+
 
     public static class taskBookNameForm {
         public String taskBookName;

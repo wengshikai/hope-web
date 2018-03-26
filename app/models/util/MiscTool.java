@@ -2,6 +2,7 @@ package models.util;
 
 import com.google.common.collect.Lists;
 import models.dbmanager.BuyerManager;
+import models.dbmanager.TaskTablesManager;
 import models.entity.Buyer;
 import models.entity.CombineShopBuyer;
 import models.entity.TaskTables;
@@ -27,7 +28,10 @@ import java.util.*;
  */
 public class MiscTool {
 
-    public static byte[] buildDownloadTaskZip(List<TaskTables> all){
+    public static byte[] buildDownloadTaskZip(){
+        //获取所有商家任务
+        List<TaskTables> all = TaskTablesManager.getALl();
+
         FileTool.deleteDirectory("exceltmp");
         FileTool.createDestDirectoryIfNotExists("exceltmp/");
         buildDownloadShuashouZip(all, "刷手.zip");
@@ -40,12 +44,11 @@ public class MiscTool {
         ss[3] = "账单.txt";
         ZIPTool.compressFiles2Zip(ss, "task.zip");
         try {
-            byte[] ret = FileTool.getFileContent("task.zip");
-            return ret;
+            return FileTool.getFileContent("task.zip");
         } catch (IOException e) {
             e.printStackTrace();
             return null;
-        }finally {
+        } finally {
             FileTool.delete("刷手.zip");
             FileTool.delete("小组汇总.zip");
             FileTool.delete("商家.zip");
