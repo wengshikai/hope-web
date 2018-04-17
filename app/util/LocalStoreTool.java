@@ -1,6 +1,6 @@
 package util;
 
-import util.FileTool;
+import models.dbmanager.GlobalTool;
 
 import java.io.IOException;
 
@@ -25,6 +25,7 @@ public class LocalStoreTool {
         try {
             return FileTool.getFileContent(imagedir+"/"+filename);
         } catch (IOException e) {
+            GlobalTool.logger.error("这张图片不存在" + imagedir+"/"+filename);
             return null;
         }
     }

@@ -34,13 +34,13 @@ public class MiscTool {
 
         FileTool.deleteDirectory("exceltmp");
         FileTool.createDestDirectoryIfNotExists("exceltmp/");
+        buildDownloadShopkeeperZip(all, "商家.zip");
         buildDownloadShuashouZip(all, "刷手.zip");
         buildTeamCollectionZip(all, "小组汇总.zip");
-        buildDownloadShopkeeperZip(all, "商家.zip");
         String[] ss = new String[4];
-        ss[0] = "刷手.zip";
-        ss[1] = "小组汇总.zip";
-        ss[2] = "商家.zip";
+        ss[0] = "商家.zip";
+        ss[1] = "刷手.zip";
+        ss[2] = "小组汇总.zip";
         ss[3] = "账单.txt";
         ZIPTool.compressFiles2Zip(ss, "task.zip");
         try {
@@ -49,11 +49,11 @@ public class MiscTool {
             e.printStackTrace();
             return null;
         } finally {
-            FileTool.delete("刷手.zip");
-            FileTool.delete("小组汇总.zip");
-            FileTool.delete("商家.zip");
-            FileTool.delete("账单.txt");
-            FileTool.delete("task.zip");
+//            FileTool.delete("商家.zip");
+//            FileTool.delete("刷手.zip");
+//            FileTool.delete("小组汇总.zip");
+//            FileTool.delete("账单.txt");
+//            FileTool.delete("task.zip");
         }
     }
 
@@ -127,7 +127,7 @@ public class MiscTool {
             try {
                 //生成任务书excel文件
                 ((BuyerTaskList)entry.getValue()).Deal();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

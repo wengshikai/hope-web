@@ -1,8 +1,8 @@
 package models.excel;
 
 
-
 import lombok.Data;
+import models.dbmanager.GlobalTool;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
@@ -119,24 +119,29 @@ public class BuyerTask {
             if(allpicw>allpich){
                 picradio = ((float)(imgtmp.w))/allpicw;
             }
-            int pictureIdx = sheet.getWorkbook().addPicture(imgtmp.content,picTypeMap.get(imgtmp.type.toLowerCase()));
-            CreationHelper helper = sheet.getWorkbook().getCreationHelper();
-            Drawing drawing = sheet.createDrawingPatriarch();
-            ClientAnchor anchor = helper.createClientAnchor();
-            if(allpicw>allpich){
-                anchor.setCol1(left+numberwide);
-                numberwide += (int)(usegezishu*picradio)+1;
-            }else{
-                anchor.setCol1(left+numberwide);
-                numberwide += (int)(usegezishu*imgtmp.w/imgtmp.h/radio*2.5)+1;
-            }
-            anchor.setRow1(top+3);
-            Picture pict = drawing.createPicture(anchor, pictureIdx);
-            imgtmp.pict = pict;
-            if(allpicw>allpich){
-                imgtmp.pict.resize(usegezishu*picradio,usegezishu*radio*imgtmp.h/imgtmp.w*picradio);
-            }else{
-                imgtmp.pict.resize(usegezishu*imgtmp.w/imgtmp.h/radio*2.5,usegezishu*2.5);
+
+            try {
+                int pictureIdx = sheet.getWorkbook().addPicture(imgtmp.content, picTypeMap.get(imgtmp.type.toLowerCase()));
+                CreationHelper helper = sheet.getWorkbook().getCreationHelper();
+                Drawing drawing = sheet.createDrawingPatriarch();
+                ClientAnchor anchor = helper.createClientAnchor();
+                if (allpicw > allpich) {
+                    anchor.setCol1(left + numberwide);
+                    numberwide += (int) (usegezishu * picradio) + 1;
+                } else {
+                    anchor.setCol1(left + numberwide);
+                    numberwide += (int) (usegezishu * imgtmp.w / imgtmp.h / radio * 2.5) + 1;
+                }
+                anchor.setRow1(top + 3);
+                Picture pict = drawing.createPicture(anchor, pictureIdx);
+                imgtmp.pict = pict;
+                if (allpicw > allpich) {
+                    imgtmp.pict.resize(usegezishu * picradio, usegezishu * radio * imgtmp.h / imgtmp.w * picradio);
+                } else {
+                    imgtmp.pict.resize(usegezishu * imgtmp.w / imgtmp.h / radio * 2.5, usegezishu * 2.5);
+                }
+            } catch (Exception e) {
+                GlobalTool.logger.error("解析图片错误!店铺名称:" + shopname + "!");
             }
         }
     }

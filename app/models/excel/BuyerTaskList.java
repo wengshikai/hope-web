@@ -5,10 +5,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import util.ExcelUtil;
-import util.FileTool;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class BuyerTaskList {
     }
 
 
-    public void Deal() throws IOException {
+    public void Deal() throws Exception {
         wb = new XSSFWorkbook();
         sheet = ExcelUtil.getOrCreateSheet(wb, "sheet1");
         redfont =  wb.createFont();
@@ -63,25 +61,6 @@ public class BuyerTaskList {
         fileOut.close();
     }
 
-
-    public static void main(String[] argv) throws IOException {
-        BuyerTaskList stl = new BuyerTaskList();
-        stl.setFilepath("workbook.xls");
-        stl.setTaskbookid(3);
-        for(int i=0;i<20;i++){
-            BuyerTask sst = new BuyerTask();
-            sst.setShopname("力源精品男装"+i);
-            sst.setGoodnum(5);
-            sst.setUnit_price(6.13);
-            sst.setKeyword("我去了就"+i);
-            byte[] ic = FileTool.getFileContent("/Users/weng/workspace/mygod/2.jpg");
-            sst.addPic(ic,"jpg");
-            ic = FileTool.getFileContent("/Users/weng/workspace/mygod/1.jpg");
-            sst.addPic(ic,"jpg");
-            stl.addShuashouTask(sst);
-        }
-        stl.Deal();
-    }
     void makeHead(){
         Cell c = ExcelUtil.getOrCreateCell(sheet, 0,0);
         ExcelUtil.setThickBorder(c,true,true,false,false);
@@ -139,7 +118,6 @@ public class BuyerTaskList {
         c = ExcelUtil.getOrCreateCell(sheet, 3,2);
         c.setCellType(Cell.CELL_TYPE_FORMULA);
         c.setCellFormula("C2+C3");
-
     }
 
     public void next() {
