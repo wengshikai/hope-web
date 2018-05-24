@@ -49,11 +49,11 @@ public class MiscTool {
             e.printStackTrace();
             return null;
         } finally {
-//            FileTool.delete("商家.zip");
-//            FileTool.delete("刷手.zip");
-//            FileTool.delete("小组汇总.zip");
-//            FileTool.delete("账单.txt");
-//            FileTool.delete("task.zip");
+            FileTool.delete("商家.zip");
+            FileTool.delete("刷手.zip");
+            FileTool.delete("小组汇总.zip");
+            FileTool.delete("账单.txt");
+            FileTool.delete("task.zip");
         }
     }
 
