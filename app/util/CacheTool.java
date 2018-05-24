@@ -85,22 +85,6 @@ public class CacheTool {
         return null;
     }
 
-    public static void main(String[] args){
-        System.out.println(inc("hehe"));
-        System.out.println(inc("hehe"));
-        System.out.println(inc("hehe"));
-        System.out.println(dec("hehe"));
-        System.out.println(dec("hehe"));
-        System.out.println(dec("hehe"));
-        System.out.println(dec("hehe"));
-        System.out.println(dec("hehe2"));
-        System.out.println(dec("hehe2"));
-        System.out.println(dec("hehe2"));
-        System.out.println(dec("hehe2"));
-        System.out.println(inc("hehe2"));
-        System.out.println(inc("hehe2"));
-    }
-
 }
 
 

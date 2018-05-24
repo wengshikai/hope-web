@@ -165,8 +165,4 @@ public class FileTool {
         } catch (IOException ex) {}
         return fileNames;
     }
-
-    public static void  main(String[] arvs){
-        System.out.println(getFileDir("/tmp/weng1/weng2/weng3/weng4/weng5"));
-    }
 }

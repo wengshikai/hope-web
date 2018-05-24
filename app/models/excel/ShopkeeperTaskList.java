@@ -255,8 +255,6 @@ public class ShopkeeperTaskList {
 
 
         //放图片
-//        System.out.println(picContentMap);
-//        System.out.println(pic1);
         if(pic1!=null&&!pic1.equals("")){
             picContent.put(pic1,picContentMap.get(pic1));
         }
@@ -266,8 +264,6 @@ public class ShopkeeperTaskList {
         if(pic3!=null&&!pic3.equals("")){
             picContent.put(pic3,picContentMap.get(pic3));
         }
-
-//        System.out.println(picContentMap.size());
 
         float h = ExcelUtil.getOrCreateRow(sheet,8).getHeightInPoints();
         float w = sheet.getColumnWidthInPixels(0);
@@ -292,7 +288,6 @@ public class ShopkeeperTaskList {
 
         int numberwide=0;
         int numberwideall = 4;
-        //System.out.println(picContent.size());
         for(Map.Entry<String,byte[]> entry:picContent.entrySet()){
             int ww =  picSize.get(entry.getKey())[0];
             int hh =  picSize.get(entry.getKey())[1];

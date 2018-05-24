@@ -65,15 +65,4 @@ public class TimeTool {
         return getUnixTimestampByyyyyMMdd(getByyyyyMMdd(getCurrentUnixTimestamp()));
 
     }
-
-
-
-
-    public static void main(String[] args){
-        Date date = new Date();
-
-        System.out.println(date);
-
-
-    }
 }
