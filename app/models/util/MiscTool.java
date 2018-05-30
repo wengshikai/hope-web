@@ -28,7 +28,7 @@ import java.util.*;
  */
 public class MiscTool {
 
-    public static byte[] buildDownloadTaskZip(){
+    public static void buildDownloadTaskZip(){
         //获取所有商家任务
         List<TaskTables> all = TaskTablesManager.getALl();
 
@@ -43,23 +43,11 @@ public class MiscTool {
         ss[2] = "小组汇总.zip";
         ss[3] = "账单.txt";
         ZIPTool.compressFiles2Zip(ss, "task.zip");
-        try {
-            return FileTool.getFileContent("task.zip");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            FileTool.delete("商家.zip");
-            FileTool.delete("刷手.zip");
-            FileTool.delete("小组汇总.zip");
-            FileTool.delete("账单.txt");
-            FileTool.delete("task.zip");
-        }
     }
 
 
     /** 生成所有刷手任务书(按刷手维度分表) */
-    public static void buildDownloadShuashouZip(List<TaskTables> all,String zipname){
+    private static void buildDownloadShuashouZip(List<TaskTables> all, String zipname){
         List<models.entity.Buyer> ssl = BuyerManager.getALl();
         Map<String,Integer> teamMap = new HashMap();
         Map<String,String> wangwang2shopName = new HashMap<String,String>();
@@ -209,7 +197,7 @@ public class MiscTool {
 
 
     /** 生成小组汇总表的压缩包 */
-    public static void buildTeamCollectionZip(List<TaskTables> allTaskTables, String zipName) {
+    private static void buildTeamCollectionZip(List<TaskTables> allTaskTables, String zipName) {
         List<String> fileNames = Lists.newArrayList();
         buildTeamCollectionExcel(allTaskTables, "A", fileNames);
         buildTeamCollectionExcel(allTaskTables, "B", fileNames);
@@ -218,7 +206,7 @@ public class MiscTool {
     }
 
     /** 生成小组汇总表  type=1:填写价格; type=2:不填写价格*/
-    public static void buildTeamCollectionExcel(List<TaskTables> allTaskTables, String type, List<String> fileNames) {
+    private static void buildTeamCollectionExcel(List<TaskTables> allTaskTables, String type, List<String> fileNames) {
         //获取所有的刷手分组
         List<Integer> buyerTeams =  BuyerManager.getALlTeams();
         for (Integer team: buyerTeams) {
@@ -336,7 +324,7 @@ public class MiscTool {
 
 
     /** 生成所有刷手任务书(按商家维度分配) */
-    public static void buildDownloadShopkeeperZip(List<TaskTables> all,String zipname){
+    private static void buildDownloadShopkeeperZip(List<TaskTables> all, String zipname){
         Map<String,ShopkeeperTaskList> stbmap = new HashMap<String,ShopkeeperTaskList>();
         for(TaskTables task:all){
             String uuid = task.getTaskBookUuid()+task.getSubTaskBookId();

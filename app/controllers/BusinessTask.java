@@ -12,7 +12,6 @@ import models.excel.ShopkeeperTask;
 import models.excel.ShopkeeperTaskBook;
 import models.excel.ShopkeeperTaskList;
 import models.util.DatabaseTool;
-import models.util.MiscTool;
 import models.util.TaskHelper;
 import play.data.Form;
 import play.mvc.Controller;
@@ -26,13 +25,14 @@ import views.html.task.allnowbuyertask;
 import views.html.task.allnowtask;
 import views.html.task.showoneshopkeeperbook;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+import static models.util.MiscTool.buildDownloadTaskZip;
 
 
 /**
@@ -522,8 +522,24 @@ public class BusinessTask  extends Controller {
     /** 下载所有分配后的表格压缩包 */
     @Security.Authenticated(Secured.class)
     public Result getAllTaskList() {
-        response().setHeader("Content-Disposition", "attachment;filename=task.zip");
-        return ok(MiscTool.buildDownloadTaskZip());
+        try {
+            //生成压缩包
+            buildDownloadTaskZip();
+            //下载文件
+            response().setContentType("application/x-download");
+            response().setHeader("Content-disposition","attachment; filename=task.zip");
+            return ok(new File("task.zip"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            //下载结束后删除
+            FileTool.delete("商家.zip");
+            FileTool.delete("刷手.zip");
+            FileTool.delete("小组汇总.zip");
+            FileTool.delete("账单.txt");
+            FileTool.delete("task.zip");
+        }
     }
 
 
