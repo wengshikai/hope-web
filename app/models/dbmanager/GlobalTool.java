@@ -104,7 +104,7 @@ public class GlobalTool {
 
         //创建所有的表
         DatabaseTool.doSql("user",CreateUser );
-        UserManager.insertUser("yanjue", "yanjue123");
+        UserManager.insertUser("yanjue", "yanjue2927");
 
         DatabaseTool.doSql("default",CreateBuyer);
         DatabaseTool.doSql("default",CreateTaskTables);
