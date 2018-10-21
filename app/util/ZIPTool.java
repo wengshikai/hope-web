@@ -1,5 +1,6 @@
 package util;
 
+import models.dbmanager.GlobalTool;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.zip.*;
 import org.apache.commons.io.IOUtils;
@@ -153,6 +154,7 @@ public class ZIPTool {
             outputDir = outputDir + File.separator;
             FileTool.createDestDirectoryIfNotExists(outputDir);
             //FileUtils.forceMkdir(new File(outputDir));
+            GlobalTool.logger.error("系统默认编码格式:" + System.getProperty("file.encoding"));
             ZipFile zf = new ZipFile(zipFile, System.getProperty("file.encoding"));
             Enumeration zipArchiveEntries = zf.getEntries();
             while (zipArchiveEntries.hasMoreElements()) {
