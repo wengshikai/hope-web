@@ -107,6 +107,7 @@ public class BusinessTask  extends Controller {
             FileTool.createDestDirectoryIfNotExists("data/zip/");
             ZIPTool.unZipToFolder(zip.getFile().getAbsolutePath(),"data/zip/");
         } catch (Exception e) {
+            GlobalTool.logger.error("解压zip文件失败!", e);
             flash("batch_error", "解压zip文件失败!");
             return redirect(routes.BusinessTask.addShopkeeperTask());
         }
